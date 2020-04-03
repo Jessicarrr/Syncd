@@ -1,11 +1,14 @@
-﻿// 2. This code loads the IFrame Player API code asynchronously.
+﻿var stateText = "[Video State]"; // the current video state (paused/playing/etc) in a readable format for UI purposes.
+var stateNumber = -1; // the current video state (paused/playing/etc)
+
+// 1. This code loads the IFrame Player API code asynchronously.
 var tag = document.createElement('script');
 
 tag.src = "https://www.youtube.com/iframe_api";
 var firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-// 3. This function creates an <iframe> (and YouTube player)
+// 2. This function creates an <iframe> (and YouTube player)
 //    after the API code downloads.
 var player;
 var currentVideoId;
@@ -69,7 +72,7 @@ function hasTimeChanged() {
             return true;
         }
         else {
-            console.log("hasTimeChanged() - Video time has not changed. Expected time : " + expectedVideoTime + ", actual time : " + getVideoTime() + ", difference : " + videoTimeDifference);
+            //console.log("hasTimeChanged() - Video time has not changed. Expected time : " + expectedVideoTime + ", actual time : " + getVideoTime() + ", difference : " + videoTimeDifference);
             lastCheckUnixTime = new Date().getTime();
             return false;
         }
@@ -86,8 +89,7 @@ function onPlayerReady(event) {
 // 5. The API calls this function when the player's state changes.
 //    The function indicates that when playing a video (state=1),
 //    the player should play for six seconds and then stop.
-var stateText = "[Video State]";
-var stateNumber = -1;
+
 function onPlayerStateChange(event) {
     stateNumber = event.data;
 
