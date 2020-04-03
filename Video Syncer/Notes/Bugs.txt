@@ -1,0 +1,17 @@
+﻿Bug where video switches from buffering to playing over and over
+	I think this is started by a user buffering, basically whenever a video loads in.
+	The user tells the server they are buffering.
+	The user finishes buffering, starts playing.
+	The server still thinks you are buffering, sets your state to buffering.
+	The server sets your time to when you started buffering, because the time does not continue when buffering.
+	The user player sets state to buffering because the server says so.
+	The user player sets state to playing because buffering is done.
+	The server says the user is buffering.
+	The user sets their state to buffering.
+	And so on and so on...
+
+	Bug fixed?
+	Caused by the videoPlayer.js, mixing up the "state" and "stateNumber" variables in different
+	methods caused each variable to be wrong. Changed "state" variable to "stateText" to be more clear
+	for future reference.
+	Also removed some server code that tries to handle buffering.

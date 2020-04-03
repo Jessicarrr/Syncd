@@ -1,0 +1,2 @@
+﻿1. Test for when users have cookies disabled
+	1a) Make a banner requesting cookie permission

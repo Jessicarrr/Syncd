@@ -1,0 +1,70 @@
+﻿#searchBar {
+    width: 70%;
+    margin-bottom: 10px;
+}
+.playerAndUserArea{
+    display: flex;
+    justify-content: right;
+}
+#player {
+    /*float: left;*/
+}
+
+#userListArea {
+    width: 20%;
+    height: 35%;
+    margin-bottom: 10px;
+    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .3), 1px 1px 1px 1px rgba(0, 0, 0, .3);
+    margin-left: 2%;
+}
+
+table {
+    display: inline-block;
+    margin: 5px;
+}
+
+th, td {
+    padding-left: 3px;
+    padding-right: 3px;
+    /*border: 1px solid black;*/
+}
+
+.usersHeading {
+    padding: 3px 0px 0px 3px;
+    border-bottom: 1px solid gray;
+}
+
+.userDiv {
+    border-bottom: 1px solid gray;
+    margin-bottom: 2px;
+    padding: 0px 5px 5px 5px;
+}
+
+.userDivElement {
+    margin: 0;
+}
+
+p[id$="userName"] {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+p[id$="userId"] {
+    float: left;
+    margin-right: 3px;
+    padding-right: 3px;
+    border-right: 1px solid Gainsboro;
+    font-size: 12px;
+}
+
+p[id$="userState"] {
+    float: left;
+    margin-right: 3px;
+    padding-right: 3px;
+    border-right: 1px solid Gainsboro;
+    font-size: 12px;
+}
+
+p[id$="userTime"] {
+    font-size: 12px;
+}

@@ -1,0 +1,55 @@
+﻿@model Video_Syncer.Views.Room.RoomModel
+
+<h2>@Model.name</h2>
+
+<script>
+    var roomId = "@Model.id";
+</script>
+
+<link rel="stylesheet" type="text/css" href="~/css/room.css">
+<script src="~/js/room/userListManager.js"></script>
+<script src="~/js/room/videoPlayer.js"></script>
+<script src="~/js/room/videoListManager.js"></script>
+<script src="~/js/room/connectionManager.js"></script>
+<script src="~/js/room/start.js"></script>
+<!--<iframe width="600" height="400"
+    src="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=1">
+</iframe>-->
+
+
+<div id="searchArea">
+    <input id="searchBar" type="text" placeholder="Add Youtube video" />
+    <button id="addButton" type="button">Add</button>
+</div>
+
+<div class="playerAndUserArea">
+    <div id="player"></div>
+
+    <div id="userListArea">
+        <div class="usersHeading">
+            <h5>Users</h5>
+        </div>
+
+    </div>
+</div>
+<table class="debugTable">
+    <tr>
+        <th>Debug</th>
+    </tr>
+    <tr>
+        <td>Video state:</td>
+        <td id="videoState">N/A</td>
+    </tr>
+    <tr>
+        <td>Video time:</td>
+        <td id="videoTime">N/A</td>
+    </tr>
+</table>
+
+
+@foreach(User user in Model.userList)
+{
+    <script>
+        addUser("@user.id", "@user.name");
+    </script>
+}

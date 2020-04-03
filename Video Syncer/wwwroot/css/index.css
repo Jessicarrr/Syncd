@@ -1,0 +1,18 @@
+﻿.create-room-area {
+    box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, .1), 2px 2px 2px 2px rgba(0, 0, 0, .1);
+    padding: 5% 0% 5% 0%;   
+    width: 65%;
+    height: 65%;
+    margin: auto;
+    text-align: center;
+}
+
+.create-room-btn {
+    width: 25%;
+    height: 15%;
+    font-size: 20px;
+}
+
+.home-title {
+    margin-bottom: 15px;
+}
