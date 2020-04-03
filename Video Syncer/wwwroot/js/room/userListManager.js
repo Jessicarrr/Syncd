@@ -2,24 +2,29 @@
 var min = 0;
 var max = 10000;
 
+/*
+ * The main method for adding a new user to the user list.
+ */
 function addUser(id, name) {
     var user = createNewUserObject(id, name);
     userList.push(user);
     addUserUI(user["div"]);
 }
 
+/**
+ * Append newly created UI for a given user to the user list.
+ * @param {any} userDiv the container for the user's UI, to be added to the user list UI.
+ */
 function addUserUI(userDiv) {
     document.getElementById("userListArea").appendChild(userDiv);
 }
 
-
-
-function updateAllUsersTest(userState, userTime) {
-    userList.forEach(function (entry) {
-        updateUIForUser(entry["id"], userState, userTime);
-    });
-}
-
+/**
+ * Update the user list for a specific user.
+ * @param {any} userId The identifier for which user to update.
+ * @param {any} userState The user's YouTube player state.
+ * @param {any} userTime The time the user is at in the video.
+ */
 function updateUIForUser(userId, userState, userTime) {
     var updatedUser = false;
 
@@ -43,6 +48,11 @@ function updateUIForUser(userId, userState, userTime) {
     return updatedUser;
 }
 
+/**
+ * Create new UI elements to accommodate a new user in the user list.
+ * @param {any} name The user name 
+ * @param {any} id The user id
+ */
 function createUIForUser(name, id) {
     var userDiv = document.createElement("div");
     var userName = document.createElement("p");
@@ -77,6 +87,12 @@ function createUIForUser(name, id) {
     return userDiv;
 }
 
+/**
+ * Creating a new user object, containing their name, id, and the div containing their
+ * personal UI in the user list.
+ * @param {any} id User id
+ * @param {any} name User name
+ */
 function createNewUserObject(id, name) {
     var user = new Object();
     user.name = name;
@@ -85,10 +101,9 @@ function createNewUserObject(id, name) {
     return user;
 }
 
-function randomUserNumber() {
-    return Math.round(Math.random() * (max - min) + min);
-}
-
+/**
+ * Remove all users from the user list.
+ */
 function removeUsers() {
     userList.forEach(function (entry) {
         var div = entry["div"];
