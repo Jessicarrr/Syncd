@@ -5,10 +5,14 @@
     
 });
 
-var tickMs = 200;
-var networkSendPeriod = 1500;
-var lastNetworkSend = 0;
+var tickMs = 200; // how often to run function tick()
+var networkSendPeriod = 1500; // how often function tick() sends updates to the server
+var lastNetworkSend = 0; // last time in ms tick() sent updates to the server.
 
+/**
+ * Tick function that runs every tickMs milliseconds. 
+ * Sends updates to the server every networkSendPeriod milliseconds.
+ */
 function tick() {
     setTimeout(tick, tickMs);
     var time = getVideoTime();
@@ -21,8 +25,11 @@ function tick() {
 
     }
 
+    /*
+     * Check if the YouTube player time changed due to user input.
+     */
     if (hasTimeChanged()) {
-        console.log("WOW THE TIME CHANGED!!!!!!!!!");
+        //console.log("");
         sendTimeUpdate();
     }
 
