@@ -193,35 +193,61 @@ function unpauseVideo() {
     player.playVideo();
 }
 
+/**
+ * Sets the video playing to what the server thinks the video should be,
+ * if the client is not already playing that video.
+ * @param {any} newVideo
+ * @param {any} newTimeSeconds
+ */
 function serverSetVideo(newVideo, newTimeSeconds) {
-    changeVideo(newVideo, newTimeSeconds);
-    unpauseVideo();
-}
-
-function serverSetVideoState(newVideoState) {
-    stateNumber = newVideoState;
-    stateText = stateIntToString(newVideoState);
-
-    switch (newVideoState) {
-        case -1: //unstarted
-        case 0: //ended
-            stopVideo();
-            break;
-        case 1: //playing
-            unpauseVideo();
-            break;
-        case 2: //paused
-            pauseVideo();
-            break;
-        case 3: //buffering
-            //pauseVideo();
-            break;
-        case 5: //"video cued"
-            break;
-
+    if (newVideo != currentVideoId) {
+        changeVideo(newVideo, newTimeSeconds);
+        unpauseVideo();
+        return true;
     }
+    return false;
+
+    
 }
 
+/**
+ * Sets the video state (playing, paused, etc) if the server's video state
+ * is different from the client.
+ * @param {any} newVideoState The video state according to the server.
+ */
+function serverSetVideoState(newVideoState) {
+    
+    if (stateNumber != newVideoState) {
+        stateNumber = newVideoState;
+        stateText = stateIntToString(newVideoState);
+
+        switch (newVideoState) {
+            case -1: //unstarted
+            case 0: //ended
+                stopVideo();
+                break;
+            case 1: //playing
+                unpauseVideo();
+                break;
+            case 2: //paused
+                pauseVideo();
+                break;
+            case 3: //buffering
+                //pauseVideo();
+                break;
+            case 5: //"video cued"
+                break;
+        }
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Logic for setting the time of the video if the server sends a different
+ * time to what the client currently has.
+ * @param {any} newTimeSeconds The video time in seconds.
+ */
 function serverSetVideoTime(newTimeSeconds) {
     // set the time of the video
     var gracePeriod = 1; // 1 second
@@ -229,38 +255,44 @@ function serverSetVideoTime(newTimeSeconds) {
 
     if (timeDifference > gracePeriod || timeDifference < (gracePeriod * -1)) {
         player.seekTo(newTimeSeconds);
+        return true;
     }
+    return false;
 }
 
+/**
+ * Function is called when the server sends info about the video playing,
+ * the state its in, and the time it should be at. This function compares the
+ * server's data to what the client has. If the server has different video parameters
+ * to the client, this function changes the client video to match the server.
+ * @param {any} newVideo The YouTube video ID that the server sent.
+ * @param {any} newVideoState The state of the video sent by the server (playing, paused, etc)
+ * @param {any} newTimeSeconds The time of the video in seconds sent by the server.
+ */
 function serverSetVideoAndState(newVideo, newVideoState, newTimeSeconds) {
     // variables for logging and logic
     var videoChanged = false;
     var stateChanged = false;
     var timeChanged = false;
-    var logString = "setVideoAndState - ";
+    var logString = "serverSetVideoAndState - ";
 
 
     // set the video
-    if (newVideo != currentVideoId) {
+    if (serverSetVideo(newVideo, newTimeSeconds)) {
         videoChanged = true;
         logString += "Network changed video to \"" + newVideo + "\".";
-        serverSetVideo(newVideo, newTimeSeconds);
     }
 
     // set the state of the video
-    if (stateNumber != newVideoState) {
+    if (serverSetVideoState(newVideoState)) {
         stateChanged = true;
         logString += " Network changed state to " + stateIntToString(newVideoState) + "(" + newVideoState + ") from " + stateIntToString(stateNumber) + "(" + stateNumber + ").";
-
-        serverSetVideoState(newVideoState);
     }
-
-    
 
     if (!videoChanged) {
         if (serverSetVideoTime(newTimeSeconds)) {
             timeChanged = true;
-            logString += " Changed time because video time is " + getVideoTime() + " but new time is " + newTimeSeconds + " (time difference is " + timeDifference + ").";
+            logString += " Changed time because video time is " + getVideoTime() + " but new time is " + newTimeSeconds + " (time difference is " + (newTimeSeconds - getVideoTime()) + ").";
             hasNetworkChangedTime = true;
         }
     }
