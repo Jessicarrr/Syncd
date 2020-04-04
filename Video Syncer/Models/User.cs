@@ -16,7 +16,7 @@ namespace Video_Syncer.Models
         {
             this.id = Id;
             this.name = Name;
-            videoState = VideoState.None;
+            videoState = VideoState.Unstarted;
             videoTimeSeconds = -1;
         }
         

@@ -12,8 +12,6 @@ namespace Video_Syncer.Models
         Playing = 1,
         Paused = 2,
         Buffering = 3,
-        VideoCued = 5,
-        WaitForBuffering = 50,
-        None = -100
+        VideoCued = 5
     }
 }

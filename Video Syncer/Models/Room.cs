@@ -85,7 +85,7 @@ namespace Video_Syncer.Models
                     return user.videoState;
                 }
             }
-            return VideoState.None;
+            return VideoState.Unstarted;
         }
 
         public Boolean UserIsBuffering()
@@ -157,6 +157,13 @@ namespace Video_Syncer.Models
                 // Keep the server's interpretation of the video's time up to date with
                 // the passing of time. This is so the server doesn't lag behind the client
                 // and their playing video.
+
+                if(lastCheck == 0)
+                {
+                    lastCheck = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                    return;
+                }
+
                 long timeSinceLastCheck = currentTime - lastCheck;
                 double timeSinceLastCheckD = Convert.ToDouble(timeSinceLastCheck);
                 double timeToAdd = timeSinceLastCheckD / 1000;

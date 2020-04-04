@@ -189,19 +189,25 @@ function unpauseVideo() {
 }
 
 function setVideoAndState(newVideo, newVideoState, newVideoTimeSeconds) {
-    // set the video
-
+    // variables for logging and logic
     var videoChanged = false;
+    var stateChanged = false;
+    var timeChanged = false;
+    var logString = "setVideoAndState - ";
+
+
+    // set the video
     if (newVideo != currentVideoId) {
-        console.log("setVideoAndState - CHANGED VIDEO");
+        videoChanged = true;
+        logString += "Network changed video to \"" + newVideo + "\".";
         changeVideo(newVideo, newVideoTimeSeconds);
         unpauseVideo();
-        videoChanged = true;
     }
 
     // set the state of the video
     if (stateNumber != newVideoState) {
-        console.log("setVideoAndState - Network changed state to " + stateIntToString(newVideoState) + " from " + stateText);
+        stateChanged = true;
+        logString += " Network changed state to " + stateIntToString(newVideoState) + "(" + newVideoState + ") from " + stateIntToString(stateNumber) + "(" + stateNumber + ").";
 
         stateNumber = newVideoState;
         stateText = stateIntToString(newVideoState);
@@ -232,10 +238,15 @@ function setVideoAndState(newVideo, newVideoState, newVideoTimeSeconds) {
 
     if (!videoChanged) {
         if (timeDifference > gracePeriod || timeDifference < (gracePeriod * -1)) {
-            console.log("setVideoAndState - CHANGED TIME because video time is " + getVideoTime() + " but new time is " + newVideoTimeSeconds + " (time difference is " + timeDifference + ")");
+            timeChanged = true;
+            logString += " Changed time because video time is " + getVideoTime() + " but new time is " + newVideoTimeSeconds + " (time difference is " + timeDifference + ").";
             hasNetworkChangedTime = true;
             player.seekTo(newVideoTimeSeconds);
             
         }
+    }
+
+    if (videoChanged || stateChanged || timeChanged) {
+        console.log(logString);
     }
 }
