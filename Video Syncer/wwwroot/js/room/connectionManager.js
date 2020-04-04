@@ -49,9 +49,7 @@ function onJoinSuccess(response) {
     var newVideoTimeSeconds = response["videoTimeSeconds"]; // the time in seconds the video should be at.
 
     // set up the YouTube player with the data from the server.
-    setVideoAndState(newVideo, newVideoState, newVideoTimeSeconds);
-
-    //removeUsers();
+    serverSetVideoAndState(newVideo, newVideoState, newVideoTimeSeconds);
 
     /*
      * For loop to populate the user list with all users in the room
@@ -290,7 +288,7 @@ function onUpdateSuccess(response) {
 
     console.log("onUpdateSuccess - Received from server video " + newVideo + " with state " + newVideoState + " and time " + newVideoTimeSeconds);
 
-    setVideoAndState(newVideo, newVideoState, newVideoTimeSeconds);
+    serverSetVideoAndState(newVideo, newVideoState, newVideoTimeSeconds);
 
     if (newUserList != null) {
         removeUsers();

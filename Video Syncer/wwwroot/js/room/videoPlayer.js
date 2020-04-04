@@ -29,6 +29,11 @@ var videoTimeOnLastCheck;
 var lastCheckUnixTime;
 var hasNetworkChangedTime = false;
 
+/**
+ * A function in charge of testing whether or not the user has changed the time.
+ * This returns false if the server changed the time, and only returns true
+ * if the user changed the time.
+ */
 function hasTimeChanged() {
 
     if (videoTimeOnLastCheck == null || lastCheckUnixTime == null) {
@@ -188,7 +193,46 @@ function unpauseVideo() {
     player.playVideo();
 }
 
-function setVideoAndState(newVideo, newVideoState, newVideoTimeSeconds) {
+function serverSetVideo(newVideo, newTimeSeconds) {
+    changeVideo(newVideo, newTimeSeconds);
+    unpauseVideo();
+}
+
+function serverSetVideoState(newVideoState) {
+    stateNumber = newVideoState;
+    stateText = stateIntToString(newVideoState);
+
+    switch (newVideoState) {
+        case -1: //unstarted
+        case 0: //ended
+            stopVideo();
+            break;
+        case 1: //playing
+            unpauseVideo();
+            break;
+        case 2: //paused
+            pauseVideo();
+            break;
+        case 3: //buffering
+            //pauseVideo();
+            break;
+        case 5: //"video cued"
+            break;
+
+    }
+}
+
+function serverSetVideoTime(newTimeSeconds) {
+    // set the time of the video
+    var gracePeriod = 1; // 1 second
+    var timeDifference = newTimeSeconds - getVideoTime();
+
+    if (timeDifference > gracePeriod || timeDifference < (gracePeriod * -1)) {
+        player.seekTo(newTimeSeconds);
+    }
+}
+
+function serverSetVideoAndState(newVideo, newVideoState, newTimeSeconds) {
     // variables for logging and logic
     var videoChanged = false;
     var stateChanged = false;
@@ -200,8 +244,7 @@ function setVideoAndState(newVideo, newVideoState, newVideoTimeSeconds) {
     if (newVideo != currentVideoId) {
         videoChanged = true;
         logString += "Network changed video to \"" + newVideo + "\".";
-        changeVideo(newVideo, newVideoTimeSeconds);
-        unpauseVideo();
+        serverSetVideo(newVideo, newTimeSeconds);
     }
 
     // set the state of the video
@@ -209,40 +252,16 @@ function setVideoAndState(newVideo, newVideoState, newVideoTimeSeconds) {
         stateChanged = true;
         logString += " Network changed state to " + stateIntToString(newVideoState) + "(" + newVideoState + ") from " + stateIntToString(stateNumber) + "(" + stateNumber + ").";
 
-        stateNumber = newVideoState;
-        stateText = stateIntToString(newVideoState);
-
-        switch (newVideoState) {
-            case -1: //unstarted
-            case 0: //ended
-                stopVideo();
-                break;
-            case 1: //playing
-                unpauseVideo();
-                break;
-            case 2: //paused
-                pauseVideo();
-                break;
-            case 3: //buffering
-                //pauseVideo();
-                break;
-            case 5: //"video cued"
-                break;
-
-        }
+        serverSetVideoState(newVideoState);
     }
 
-    // set the time of the video
-    var gracePeriod = 1; // 1 second
-    var timeDifference = newVideoTimeSeconds - getVideoTime();
+    
 
     if (!videoChanged) {
-        if (timeDifference > gracePeriod || timeDifference < (gracePeriod * -1)) {
+        if (serverSetVideoTime(newTimeSeconds)) {
             timeChanged = true;
-            logString += " Changed time because video time is " + getVideoTime() + " but new time is " + newVideoTimeSeconds + " (time difference is " + timeDifference + ").";
+            logString += " Changed time because video time is " + getVideoTime() + " but new time is " + newTimeSeconds + " (time difference is " + timeDifference + ").";
             hasNetworkChangedTime = true;
-            player.seekTo(newVideoTimeSeconds);
-            
         }
     }
 
