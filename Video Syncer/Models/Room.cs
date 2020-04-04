@@ -128,11 +128,7 @@ namespace Video_Syncer.Models
             }
             else if(newState == VideoState.Buffering)
             {
-                if(!UserIsBuffering())
-                {
-                    //SetStateForAll(VideoState.Paused);
-                    //SetStateForUser(userId, VideoState.Buffering);
-                }
+                
                 
             }
             UpdateVideoStatistics(newState, videoTimeSeconds, currentYoutubeVideoId);
