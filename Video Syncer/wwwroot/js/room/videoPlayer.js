@@ -217,7 +217,7 @@ function serverSetVideo(newVideo, newTimeSeconds) {
  * @param {any} newVideoState The video state according to the server.
  */
 function serverSetVideoState(newVideoState) {
-    
+
     if (stateNumber != newVideoState) {
         stateNumber = newVideoState;
         stateText = stateIntToString(newVideoState);
@@ -276,6 +276,8 @@ function serverSetVideoAndState(newVideo, newVideoState, newTimeSeconds) {
     var stateChanged = false;
     var timeChanged = false;
     var logString = "serverSetVideoAndState - ";
+    var oldStateText = stateIntToString(stateNumber);
+    var oldStateNumber = stateNumber;
 
 
     // set the video
@@ -287,7 +289,7 @@ function serverSetVideoAndState(newVideo, newVideoState, newTimeSeconds) {
     // set the state of the video
     if (serverSetVideoState(newVideoState)) {
         stateChanged = true;
-        logString += " Network changed state to " + stateIntToString(newVideoState) + "(" + newVideoState + ") from " + stateIntToString(stateNumber) + "(" + stateNumber + ").";
+        logString += " Network changed state to " + stateIntToString(newVideoState) + "(" + newVideoState + ") from " + oldStateText + "(" + oldStateNumber + ").";
     }
 
     if (!videoChanged) {
