@@ -35,6 +35,27 @@ namespace Video_Syncer.Controllers
         }
 
         [HttpPost]
+        public JsonResult EndVideo([FromBody]VideoStateChangeRequest request)
+        {
+            RoomManager roomManager = RoomManager.GetSingletonInstance();
+            Room room = roomManager.GetRoom(request.roomId);
+
+            if (room == null)
+            {
+                return null;
+            }
+            else
+            {
+                room.NewVideoState(request.userId, VideoState.Ended);
+                VideoStateChangeCallback callback = new VideoStateChangeCallback()
+                {
+                    success = true
+                };
+                return Json(callback);
+            }
+        }
+
+        [HttpPost]
         public JsonResult PlayVideo([FromBody]VideoStateChangeRequest request)
         {
             RoomManager roomManager = RoomManager.GetSingletonInstance();

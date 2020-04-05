@@ -99,13 +99,15 @@ function onPlayerStateChange(event) {
     stateNumber = event.data;
 
     stateText = stateIntToString(stateNumber);
+    console.log("test onPlayerStateChange - " + stateText);
 
     switch (event.data) {
         case -1: //unstarted
             //sendVideoUnstartedRequest();
             break;
         case 0: //ended
-            //sendVideoEndedRequest();
+            sendVideoEndedRequest();
+            console.log("onPlayerStateChange - Sending request to end the video");
             break;
         case 1: //playing
             sendPlayRequest();

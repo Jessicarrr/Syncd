@@ -28,7 +28,7 @@ namespace Video_Syncer.Models
             this.id = id;
             this.name = name;
             
-            currentYoutubeVideoId = "HPfM2M1crxw";
+            currentYoutubeVideoId = "LXb3EKWsInQ";
             videoTimeSeconds = 0;
             
         }
@@ -126,9 +126,11 @@ namespace Video_Syncer.Models
                 }
                 
             }
-            else if(newState == VideoState.Buffering)
+            else if(newState == VideoState.Ended)
             {
-                
+                SetStateForAll(VideoState.Ended);
+
+                //TODO: Playlist support, play next video.
                 
             }
             UpdateVideoStatistics(newState, videoTimeSeconds, currentYoutubeVideoId);
