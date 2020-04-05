@@ -230,7 +230,7 @@ function onLeaveError() {
 function sendUpdateRequest() {
     var videoTime = getVideoTime();
 
-    console.log("sendUpdateRequest - Sending roomId " + roomId + " and userId " + userId + " youtube : " + currentVideoId + ", state: " + stateNumber + ", videoTimeSeconds: " + videoTime);
+    //console.log("sendUpdateRequest - Sending roomId " + roomId + " and userId " + userId + " youtube : " + currentVideoId + ", state: " + stateNumber + ", videoTimeSeconds: " + videoTime);
 
     $.ajax({
         url: '/room/Update',
@@ -286,7 +286,7 @@ function onUpdateSuccess(response) {
     var newVideoState = response["currentVideoState"];
     var newVideoTimeSeconds = response["videoTimeSeconds"];
 
-    console.log("onUpdateSuccess - Received from server video " + newVideo + " with state " + newVideoState + " and time " + newVideoTimeSeconds);
+    //console.log("onUpdateSuccess - Received from server video " + newVideo + " with state " + newVideoState + " and time " + newVideoTimeSeconds);
 
     serverSetVideoAndState(newVideo, newVideoState, newVideoTimeSeconds);
 
