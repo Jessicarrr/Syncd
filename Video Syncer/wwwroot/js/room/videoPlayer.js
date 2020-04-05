@@ -99,7 +99,6 @@ function onPlayerStateChange(event) {
     stateNumber = event.data;
 
     stateText = stateIntToString(stateNumber);
-    console.log("test onPlayerStateChange - " + stateText);
 
     switch (event.data) {
         case -1: //unstarted
