@@ -133,7 +133,7 @@ namespace Video_Syncer.Models
                 //TODO: Playlist support, play next video.
                 
             }
-            UpdateVideoStatistics(newState, videoTimeSeconds, currentYoutubeVideoId);
+            UpdateVideoStatistics(videoTimeSeconds, currentYoutubeVideoId);
             
             /*
             else if (newState == VideoState.Unstarted)
@@ -146,7 +146,7 @@ namespace Video_Syncer.Models
             }*/
         }
 
-        public void UpdateVideoStatistics(VideoState state, double seconds, string youtubeId)
+        public void UpdateVideoStatistics(double seconds, string youtubeId)
         {
             long currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 

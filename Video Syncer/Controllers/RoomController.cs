@@ -174,7 +174,7 @@ namespace Video_Syncer.Controllers
             else
             {
                 // update room
-                room.UpdateVideoStatistics((VideoState) request.videoState,
+                room.UpdateVideoStatistics(
                     request.videoTimeSeconds,
                     request.currentYoutubeVideoId);
 
