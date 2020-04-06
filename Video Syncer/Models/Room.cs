@@ -203,7 +203,6 @@ namespace Video_Syncer.Models
             if (timeSinceLastChange > timeLimitSinceLastChange)
             {
                 videoTimeSeconds = seconds;
-                SetStateForAll(VideoState.Playing);
                 lastTimeChange = DateTimeOffset.Now.ToUnixTimeMilliseconds();
                 return;
 
