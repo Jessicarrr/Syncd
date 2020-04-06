@@ -265,6 +265,16 @@ namespace Video_Syncer.Models
             if(!UserIdExists(user.id) && userList.Count < maxUsers)
             {
                 userList.Add(user);
+
+                if(userList.Count == 1)
+                {
+                    SetStateForUser(user.id, VideoState.Paused);
+                }
+                else
+                {
+                    SetStateForUser(user.id, GetSuggestedVideoState());
+                }
+                
             }
         }
 
