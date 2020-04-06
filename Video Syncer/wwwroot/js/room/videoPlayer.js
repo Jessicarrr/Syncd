@@ -177,6 +177,15 @@ function stopVideo() {
     player.stopVideo();
 }
 
+function serverChangeVideo(paramVideoId, seconds = 0) {
+    player.loadVideoById({
+        videoId: paramVideoId,
+        startSeconds: seconds
+    });
+
+    currentVideoId = paramVideoId;
+}
+
 function changeVideo(paramVideoId, seconds = 0) {
     player.loadVideoById({
         videoId: paramVideoId,
@@ -202,13 +211,10 @@ function unpauseVideo() {
  */
 function serverSetVideo(newVideo, newTimeSeconds) {
     if (newVideo != currentVideoId) {
-        changeVideo(newVideo, newTimeSeconds);
-        unpauseVideo();
+        serverChangeVideo(newVideo, newTimeSeconds);
         return true;
     }
     return false;
-
-    
 }
 
 /**
@@ -283,7 +289,7 @@ function serverSetVideoAndState(newVideo, newVideoState, newTimeSeconds) {
     // set the video
     if (serverSetVideo(newVideo, newTimeSeconds)) {
         videoChanged = true;
-        logString += "Network changed video to \"" + newVideo + "\".";
+        logString += "Network changed video to \"" + newVideo + "\" with time of " + newTimeSeconds + " seconds.";
     }
 
     // set the state of the video

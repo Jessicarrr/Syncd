@@ -48,6 +48,8 @@ function onJoinSuccess(response) {
     var newVideoState = response["currentVideoState"]; // the state of the YouTube video. Paused/playing/ended/etc
     var newVideoTimeSeconds = response["videoTimeSeconds"]; // the time in seconds the video should be at.
 
+    console.log("onJoinSuccess - Received video " + newVideo + ", with state " + stateIntToString(newVideoState) + ", at time " + newVideoTimeSeconds);
+
     // set up the YouTube player with the data from the server.
     serverSetVideoAndState(newVideo, newVideoState, newVideoTimeSeconds);
 
