@@ -23,13 +23,21 @@ namespace Video_Syncer.Controllers
             }
             else
             {
-                RoomModel model = new RoomModel()
+                if(room.isFull())
                 {
-                    id = room.id,
-                    name = room.name,
-                    userList = room.userList
-                };
-                return View("Room", model);
+                    return View("RoomFull");
+                }
+                else
+                {
+                    RoomModel model = new RoomModel()
+                    {
+                        id = room.id,
+                        name = room.name,
+                        userList = room.userList
+                    };
+                    return View("Room", model);
+                }
+                
             }
 
         }

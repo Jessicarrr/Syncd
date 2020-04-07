@@ -33,6 +33,15 @@ namespace Video_Syncer.Models
             
         }
 
+        public bool isFull()
+        {
+            if(userList.Count >= maxUsers)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public void NewVideo(string youtubeId)
         {
             currentYoutubeVideoId = youtubeId;
@@ -261,7 +270,7 @@ namespace Video_Syncer.Models
 
         private void Join(User user)
         {
-            if(!UserIdExists(user.id) && userList.Count < maxUsers)
+            if(!UserIdExists(user.id) && !isFull())
             {
                 userList.Add(user);
 
