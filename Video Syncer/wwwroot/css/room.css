@@ -8,7 +8,11 @@
 }
 #player {
     /*float: left;*/
+    pointer-events: none;
+
 }
+
+
 
 #userListArea {
     width: 20%;

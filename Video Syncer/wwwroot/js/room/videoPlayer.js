@@ -17,12 +17,62 @@ function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
         width: '850',
         height: '478',
-        videoId: "XxuL-Y80sSM",
+        wmode: 'transparent',
         events: {
             'onReady': onPlayerReady,
             'onStateChange': onPlayerStateChange
+        },
+        playerVars: {
+            'controls': 0,
+            'disablekb': 1,
+            'modestbranding': 1
         }
     });
+
+    
+}
+
+// 4. The API will call this function when the video player is ready.
+function onPlayerReady(event) {
+    sendJoinRequest();
+}
+
+// 5. The API calls this function when the player's state changes.
+//    The function indicates that when playing a video (state=1),
+//    the player should play for six seconds and then stop.
+
+function onPlayerStateChange(event) {
+    stateNumber = event.data;
+
+    stateText = stateIntToString(stateNumber);
+
+    switch (event.data) {
+        case -1: //unstarted
+            //sendVideoUnstartedRequest();
+            break;
+        case 0: //ended
+            sendVideoEndedRequest();
+            console.log("onPlayerStateChange - Sending request to end the video");
+            break;
+        case 1: //playing
+            sendPlayRequest();
+            console.log("onPlayerStateChange - Sending request to play");
+            break;
+        case 2: //paused
+            sendPauseRequest();
+            console.log("onPlayerStateChange - Sending request to pause");
+            break;
+        case 3: //buffering
+            sendBufferingRequest();
+            console.log("onPlayerStateChange - Sending request to buffer");
+            break;
+        case 5: //"video cued"
+
+            break;
+
+    }
+
+    document.getElementById("videoState").innerHTML = stateText;
 }
 
 var videoTimeOnLastCheck;
@@ -84,49 +134,6 @@ function hasTimeChanged() {
 
         
     }
-}
-
-// 4. The API will call this function when the video player is ready.
-function onPlayerReady(event) {
-    sendJoinRequest();
-}
-
-// 5. The API calls this function when the player's state changes.
-//    The function indicates that when playing a video (state=1),
-//    the player should play for six seconds and then stop.
-
-function onPlayerStateChange(event) {
-    stateNumber = event.data;
-
-    stateText = stateIntToString(stateNumber);
-
-    switch (event.data) {
-        case -1: //unstarted
-            //sendVideoUnstartedRequest();
-            break;
-        case 0: //ended
-            sendVideoEndedRequest();
-            console.log("onPlayerStateChange - Sending request to end the video");
-            break;
-        case 1: //playing
-            sendPlayRequest();
-            console.log("onPlayerStateChange - Sending request to play");
-            break;
-        case 2: //paused
-            sendPauseRequest();
-            console.log("onPlayerStateChange - Sending request to pause");
-            break;
-        case 3: //buffering
-            sendBufferingRequest();
-            console.log("onPlayerStateChange - Sending request to buffer");
-            break;
-        case 5: //"video cued"
-            
-            break;
-
-    }
-
-    document.getElementById("videoState").innerHTML = stateText;
 }
 
 function stateIntToString(stateNumber) {
