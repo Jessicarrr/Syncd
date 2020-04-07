@@ -64,7 +64,7 @@ function onJoinSuccess(response) {
         var currentUserName = user["name"];
         addUser(currentUserId, currentUserName);
     }
-    tick();
+    //tick();
 }
 
 /**
