@@ -15,17 +15,19 @@ var currentVideoId;
 
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
-        width: '850',
-        height: '478',
-        wmode: 'transparent',
+        //width: '850',
+        //height: '478',
+        wmode: 'opaque',
         events: {
             'onReady': onPlayerReady,
             'onStateChange': onPlayerStateChange
         },
         playerVars: {
+            'wmode': 'opaque',
             'controls': 0,
             'disablekb': 1,
             'modestbranding': 1
+            
         }
     });
 
@@ -34,6 +36,7 @@ function onYouTubeIframeAPIReady() {
 
 // 4. The API will call this function when the video player is ready.
 function onPlayerReady(event) {
+    createPlayButton();
     sendJoinRequest();
 }
 
