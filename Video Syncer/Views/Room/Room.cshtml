@@ -7,8 +7,14 @@
 </script>
 
 <link rel="stylesheet" type="text/css" href="~/css/room.css">
+
+<!-- Start custom video player lib -->
+<script src="~/lib/custom-video-player/js/debug.js"></script>
+<script src="~/lib/custom-video-player/js/video-player.js"></script>
+<link rel="stylesheet" type="text/css" href="~/lib/custom-video-player/css/player.css">
+<!-- End custom video player lib -->
+
 <script src="~/js/room/userListManager.js"></script>
-<script src="~/js/room/customYoutubePlayer/debug.js"></script>
 <script src="~/js/room/videoPlayer.js"></script>
 <script src="~/js/room/videoListManager.js"></script>
 <script src="~/js/room/connectionManager.js"></script>
@@ -24,14 +30,8 @@
 </div>
 
 <div class="playerAndUserArea">
-    <div id="videoPlayerContainer">
-        
-        <div id="player"></div>
-        <div id="videoPlayerOverlay">
-            <button>testerinos</button>
-        </div>
-    </div>
-    
+    <div id="player"></div>
+
     <div id="userListArea">
         <div class="usersHeading">
             <h5>Users</h5>
@@ -54,7 +54,7 @@
 </table>
 
 
-@foreach(User user in Model.userList)
+@foreach (User user in Model.userList)
 {
     <script>
         addUser("@user.id", "@user.name");

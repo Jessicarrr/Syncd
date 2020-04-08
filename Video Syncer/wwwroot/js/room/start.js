@@ -1,6 +1,9 @@
 ﻿$(window).on('load', function () {
     createNewName();
     document.getElementById("addButton").addEventListener("click", addVideoFromSearchBar);
+    var playerHTMLObject = document.getElementById("player");
+    createPlayerOverObject(playerHTMLObject);
+    startLoadingYoutubePlayer();
     //sendJoinRequest();
     
 });

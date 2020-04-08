@@ -1,0 +1,28 @@
+﻿#videoPlayerContainer {
+    width: 850px;
+    height: 478px;
+    overflow: hidden;
+    position: relative;
+}
+
+#player {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+#videoPlayerOverlay {
+    opacity: 0.7;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+#customPlayButton {
+    height: 50px;
+    width: 50px;
+}

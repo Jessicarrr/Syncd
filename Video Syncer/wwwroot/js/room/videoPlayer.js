@@ -1,12 +1,15 @@
 ﻿var stateText = "[Video State]"; // the current video state (paused/playing/etc) in a readable format for UI purposes.
 var stateNumber = -1; // the current video state (paused/playing/etc)
 
-// 1. This code loads the IFrame Player API code asynchronously.
-var tag = document.createElement('script');
 
-tag.src = "https://www.youtube.com/iframe_api";
-var firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+function startLoadingYoutubePlayer() {
+    // 1. This code loads the IFrame Player API code asynchronously.
+    var tag = document.createElement('script');
+
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+}
 
 // 2. This function creates an <iframe> (and YouTube player)
 //    after the API code downloads.
@@ -15,8 +18,8 @@ var currentVideoId;
 
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
-        //width: '850',
-        //height: '478',
+        width: '850',
+        height: '478',
         wmode: 'opaque',
         events: {
             'onReady': onPlayerReady,
@@ -34,9 +37,37 @@ function onYouTubeIframeAPIReady() {
     
 }
 
+function getVideoTime() {
+    return player.getCurrentTime() || 0.0;
+}
+
+function stopVideo() {
+    player.stopVideo();
+}
+
+function pauseVideo() {
+    player.pauseVideo();
+}
+
+function unpauseVideo() {
+    player.playVideo();
+}
+
+function toggleVideoPlaying() {
+    // if the video is playing somehow
+    if (stateNumber == 1 || stateNumber == 3) {
+        pauseVideo();
+    }
+    // if the video is paused somehow
+    else if (stateNumber == 2 || stateNumber == -1 || stateNumber == 0 || stateNumber == 5) {
+        unpauseVideo();
+    }
+}
+
 // 4. The API will call this function when the video player is ready.
 function onPlayerReady(event) {
-    createPlayButton();
+    setPlayVideoCallback(toggleVideoPlaying)
+
     sendJoinRequest();
 }
 
@@ -179,14 +210,6 @@ function formatVideoTime(s) {
     return videoTime;
 }
 
-function getVideoTime() {
-    return player.getCurrentTime() || 0.0;
-}
-
-function stopVideo() {
-    player.stopVideo();
-}
-
 function serverChangeVideo(paramVideoId, seconds = 0) {
     player.loadVideoById({
         videoId: paramVideoId,
@@ -205,13 +228,7 @@ function changeVideo(paramVideoId, seconds = 0) {
     currentVideoId = paramVideoId;
     sendVideoChangeRequest(paramVideoId);
 }
-function pauseVideo() {
-    player.pauseVideo();
-}
 
-function unpauseVideo() {
-    player.playVideo();
-}
 
 /**
  * Sets the video playing to what the server thinks the video should be,

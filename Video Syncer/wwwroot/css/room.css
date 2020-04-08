@@ -6,30 +6,7 @@
     display: flex;
     justify-content: right;
 }
-#videoPlayerContainer {
-    width: 850px;
-    height: 478px;
-    overflow: hidden;
-    position: relative;
-}
-#player {
-    /*float: left;*/
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    right: 0;
-    top: 0;
-}
 
-#videoPlayerOverlay {
-    background-color: #FF0000;
-    opacity: 0.5;
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    right: 0;
-    top: 0;
-}
 
 #userListArea {
     width: 20%;
