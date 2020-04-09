@@ -1,4 +1,4 @@
-﻿#videoPlayerContainer {
+﻿#cvpl-videoPlayerContainer {
     width: 850px;
     height: 478px;
     overflow: hidden;
@@ -13,7 +13,7 @@
     top: 0;
 }
 
-#videoPlayerOverlay {
+#cvpl-videoPlayerOverlay {
     opacity: 0.7;
     height: 100%;
     width: 100%;
@@ -22,7 +22,26 @@
     top: 0;
 }
 
-#customPlayButton {
-    height: 50px;
-    width: 50px;
+#cvpl-customPlayButton, #cvpl-customVolumeButton {
+    height: 100%;
+    width: 40px;
+    vertical-align: top;
+}
+
+#cvpl-volumeSlider {
+    background-color: coral;
+    width: 100px;
+    height: 100%;
+    vertical-align: top;
+    cursor: pointer;
+}
+
+#cvpl-bottomButtonDiv {
+    position:absolute;
+    background-color: crimson;
+    opacity: 0.7;
+    height: 8%;
+    width: 100%;
+    bottom: 0;
+    left: 0;
 }
