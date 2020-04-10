@@ -3,23 +3,112 @@ var playerDivId = "cvpl-videoPlayerOverlay";
 var volumeSliderId = "cvpl-volumeSlider";
 var volumeButtonHoverId = "cvpl-customVolumeButton";
 var bottomButtonDivId = "cvpl-bottomButtonDiv"
+var timeSliderId = "cpvl-timeSlider";
 var playerAdded = false;
 
 var playButton;
 var volumeHoverButton;
 var volumeSlider;
+var timeSlider;
 var volumeHoverSlider;
 var bottomButtonDiv;
 
 var toggleVideoPlayingCallback;
 var volumeChangeCallback;
+var userClicksTimeSliderCallback;
+var getCurrentVideoTimeCallback;
+var getTotalVideoDurationCallback;
+
+var shouldTrackTime = false;
+
+function startTrackingTime() {
+    if (!shouldTrackTime) {
+        console.log("startTrackingTime() - shouldTrackTime == false. Stopping time tracking.")
+        return;
+    }
+
+    if (!isFunction(getCurrentVideoTimeCallback)) {
+        throw "startTrackingTime() - param 1 getCurrentVideoTimeCallback must be a function";
+    }
+
+    if (!isFunction(getTotalVideoDurationCallback)) {
+        throw "startTrackingTime() - param 2 getTotalVideoDurationCallback must be a function";
+    }
+
+    var currentTime = getCurrentVideoTimeCallback();
+    var totalDuration = getTotalVideoDurationCallback();
+
+    if (currentTime == null) {
+        throw "startTrackingTime() - Error: getCurrentVideoTimeCallback returned null.";
+    }
+    if (totalDuration == null) {
+        throw "startTrackingTime() - getTotalVideoDurationCallback returned null";
+    }
+    if (isNaN(currentTime)) {
+        throw "startTrackingTime() - getCurrentVideoTimeCallback returned a value that is NaN."
+    }
+    if (isNaN(totalDuration)) {
+        throw "startTrackingTime() - getTotalVideoDurationCallback returned a value that is NaN."
+    }
+    if (timeSlider == null || !isHTMLElement(timeSlider)) {
+        throw "startTrackingTime() - The UI for the time slider has not yet been set, so this function cannot change it.";
+    }
+
+
+    var percentage = (currentTime / totalDuration) * 100;
+
+    if (isNaN(percentage)) {
+        setTimeout(startTrackingTime, 1000);
+        return;
+    }
+
+    timeSlider.value = percentage;
+    setTimeout(startTrackingTime, 1000);
+}
+
+function givePlayerAbilityToTrackTime(paramGetCurrentVideoTimeCallback, paramGetTotalVideoDurationCallback) {
+    if (!isFunction(paramGetCurrentVideoTimeCallback)) {
+        throw "givePlayerAbilityToTrackTime - First param getCurrentVideoTimeCallback must be a function";
+    }
+
+    if (!isFunction(paramGetTotalVideoDurationCallback)) {
+        throw "givePlayerAbilityToTrackTime - Second param getTotalVideoDurationCallback must be a function";
+    }
+
+    if (paramGetCurrentVideoTimeCallback.length !== 0 || paramGetTotalVideoDurationCallback.length !== 0) {
+        throw "givePlayerAbilityToTrackTime - The callbacks passed to this function must not have any parameters.";
+    }
+
+    getCurrentVideoTimeCallback = paramGetCurrentVideoTimeCallback
+    getTotalVideoDurationCallback = paramGetTotalVideoDurationCallback;
+
+    shouldTrackTime = true;
+    startTrackingTime();
+}
 
 function setVolumeChangeCallback(newCallback) {
     if (!isFunction(newCallback)) {
         throw "First parameter must be a function";
     }
 
+    if (newCallback.length !== 1) {
+        throw "setVolumeChangeCallback - This callback requires one parameter (number between 0 and 100 which represents the volume)";
+    }
+
     volumeChangeCallback = newCallback;
+}
+
+function setClickTimeSliderCallback(newCallback) {
+    if (!isFunction(newCallback)) {
+        throw "First parameter must be a function";
+    }
+
+    if (newCallback.length !== 1) {
+        throw "setUserChangesTimeCallback - This callback requires one parameter " +
+            "(number between 0 and 100 which represents the percentage progress through the video)";
+    }
+
+    userClicksTimeSliderCallback = newCallback;
 }
 
 function setToggleVideoPlayingCallback(paramTogglePlayingCallback) {
@@ -75,6 +164,27 @@ function setupListeners() {
 function createHTML(playerDiv) {
     createButtonDiv(playerDiv);
     createButtons(playerDiv);
+    createTimeSlider(playerDiv);
+}
+
+function createTimeSlider(playerDiv) {
+    timeSlider = document.createElement("input");
+    timeSlider.setAttribute("id", timeSliderId);
+    timeSlider.setAttribute("type", "range");
+    timeSlider.setAttribute("min", "0");
+    timeSlider.setAttribute("max", "100");
+    timeSlider.setAttribute("value", "0");
+
+    playerDiv.appendChild(timeSlider);
+
+    timeSlider.onclick = function () {
+        console.log("change - " + timeSlider.value);
+
+        if (isFunction(userClicksTimeSliderCallback)) {
+            userClicksTimeSliderCallback(timeSlider.value);
+
+        }
+    }
 }
 
 function createButtonDiv(playerDiv) {
@@ -99,7 +209,6 @@ function createPlayButton() {
         }
     }
     
-
     bottomButtonDiv.appendChild(playButton);
 }
 
@@ -151,7 +260,7 @@ function createVolumeSlider() {
 
     volumeSlider.oninput = function () {
         if (isFunction(volumeChangeCallback)) {
-            volumeChangeCallback();
+            volumeChangeCallback(volumeSlider.value);
         }
     }
 

@@ -38,10 +38,55 @@
 
 #cvpl-bottomButtonDiv {
     position:absolute;
-    background-color: crimson;
+    background-color: black;
     opacity: 0.7;
-    height: 8%;
+    height: 7%;
     width: 100%;
     bottom: 0;
     left: 0;
+}
+
+/* The slider itself */
+#cpvl-timeSlider {
+    -webkit-appearance: none; /* Override default CSS styles */
+    appearance: none;
+    width: 100%; /* Full-width */
+    height: 5px; /* Specified height */
+    bottom: 7%;
+    position: absolute;
+    background: #d3d3d3; /* Grey background */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+    cursor: pointer; /* Cursor on hover */
+}
+
+/* Mouse-over effects */
+#cpvl-timeSlider:hover {
+    opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+#cpvl-timeSlider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    width: 5px; /* Slider handle width */
+    height: 5px; /* Slider handle height */
+    background: #FF0000; /* Red background */
+    cursor: pointer; /* Cursor on hover */
+}
+
+#cpvl-timeSlider::-moz-range-thumb {
+    width: 1%; /* Set a specific slider handle width */
+    height: 1%; /* Slider handle height */
+    background: #FF0000; /* Red background */
+    cursor: pointer; /* Cursor on hover */
+}
+
+#cpvl-timeSlider::-webkit-slider-thumb:hover {
+    height: 10px;
+}
+
+#cpvl-timeSlider::-moz-range-thumb:hover {
+    height: 10px;
 }

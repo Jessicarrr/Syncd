@@ -64,9 +64,31 @@ function toggleVideoPlaying() {
     }
 }
 
+/**
+ * Adjust volume of the youtube player.
+ * @param {any} volume a number between 0 and 100 representing the volume.
+ */
+function adjustVolume(volume) {
+    player.setVolume(volume);
+}
+
+function adjustTime(percentage) {
+    var totalVideoLength = getVideoTotalDuration();
+
+    var newVideoTime = (totalVideoLength * percentage) / 100;
+    player.seekTo(newVideoTime);
+}
+
+function getVideoTotalDuration() {
+    return player.getDuration();
+}
+
 // 4. The API will call this function when the video player is ready.
 function onPlayerReady(event) {
     setToggleVideoPlayingCallback(toggleVideoPlaying);
+    setVolumeChangeCallback(adjustVolume);
+    setClickTimeSliderCallback(adjustTime);
+    givePlayerAbilityToTrackTime(getVideoTime, getVideoTotalDuration);
 
     sendJoinRequest();
 }
