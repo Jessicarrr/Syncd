@@ -75,7 +75,7 @@ function adjustVolume(volume) {
 function adjustTime(percentage) {
     var totalVideoLength = getVideoTotalDuration();
 
-    var newVideoTime = (totalVideoLength * percentage) / 100;
+    var newVideoTime = ((totalVideoLength * percentage) / 100).toFixed(2);
     player.seekTo(newVideoTime);
 }
 

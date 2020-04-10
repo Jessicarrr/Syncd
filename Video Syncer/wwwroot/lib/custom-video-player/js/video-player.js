@@ -174,6 +174,7 @@ function createTimeSlider(playerDiv) {
     timeSlider.setAttribute("min", "0");
     timeSlider.setAttribute("max", "100");
     timeSlider.setAttribute("value", "0");
+    timeSlider.setAttribute("step", "0.1");
 
     playerDiv.appendChild(timeSlider);
 
