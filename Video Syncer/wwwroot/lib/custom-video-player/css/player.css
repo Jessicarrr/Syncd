@@ -1,6 +1,4 @@
 ﻿#cvpl-videoPlayerContainer {
-    width: 850px;
-    height: 478px;
     overflow: hidden;
     position: relative;
 }

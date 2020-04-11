@@ -9,6 +9,8 @@ var timeDisplayId = "cvpl-timeDisplay";
 var playerAdded = false;
 var userDraggingTimeSlider = false;
 
+var containerDiv;
+var playerDiv;
 var playButton;
 var volumeHoverButton;
 var volumeSlider;
@@ -173,7 +175,24 @@ function isFunction(object) {
     return false;
 }
 
-function createPlayerOverObject(object) {
+/**
+ * Changes the width and height of the video player.
+ * @param {any} playerWidth The new width for the video player
+ * @param {any} playerHeight The new height for the video player
+ */
+function changePlayerDimensions(playerWidth, playerHeight) {
+    containerDiv.style.height = playerHeight + "px";
+    containerDiv.style.width = playerWidth + "px";
+}
+
+/**
+ * Create the video player over any html object. It will create a div around the html object of
+ * the same height and width. Then insert the object inside along with an overlay div. 
+ * @param object The player appears on top of this object
+ * @param {any} playerWidth The width of the player. Should be the same width as your video player. Can be a string or a whole number. 
+ * @param {any} playerHeight The height of the player. Should be the same height as your video player. Can be a string or a whole number.
+ */
+function createPlayerOverObject(object, playerWidth, playerHeight) {
     console.log("createPlayerOverObject - Trying to create custom video player");
 
     if (playerAdded) {
@@ -187,17 +206,23 @@ function createPlayerOverObject(object) {
     }
 
     var objectParent = object.parentNode;
-    var newContainerDiv = document.createElement("div");
-    var newPlayerDiv = document.createElement("div");
+    containerDiv = document.createElement("div");
+    playerDiv = document.createElement("div");
     
-    newContainerDiv.setAttribute("id", containerDivId);
-    newPlayerDiv.setAttribute("id", playerDivId);
+    containerDiv.setAttribute("id", containerDivId);
+    playerDiv.setAttribute("id", playerDivId);
 
-    objectParent.replaceChild(newContainerDiv, object);
-    newContainerDiv.appendChild(object);
-    newContainerDiv.appendChild(newPlayerDiv);
+    // setting the height and width to match the object height and width
+    containerDiv.style.height = playerHeight + "px";
+    containerDiv.style.width = playerWidth + "px";
 
-    createHTML(newPlayerDiv);
+    console.log("properties = " + containerDiv.style.height + " " + containerDiv.style.width);
+
+    objectParent.replaceChild(containerDiv, object);
+    containerDiv.appendChild(object);
+    containerDiv.appendChild(playerDiv);
+
+    createHTML(playerDiv);
     setupListeners();
 
     console.log("createPlayerOverObject - Finished creating custom video player")
