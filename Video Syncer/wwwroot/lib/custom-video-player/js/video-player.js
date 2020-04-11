@@ -216,8 +216,6 @@ function createPlayerOverObject(object, playerWidth, playerHeight) {
     containerDiv.style.height = playerHeight + "px";
     containerDiv.style.width = playerWidth + "px";
 
-    console.log("properties = " + containerDiv.style.height + " " + containerDiv.style.width);
-
     objectParent.replaceChild(containerDiv, object);
     containerDiv.appendChild(object);
     containerDiv.appendChild(playerDiv);
