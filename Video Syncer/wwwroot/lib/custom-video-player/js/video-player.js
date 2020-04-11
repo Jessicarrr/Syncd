@@ -4,6 +4,7 @@ var volumeSliderId = "cvpl-volumeSlider";
 var volumeButtonHoverId = "cvpl-customVolumeButton";
 var bottomButtonDivId = "cvpl-bottomButtonDiv"
 var timeSliderId = "cpvl-timeSlider";
+var timeDisplayId = "cvpl-timeDisplay";
 
 var playerAdded = false;
 var userDraggingTimeSlider = false;
@@ -14,6 +15,7 @@ var volumeSlider;
 var timeSlider;
 var volumeHoverSlider;
 var bottomButtonDiv;
+var timeDisplay;
 
 var toggleVideoPlayingCallback;
 var volumeChangeCallback;
@@ -58,6 +60,8 @@ function startTrackingTime() {
 
 
     var percentage = (currentTime / totalDuration) * 100;
+    var currentTimeFormatted = secondsToFormattedTime(currentTime);
+    var totalDurationFormatted = secondsToFormattedTime(totalDuration);
 
     if (isNaN(percentage)) {
         setTimeout(startTrackingTime, 1000);
@@ -67,8 +71,45 @@ function startTrackingTime() {
     if (!userDraggingTimeSlider) {
         timeSlider.value = percentage;
     }
-    
+
+    if (currentTimeFormatted != null && totalDurationFormatted != null && timeDisplay != null) {
+        timeDisplay.innerHTML = currentTimeFormatted + " / " + totalDurationFormatted;
+    }
+    else {
+        if (currentTimeFormatted == null) {
+            console.log("currentTimeFormatted is null, coz currentTime is " + currentTime);
+        }
+
+        if (totalDurationFormatted == null) {
+            console.log("totalDurationFormatted is null, coz totalDuration is " + totalDuration);
+        }
+
+        if (timeDisplay == null) {
+            console.log("timeDisplay is null, coz it's " + timeDisplay);
+        }
+    }
+
     setTimeout(startTrackingTime, 1000);
+}
+
+function secondsToFormattedTime(seconds) {
+
+    if (seconds == null) {
+        return null;
+    }
+
+    var roundedSeconds = Math.floor(seconds);
+    var date = new Date(null);
+    date.setSeconds(roundedSeconds);
+
+    var videoTime = date.toUTCString().match(/(\d\d:\d\d:\d\d)/)[0];
+
+    if (roundedSeconds < 3600) { // lower than one hour
+        // remove the hour area
+        videoTime = videoTime.match(/(\d\d:\d\d$)/)[0];
+    }
+
+    return videoTime;
 }
 
 function givePlayerAbilityToTrackTime(paramGetCurrentVideoTimeCallback, paramGetTotalVideoDurationCallback) {
@@ -168,8 +209,16 @@ function setupListeners() {
 
 function createHTML(playerDiv) {
     createButtonDiv(playerDiv);
+    createTimeDisplay(playerDiv);
     createButtons(playerDiv);
     createTimeSlider(playerDiv);
+}
+
+function createTimeDisplay(playerDiv) {
+    timeDisplay = document.createElement("p");
+    timeDisplay.setAttribute("id", timeDisplayId);
+    timeDisplay.innerHTML = "--:--:-- / --:--:--";
+    bottomButtonDiv.appendChild(timeDisplay);
 }
 
 function createTimeSlider(playerDiv) {

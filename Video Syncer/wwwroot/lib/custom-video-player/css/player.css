@@ -39,13 +39,25 @@
 #cvpl-bottomButtonDiv {
     position:absolute;
     background-color: black;
-    opacity: 0.7;
+    opacity: 0.9;
     height: 7%;
     width: 100%;
     bottom: 0;
     left: 0;
 }
 
+#cvpl-timeDisplay {
+    height: 100%;
+    width: 140px;
+    vertical-align: middle;
+    color: white;
+    float: left;
+    margin-left: 4px;
+    margin-right: 4px;
+    padding-top: 0.4%;
+    padding-bottom: 0px;
+    text-align: center;
+}
 /* The slider itself */
 #cpvl-timeSlider {
     -webkit-appearance: none; /* Override default CSS styles */
