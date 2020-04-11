@@ -4,7 +4,9 @@ var volumeSliderId = "cvpl-volumeSlider";
 var volumeButtonHoverId = "cvpl-customVolumeButton";
 var bottomButtonDivId = "cvpl-bottomButtonDiv"
 var timeSliderId = "cpvl-timeSlider";
+
 var playerAdded = false;
+var userDraggingTimeSlider = false;
 
 var playButton;
 var volumeHoverButton;
@@ -62,7 +64,10 @@ function startTrackingTime() {
         return;
     }
 
-    timeSlider.value = percentage;
+    if (!userDraggingTimeSlider) {
+        timeSlider.value = percentage;
+    }
+    
     setTimeout(startTrackingTime, 1000);
 }
 
@@ -177,6 +182,14 @@ function createTimeSlider(playerDiv) {
     timeSlider.setAttribute("step", "0.1");
 
     playerDiv.appendChild(timeSlider);
+
+    timeSlider.onmousedown = function () {
+        userDraggingTimeSlider = true;
+    }
+
+    timeSlider.onmouseup = function () {
+        userDraggingTimeSlider = false;
+    }
 
     timeSlider.onclick = function () {
         console.log("change - " + timeSlider.value);
