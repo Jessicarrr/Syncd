@@ -20,14 +20,18 @@
     top: 0;
 }
 
-#cvpl-customPlayButton, #cvpl-customVolumeButton {
+#cvpl-customPlayButton, #cvpl-customVolumeButton, #cvpl-fullscreenButton {
     height: 100%;
     width: 40px;
     vertical-align: top;
 }
 
+#cvpl-fullscreenButton {
+    float: right;
+}
+
 #cvpl-volumeSlider {
-    background-color: coral;
+    color: coral;
     width: 100px;
     height: 100%;
     vertical-align: top;
@@ -35,13 +39,14 @@
 }
 
 #cvpl-bottomButtonDiv {
-    position:absolute;
+    position: absolute;
     background-color: black;
     opacity: 0.9;
     height: 7%;
     width: 100%;
     bottom: 0;
     left: 0;
+    overflow: hidden;
 }
 
 #cvpl-timeDisplay {

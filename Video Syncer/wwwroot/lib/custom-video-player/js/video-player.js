@@ -5,6 +5,7 @@ var volumeButtonHoverId = "cvpl-customVolumeButton";
 var bottomButtonDivId = "cvpl-bottomButtonDiv"
 var timeSliderId = "cpvl-timeSlider";
 var timeDisplayId = "cvpl-timeDisplay";
+var fullscreenButtonId = "cvpl-fullscreenButton";
 
 var playerAdded = false;
 var userDraggingTimeSlider = false;
@@ -18,6 +19,7 @@ var timeSlider;
 var volumeHoverSlider;
 var bottomButtonDiv;
 var timeDisplay;
+var fullscreenButton;
 
 var toggleVideoPlayingCallback;
 var volumeChangeCallback;
@@ -235,6 +237,14 @@ function createHTML(playerDiv) {
     createTimeDisplay(playerDiv);
     createButtons(playerDiv);
     createTimeSlider(playerDiv);
+    createFullscreenButton();
+}
+
+function createFullscreenButton() {
+    fullscreenButton = document.createElement("button");
+    fullscreenButton.setAttribute("id", fullscreenButtonId);
+    fullscreenButton.innerHTML = "FS";
+    bottomButtonDiv.appendChild(fullscreenButton);
 }
 
 function createTimeDisplay(playerDiv) {
