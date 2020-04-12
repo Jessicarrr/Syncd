@@ -96,6 +96,18 @@ function startTrackingTime() {
     setTimeout(startTrackingTime, 1000);
 }
 
+function tryFullScreen() {
+    if (containerDiv.requestFullscreen) {
+        containerDiv.requestFullscreen();
+    } else if (containerDiv.mozRequestFullScreen) { /* Firefox */
+        containerDiv.mozRequestFullScreen();
+    } else if (containerDiv.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+        containerDiv.webkitRequestFullscreen();
+    } else if (containerDiv.msRequestFullscreen) { /* IE/Edge */
+        containerDiv.msRequestFullscreen();
+    }
+}
+
 function secondsToFormattedTime(seconds) {
 
     if (seconds == null) {
@@ -245,6 +257,12 @@ function createFullscreenButton() {
     fullscreenButton.setAttribute("id", fullscreenButtonId);
     fullscreenButton.innerHTML = "FS";
     bottomButtonDiv.appendChild(fullscreenButton);
+
+    fullscreenButton.onclick = function () {
+        console.log("Trying to full screen");
+        tryFullScreen();
+    }
+
 }
 
 function createTimeDisplay(playerDiv) {

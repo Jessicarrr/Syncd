@@ -41,7 +41,7 @@
     position: absolute;
     background-color: black;
     opacity: 0.9;
-    height: 7%;
+    height: 33px;
     width: 100%;
     bottom: 0;
     left: 0;
@@ -49,7 +49,7 @@
 }
 
 #cvpl-timeDisplay {
-    height: 100%;
+    height: 33px;
     width: 140px;
     vertical-align: middle;
     color: white;
@@ -66,7 +66,7 @@
     appearance: none;
     width: 100%; /* Full-width */
     height: 5px; /* Specified height */
-    bottom: 7%;
+    bottom: 33px;
     position: absolute;
     background: #d3d3d3; /* Grey background */
     outline: none; /* Remove outline */
