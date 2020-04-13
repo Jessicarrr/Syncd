@@ -64,7 +64,7 @@ function onJoinSuccess(response) {
         var currentUserName = user["name"];
         addUser(currentUserId, currentUserName);
     }
-    //tick();
+    tick();
 }
 
 /**
@@ -256,10 +256,12 @@ function sendUpdateRequest() {
 /**
  * Update the server about what time the user is at in their YouTube video.
  */
-function sendTimeUpdate() {
-    var videoTime = getVideoTime();
+function sendTimeUpdate(newVideoTime) {
+    var timeTest = getVideoTime();
 
-    console.log("sendTimeUpdate - Sending roomId " + roomId + " and userId " + userId + " youtube : " + currentVideoId + ", state: " + stateNumber + ", videoTimeSeconds: " + videoTime);
+    console.log("Test: timeTest = " + timeTest + ", newVideoTime = " + newVideoTime + ". timeTest type is " + typeof(timeTest) + " where as type of newVideoTime is " + typeof(newVideoTime));
+
+    console.log("sendTimeUpdate - Sending roomId " + roomId + " and userId " + userId + " youtube : " + currentVideoId + ", state: " + stateNumber + ", newVideoTime: " + newVideoTime);
 
     $.ajax({
         url: '/room/TimeUpdate',
@@ -270,7 +272,7 @@ function sendTimeUpdate() {
             {
                 roomId: roomId,
                 userId: userId,
-                videoTimeSeconds: videoTime
+                videoTimeSeconds: newVideoTime
             }
         )
     });

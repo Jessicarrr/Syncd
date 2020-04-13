@@ -5,9 +5,6 @@
     startLoadingYoutubePlayer();
     var playerHTMLObject = document.getElementById("player");
     createPlayerOverObject(playerHTMLObject, youtubeWidth, youtubeHeight);
-    
-    //sendJoinRequest();
-    
 });
 
 var tickMs = 200; // how often to run function tick()
@@ -19,8 +16,9 @@ var lastNetworkSend = 0; // last time in ms tick() sent updates to the server.
  * Sends updates to the server every networkSendPeriod milliseconds.
  */
 function tick() {
-    setTimeout(tick, tickMs);
     var time = getVideoTime();
+
+    setTimeout(tick, tickMs);
 
     if (!isNaN(time)) {
         document.getElementById("videoTime").innerHTML = formatVideoTime(time);
@@ -28,14 +26,6 @@ function tick() {
     else {
         document.getElementById("videoTime").innerHTML = "N/A";
 
-    }
-
-    /*
-     * Check if the YouTube player time changed due to user input.
-     */
-    if (hasTimeChanged()) {
-        //console.log("");
-        sendTimeUpdate();
     }
 
     var currentTime = new Date().getTime();

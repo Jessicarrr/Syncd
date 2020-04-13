@@ -57,10 +57,14 @@ function unpauseVideo() {
 function toggleVideoPlaying() {
     // if the video is playing somehow
     if (stateNumber == 1 || stateNumber == 3) {
+        sendPauseRequest();
+        console.log("toggleVideoPlaying - Sending request to pause");
         pauseVideo();
     }
     // if the video is paused somehow
     else if (stateNumber == 2 || stateNumber == -1 || stateNumber == 0 || stateNumber == 5) {
+        sendPlayRequest();
+        console.log("toggleVideoPlaying - Sending request to play");
         unpauseVideo();
     }
 }
@@ -76,7 +80,8 @@ function adjustVolume(volume) {
 function adjustTime(percentage) {
     var totalVideoLength = getVideoTotalDuration();
 
-    var newVideoTime = ((totalVideoLength * percentage) / 100).toFixed(2);
+    var newVideoTime = parseFloat(((totalVideoLength * percentage) / 100).toFixed(2));
+    sendTimeUpdate(newVideoTime);
     player.seekTo(newVideoTime);
 }
 
@@ -112,12 +117,16 @@ function onPlayerStateChange(event) {
             console.log("onPlayerStateChange - Sending request to end the video");
             break;
         case 1: //playing
-            sendPlayRequest();
-            console.log("onPlayerStateChange - Sending request to play");
+            // now handled in toggleVideoPlaying()
+            
+            /*sendPlayRequest();
+            console.log("onPlayerStateChange - Sending request to play");*/
             break;
         case 2: //paused
-            sendPauseRequest();
-            console.log("onPlayerStateChange - Sending request to pause");
+            // now handled in toggleVideoPlaying()
+
+            /*sendPauseRequest();
+            console.log("onPlayerStateChange - Sending request to pause");*/
             break;
         case 3: //buffering
             sendBufferingRequest();
