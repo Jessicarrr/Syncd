@@ -129,10 +129,11 @@ namespace Video_Syncer.Models
             }
             else if (newState == VideoState.Playing)
             {
-                if(!UserIsBuffering())
+                if(GetSuggestedVideoState() == VideoState.Ended)
                 {
-                    SetStateForAll(newState);
+                    videoTimeSeconds = 0;
                 }
+                SetStateForAll(newState);
                 
             }
             else if(newState == VideoState.Ended)

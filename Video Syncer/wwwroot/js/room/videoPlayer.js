@@ -351,12 +351,6 @@ function serverSetVideoAndState(newVideo, newVideoState, newTimeSeconds) {
         logString += "Network changed video to \"" + newVideo + "\" with time of " + newTimeSeconds + " seconds.";
     }
 
-    // set the state of the video
-    if (serverSetVideoState(newVideoState)) {
-        stateChanged = true;
-        logString += " Network changed state to " + stateIntToString(newVideoState) + "(" + newVideoState + ") from " + oldStateText + "(" + oldStateNumber + ").";
-    }
-
     if (!videoChanged) {
         if (serverSetVideoTime(newTimeSeconds)) {
             timeChanged = true;
@@ -364,6 +358,14 @@ function serverSetVideoAndState(newVideo, newVideoState, newTimeSeconds) {
             hasNetworkChangedTime = true;
         }
     }
+
+    // set the state of the video
+    if (serverSetVideoState(newVideoState)) {
+        stateChanged = true;
+        logString += " Network changed state to " + stateIntToString(newVideoState) + "(" + newVideoState + ") from " + oldStateText + "(" + oldStateNumber + ").";
+    }
+
+    
 
     if (videoChanged || stateChanged || timeChanged) {
         console.log(logString);
