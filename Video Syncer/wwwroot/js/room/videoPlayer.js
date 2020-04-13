@@ -229,7 +229,7 @@ function serverSetVideoState(newVideoState) {
         switch (newVideoState) {
             case -1: //unstarted
             case 0: //ended
-                stopVideo();
+                //stopVideo();
                 break;
             case 1: //playing
                 unpauseVideo();
