@@ -213,9 +213,16 @@ namespace Video_Syncer.Models
             {
                 videoTimeSeconds = seconds;
                 lastTimeChange = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+
+                if (GetSuggestedVideoState() == VideoState.Ended)
+                {
+                    SetStateForAll(VideoState.Playing);
+                }
+
                 return;
 
             }
+            
         }
 
         public User UpdateUser(int userId, double seconds)
