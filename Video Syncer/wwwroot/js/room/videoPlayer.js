@@ -28,7 +28,6 @@ function onYouTubeIframeAPIReady() {
         },
         playerVars: {
             'wmode': 'opaque',
-            'controls': 0,
             'disablekb': 1,
             'modestbranding': 1
             

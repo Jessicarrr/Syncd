@@ -9,6 +9,7 @@ var fullscreenButtonId = "cvpl-fullscreenButton";
 
 var playerAdded = false;
 var userDraggingTimeSlider = false;
+var isMouseOverPlayer = false;
 
 var containerDiv;
 var playerDiv;
@@ -28,6 +29,60 @@ var getCurrentVideoTimeCallback;
 var getTotalVideoDurationCallback;
 
 var shouldTrackTime = false;
+
+/**
+ * Disables the custom player so that the video can be clicked on and interacted with.
+ */
+function disablePlayer() {
+    playerDiv.style.display = 'none';
+}
+
+/**
+ * Enables the player so that the player can be used again after disablePlayer() has been called.
+ */
+function enablePlayer() {
+    playerDiv.style.display = 'block';
+}
+
+function makeButtonAreaInvisible() {
+    fadeOut(bottomButtonDiv);
+}
+
+function makeButtonAreaVisible() {
+    fadeIn(bottomButtonDiv);
+}
+
+function fadeOut(element, toOpacity=0) {
+    if (element == null || !isHTMLElement(element)) {
+        throw "fadeOut(element) - param must be a html element, you sent \"" + element + "\"";
+    }
+
+    // no opacity is set
+    if (!element.style.opacity) {
+        element.style.opacity = 1;
+    }
+
+    element.style.transition = '0.2s';
+    element.style.opacity = toOpacity;
+    element.style.visibility = "hidden";
+}
+
+function fadeIn(element, toOpacity=1) {
+    if (element == null || !isHTMLElement(element)) {
+        throw "fadeIn(element, toOpacity=1) - param 1 must be an html element, you sent \"" + element + "\"";
+    }
+
+    // no opacity is set
+    if (!element.style.opacity) {
+        element.style.opacity = 0;
+    }
+
+    element.style.visibility = "visible";
+    element.style.transition = '0.2s';
+    element.style.opacity = toOpacity;
+
+    
+}
 
 function startTrackingTime() {
     if (!shouldTrackTime) {
@@ -241,8 +296,27 @@ function createPlayerOverObject(object, playerWidth, playerHeight) {
 }
 
 function setupListeners() {
-    
+    containerDiv.onmouseenter = function () {
+        isMouseOverPlayer = true;
+        fadeIn(bottomButtonDiv);
+        fadeIn(timeSlider);
+    }
+
+    containerDiv.onmouseleave = function () {
+        isMouseOverPlayer = false;
+
+        setTimeout(function () {
+            if (!isMouseOverPlayer) {
+                fadeOut(bottomButtonDiv);
+                fadeOut(timeSlider);
+            }
+            
+        }, 1000);
+        
+    }
 }
+
+
 
 function createHTML(playerDiv) {
     createButtonDiv(playerDiv);

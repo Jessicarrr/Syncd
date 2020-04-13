@@ -5,6 +5,8 @@
     startLoadingYoutubePlayer();
     var playerHTMLObject = document.getElementById("player");
     createPlayerOverObject(playerHTMLObject, youtubeWidth, youtubeHeight);
+
+    setupHidePlayerCheckbox();
 });
 
 var tickMs = 200; // how often to run function tick()
