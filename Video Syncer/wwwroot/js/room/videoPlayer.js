@@ -187,6 +187,11 @@ function serverChangeVideo(paramVideoId, seconds = 0) {
     });
 
     currentVideoId = paramVideoId;
+
+    var ytUrl = buildYoutubeUrl(currentVideoId);
+    callApiWithCallback(ytUrl, function (data) {
+        document.getElementById("video-title").innerHTML = data.title;
+    });
 }
 
 function changeVideo(paramVideoId, seconds = 0) {
@@ -197,6 +202,11 @@ function changeVideo(paramVideoId, seconds = 0) {
     
     currentVideoId = paramVideoId;
     sendVideoChangeRequest(paramVideoId);
+
+    var ytUrl = buildYoutubeUrl(currentVideoId);
+    callApiWithCallback(ytUrl, function (data) {
+        document.getElementById("video-title").innerHTML = data.title;
+    });
 }
 
 
