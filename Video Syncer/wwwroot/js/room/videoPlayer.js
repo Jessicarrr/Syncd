@@ -141,67 +141,6 @@ function onPlayerStateChange(event) {
     document.getElementById("videoState").innerHTML = stateText;
 }
 
-var videoTimeOnLastCheck;
-var lastCheckUnixTime;
-var hasNetworkChangedTime = false;
-
-/**
- * A function in charge of testing whether or not the user has changed the time.
- * This returns false if the server changed the time, and only returns true
- * if the user changed the time.
- */
-function hasTimeChanged() {
-
-    if (videoTimeOnLastCheck == null || lastCheckUnixTime == null) {
-        videoTimeOnLastCheck = getVideoTime() || 0;
-        lastCheckUnixTime = new Date().getTime();
-        return false;
-    }
-    else {
-        if (hasNetworkChangedTime) {
-            console.log("hasTimeChanged() - The network has changed the time.")
-            hasNetworkChangedTime = false;
-            videoTimeOnLastCheck = getVideoTime();
-            lastCheckUnixTime = new Date().getTime();
-            return false;
-        }
-
-        var currentTime = new Date().getTime();
-        var timeSinceLastCheck = currentTime - lastCheckUnixTime;
-        var timeSinceLastCheckSeconds = timeSinceLastCheck / 1000;
-        var expectedVideoTime;
-        
-        var gracePeriod = 0.5;
-
-        if (stateNumber == 1) {
-            expectedVideoTime = videoTimeOnLastCheck + timeSinceLastCheckSeconds;
-            //console.log("hasTimeChanged() - expected video time (" + expectedVideoTime + ") = " + videoTimeOnLastCheck + " + " + timeSinceLastCheckSeconds);
-        }
-        else {
-            expectedVideoTime = videoTimeOnLastCheck;
-        }
-
-        // done with checking video time on last check. set it again.
-        videoTimeOnLastCheck = getVideoTime();
-
-        var videoTimeDifference = expectedVideoTime - getVideoTime();
-
-        if (videoTimeDifference > gracePeriod || videoTimeDifference < (gracePeriod * -1)) {
-            // the video time unexpectedly changed
-            console.log("hasTimeChanged() - Time changed! Expected time : " + expectedVideoTime + ", actual time : " + getVideoTime() + ", difference : " + videoTimeDifference);
-            lastCheckUnixTime = new Date().getTime();
-            return true;
-        }
-        else {
-            //console.log("hasTimeChanged() - Video time has not changed. Expected time : " + expectedVideoTime + ", actual time : " + getVideoTime() + ", difference : " + videoTimeDifference);
-            lastCheckUnixTime = new Date().getTime();
-            return false;
-        }
-
-        
-    }
-}
-
 function stateIntToString(stateNumber) {
     switch (stateNumber) {
         case -1: //unstarted
@@ -364,8 +303,6 @@ function serverSetVideoAndState(newVideo, newVideoState, newTimeSeconds) {
         stateChanged = true;
         logString += " Network changed state to " + stateIntToString(newVideoState) + "(" + newVideoState + ") from " + oldStateText + "(" + oldStateNumber + ").";
     }
-
-    
 
     if (videoChanged || stateChanged || timeChanged) {
         console.log(logString);
