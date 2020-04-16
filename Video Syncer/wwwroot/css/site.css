@@ -73,3 +73,11 @@ body {
 #usernameBox {
     border: none;
 }
+
+#alert-username-too-long {
+    margin-bottom: 1px;
+    height: 18px;
+    line-height: 18px;
+    padding: 0px 15px;
+    font-size: 14px;
+}

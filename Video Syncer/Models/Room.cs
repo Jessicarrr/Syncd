@@ -23,6 +23,8 @@ namespace Video_Syncer.Models
 
         private long lastCheck = 0;
 
+        public int usernameCharacterLimit = 25;
+
         public Room(string id, string name = "")
         {
             this.id = id;
@@ -250,7 +252,7 @@ namespace Video_Syncer.Models
         {
             int userId = CreateUniqueUserId();
 
-            User user = new User(userId, name);
+            User user = new User(userId, name.Substring(0, usernameCharacterLimit));
             return user;
         }
 

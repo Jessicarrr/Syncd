@@ -4,24 +4,42 @@
 // Write your JavaScript code.
 
 var usernameCookie = "username";
+var usernameCharacterLimit = 25;
 
 window.onload = function (event) {
     createNewName();
+    var errorMsg = document.getElementById("alert-username-too-long");
+    errorMsg.innerHTML =
+        "Name must be less than " + usernameCharacterLimit + " characters"
+    errorMsg.style.display = "none";
 };
 
 document.getElementById("usernameBox").onfocusout = function () {
-    var newName = document.getElementById("usernameBox").value;
-    console.log("Set username to \"" + newName + "\"");
-    setName(newName);
+    userSetName();
 }
 
 document.getElementById("usernameBox").addEventListener("keyup", function (e) {
     if (e.keyCode === 13) {
-        var newName = document.getElementById("usernameBox").value;
-        setName(newName);
-        console.log("Set new name to \"" + newName + "\"");
+        userSetName();
     }
-});
+}); 
+
+function userSetName() {
+    var newNameDefault = document.getElementById("usernameBox").value;
+    var errorMsg = document.getElementById("alert-username-too-long");
+
+    if (newNameDefault.length > usernameCharacterLimit) {
+        errorMsg.style.display = "block";
+
+    }
+    else {
+        errorMsg.style.display = "none";
+    }
+
+    var newName = newNameDefault.slice(0, usernameCharacterLimit);
+    setName(newName);
+    console.log("Set new name to \"" + newName + "\"");
+}
 
 function getUsername() {
     if (getCookie(usernameCookie) != "") {
