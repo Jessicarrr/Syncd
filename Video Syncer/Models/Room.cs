@@ -252,7 +252,11 @@ namespace Video_Syncer.Models
         {
             int userId = CreateUniqueUserId();
 
-            User user = new User(userId, name.Substring(0, usernameCharacterLimit));
+            if(name.Length > usernameCharacterLimit)
+            {
+                name = name.Substring(0, usernameCharacterLimit);
+            }
+            User user = new User(userId, name);
             return user;
         }
 
