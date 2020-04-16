@@ -19,6 +19,13 @@ window.onload = function (event) {
         console.log("Javascript enabled");
         javascriptWarning.style.display = "none";
     }
+
+    /* Check if the user is using Internet explorer, and display an error */
+    if (isUsingInternetExplorer()) {
+        var ieWarning = document.getElementById("alert-using-internet-explorer");
+        ieWarning.style.display = "block";
+    }
+
 };
 
 document.getElementById("usernameBox").onfocusout = function () {
@@ -30,6 +37,28 @@ document.getElementById("usernameBox").addEventListener("keyup", function (e) {
         userSetName();
     }
 }); 
+
+function isUsingInternetExplorer() {
+    if (window.document.documentMode) {
+        return true;
+    }
+    return false;
+
+    /*var userAgent = window.navigator.userAgent;
+    var msieVersion = userAgent.indexOf('MSIE ');
+    var tridentVersion = userAgent.indexOf('Trident/');
+    var edgeVersion = ua.indexOf('Edge/');
+
+    if (edgeVersion > 0) {
+        return false;
+    }
+
+    if (msieVersion > 0 || tridentVersion > 0) {
+        return true;
+    }
+    return false;*/
+
+}
 
 function userSetName() {
     var newNameDefault = document.getElementById("usernameBox").value;

@@ -81,3 +81,8 @@ body {
     padding: 0px 15px;
     font-size: 14px;
 }
+
+#alert-using-internet-explorer {
+    display: none;
+    text-align: center;
+}
