@@ -12,6 +12,13 @@ window.onload = function (event) {
     errorMsg.innerHTML =
         "Name must be less than " + usernameCharacterLimit + " characters"
     errorMsg.style.display = "none";
+
+    var javascriptWarning = document.getElementById("alert-no-javascript");
+
+    if (javascriptWarning != null) {
+        console.log("Javascript enabled");
+        javascriptWarning.style.display = "none";
+    }
 };
 
 document.getElementById("usernameBox").onfocusout = function () {
