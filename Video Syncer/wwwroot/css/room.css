@@ -9,11 +9,11 @@
 
 
 #userListArea {
-    width: 20%;
     height: 35%;
     margin-bottom: 10px;
     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .3), 1px 1px 1px 1px rgba(0, 0, 0, .3);
     margin-left: 2%;
+    white-space: nowrap;
 }
 
 table {
@@ -24,7 +24,11 @@ table {
 th, td {
     padding-left: 3px;
     padding-right: 3px;
+    white-space: nowrap;
     /*border: 1px solid black;*/
+}
+tr{ 
+    white-space: nowrap;
 }
 
 .usersHeading {
