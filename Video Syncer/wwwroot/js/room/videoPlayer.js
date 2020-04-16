@@ -29,7 +29,8 @@ function onYouTubeIframeAPIReady() {
         playerVars: {
             'wmode': 'opaque',
             'disablekb': 1,
-            'modestbranding': 1
+            'modestbranding': 1,
+            'mute' : 1
             
         }
     });
@@ -81,6 +82,10 @@ function toggleVideoPlaying() {
  * @param {any} volume a number between 0 and 100 representing the volume.
  */
 function adjustVolume(volume) {
+    if (player.isMuted()) {
+        player.unMute();
+    }
+    
     player.setVolume(volume);
 }
 
