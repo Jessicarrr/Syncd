@@ -1,5 +1,5 @@
 ﻿var containerDivId = "cvpl-videoPlayerContainer";
-var playerDivId = "cvpl-videoPlayerOverlay";
+var playerControlsDivId = "cvpl-videoPlayerOverlay";
 var volumeSliderId = "cvpl-volumeSlider";
 var volumeButtonHoverId = "cvpl-customVolumeButton";
 var bottomButtonDivId = "cvpl-bottomButtonDiv"
@@ -12,7 +12,8 @@ var userDraggingTimeSlider = false;
 var isMouseOverPlayer = false;
 
 var containerDiv;
-var playerDiv;
+var playerControlsDiv;
+var playerElement;
 var playButton;
 var volumeHoverButton;
 var volumeSlider;
@@ -27,6 +28,8 @@ var volumeChangeCallback;
 var userClicksTimeSliderCallback;
 var getCurrentVideoTimeCallback;
 var getTotalVideoDurationCallback;
+var fullscreenCallback;
+var exitFullscreenCallback;
 
 var shouldTrackTime = false;
 
@@ -34,14 +37,14 @@ var shouldTrackTime = false;
  * Disables the custom player so that the video can be clicked on and interacted with.
  */
 function disablePlayer() {
-    playerDiv.style.display = 'none';
+    playerControlsDiv.style.display = 'none';
 }
 
 /**
  * Enables the player so that the player can be used again after disablePlayer() has been called.
  */
 function enablePlayer() {
-    playerDiv.style.display = 'block';
+    playerControlsDiv.style.display = 'block';
 }
 
 function makeButtonAreaInvisible() {
@@ -151,20 +154,148 @@ function startTrackingTime() {
     setTimeout(startTrackingTime, 1000);
 }
 
+/**
+ * Set the callback for fullscreen functionality. This is so the element we have wrapped around
+ * can go fullscreen as well as the custom video player.
+ * @param {any} newCallback The callback function
+ */
+function setFullscreenCallback(newCallback) {
+    if (!isFunction(newCallback)) {
+        throw "setFullscreenCallback - newCallback parameter must be a function";
+    }
+
+    fullscreenCallback = newCallback;
+
+    if (isFunction(exitFullscreenCallback) && fullscreenButton.onclick == null) {
+        addFullscreenButtonClick();
+    }
+}
+
+function setExitFullscreenCallback(newCallback) {
+    if (!isFunction(newCallback)) {
+        throw "setExitFullscreenCallback - newCallback parameter must be a function";
+    }
+
+    exitFullscreenCallback = newCallback;
+
+    if (isFunction(fullscreenCallback) && fullscreenButton.onclick == null) {
+        addFullscreenButtonClick();
+    }
+}
+
+function addFullscreenButtonClick() {
+    addFullscreenListeners();
+
+    fullscreenButton.onclick = function () {
+
+        if (!isFullscreen()) {
+            console.log("fullscreen - tryin full screen");
+            tryFullScreen();
+        }
+        else {
+            console.log("fullscreen - exiting fullscreen");
+            tryExitFullscreen();
+        }
+    }
+}
+
+function doFullscreenCallbacks() {
+    if (isFullscreen()) {
+        fullscreenCallback();
+    }
+    else {
+        exitFullscreenCallback();
+    }
+}
+
+function addFullscreenListeners() {
+
+
+    /* Standard syntax */
+    document.addEventListener("fullscreenchange", function () {
+        doFullscreenCallbacks();
+    });
+
+    /* Firefox */
+    document.addEventListener("mozfullscreenchange", function () {
+        doFullscreenCallbacks();
+    });
+
+    /* Chrome, Safari and Opera */
+    document.addEventListener("webkitfullscreenchange", function () {
+        doFullscreenCallbacks();
+    });
+
+    /* IE / Edge */
+    document.addEventListener("msfullscreenchange", function () {
+        doFullscreenCallbacks();
+    });
+}
+
+function isFullscreen() {
+    return document.isFullScreen || document.fullscreenElement
+        || document.webkitFullscreenElement || document.mozFullScreenElement
+        || document.msFullscreenElement;
+}
+
 function tryFullScreen() {
+    if (fullscreenCallback == null || !isFunction(fullscreenCallback)) {
+        throw "tryFullscreen() - Fullscreen callback must be set first. " +
+            "Please use setFullscreenCallback(..) and setExitFullscreenCallback(..)";
+    }
+
+    if (exitFullscreenCallback == null || !isFunction(exitFullscreenCallback)) {
+        throw "tryFullscreen() - Exit fullscreen callback must be set first. " +
+            "Please use setExitFullscreenCallback(..)";
+    }
+
     if (containerDiv.requestFullscreen) {
         containerDiv.requestFullscreen();
-    } else if (containerDiv.mozRequestFullScreen) { /* Firefox */
+
+    }
+    else if (containerDiv.mozRequestFullScreen) { /* Firefox */
         containerDiv.mozRequestFullScreen();
-    } else if (containerDiv.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+
+    }
+    else if (containerDiv.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
         containerDiv.webkitRequestFullscreen();
-    } else if (containerDiv.msRequestFullscreen) { /* IE/Edge */
+
+    }
+    else if (containerDiv.msRequestFullscreen) { /* IE/Edge */
         containerDiv.msRequestFullscreen();
     }
 }
 
-function secondsToFormattedTime(seconds) {
+function tryExitFullscreen() {
 
+    if (fullscreenCallback == null || !isFunction(fullscreenCallback)) {
+        throw "tryFullscreen() - Fullscreen callback must be set first. " +
+        "Please use setFullscreenCallback(..) and setExitFullscreenCallback(..)";
+    }
+
+    if (exitFullscreenCallback == null || !isFunction(exitFullscreenCallback)) {
+        throw "tryFullscreen() - Exit fullscreen callback must be set first. " +
+        "Please use setExitFullscreenCallback(..)";
+    }
+
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    }
+
+    else if (document.mozCancelFullScreen) { /* Firefox */
+        document.mozCancelFullScreen();
+    }
+
+    else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+        document.webkitExitFullscreen();
+    }
+
+    else if (document.msExitFullscreen) { /* IE/Edge */
+        document.msExitFullscreen();
+    }
+}
+
+function secondsToFormattedTime(seconds) {
     if (seconds == null) {
         return null;
     }
@@ -276,20 +407,24 @@ function createPlayerOverObject(object, playerWidth, playerHeight) {
 
     var objectParent = object.parentNode;
     containerDiv = document.createElement("div");
-    playerDiv = document.createElement("div");
+    playerControlsDiv = document.createElement("div");
     
     containerDiv.setAttribute("id", containerDivId);
-    playerDiv.setAttribute("id", playerDivId);
+    playerControlsDiv.setAttribute("id", playerControlsDivId);
 
     // setting the height and width to match the object height and width
     containerDiv.style.height = playerHeight + "px";
     containerDiv.style.width = playerWidth + "px";
 
+    currentWidth = playerWidth;
+    currentHeight = playerHeight;
+    playerElement = object;
+
     objectParent.replaceChild(containerDiv, object);
     containerDiv.appendChild(object);
-    containerDiv.appendChild(playerDiv);
+    containerDiv.appendChild(playerControlsDiv);
 
-    createHTML(playerDiv);
+    createHTML(playerControlsDiv);
     setupListeners();
 
     console.log("createPlayerOverObject - Finished creating custom video player")
@@ -318,11 +453,11 @@ function setupListeners() {
 
 
 
-function createHTML(playerDiv) {
-    createButtonDiv(playerDiv);
-    createTimeDisplay(playerDiv);
-    createButtons(playerDiv);
-    createTimeSlider(playerDiv);
+function createHTML(playerControlsDiv) {
+    createButtonDiv(playerControlsDiv);
+    createTimeDisplay(playerControlsDiv);
+    createButtons(playerControlsDiv);
+    createTimeSlider(playerControlsDiv);
     createFullscreenButton();
 }
 
@@ -331,22 +466,16 @@ function createFullscreenButton() {
     fullscreenButton.setAttribute("id", fullscreenButtonId);
     fullscreenButton.innerHTML = "FS";
     bottomButtonDiv.appendChild(fullscreenButton);
-
-    fullscreenButton.onclick = function () {
-        console.log("Trying to full screen");
-        tryFullScreen();
-    }
-
 }
 
-function createTimeDisplay(playerDiv) {
+function createTimeDisplay(playerControlsDiv) {
     timeDisplay = document.createElement("p");
     timeDisplay.setAttribute("id", timeDisplayId);
     timeDisplay.innerHTML = "--:--:-- / --:--:--";
     bottomButtonDiv.appendChild(timeDisplay);
 }
 
-function createTimeSlider(playerDiv) {
+function createTimeSlider(playerControlsDiv) {
     timeSlider = document.createElement("input");
     timeSlider.setAttribute("id", timeSliderId);
     timeSlider.setAttribute("type", "range");
@@ -355,7 +484,7 @@ function createTimeSlider(playerDiv) {
     timeSlider.setAttribute("value", "0");
     timeSlider.setAttribute("step", "0.1");
 
-    playerDiv.appendChild(timeSlider);
+    playerControlsDiv.appendChild(timeSlider);
 
     timeSlider.onmousedown = function () {
         userDraggingTimeSlider = true;
@@ -375,13 +504,13 @@ function createTimeSlider(playerDiv) {
     }
 }
 
-function createButtonDiv(playerDiv) {
+function createButtonDiv(playerControlsDiv) {
     bottomButtonDiv = document.createElement("div");
     bottomButtonDiv.setAttribute("id", bottomButtonDivId);
-    playerDiv.appendChild(bottomButtonDiv);
+    playerControlsDiv.appendChild(bottomButtonDiv);
 }
 
-function createButtons(playerDiv) {
+function createButtons(playerControlsDiv) {
     createPlayButton();
     createVolumeSlider();
 }
@@ -448,6 +577,7 @@ function createVolumeSlider() {
 
     volumeSlider.oninput = function () {
         if (isFunction(volumeChangeCallback)) {
+            console.log("volume slider value = " + volumeSlider.value);
             volumeChangeCallback(volumeSlider.value);
         }
     }
