@@ -141,6 +141,7 @@ namespace Video_Syncer.Models
             else if(newState == VideoState.Ended)
             {
                 SetStateForAll(VideoState.Ended);
+                UpdateTime();
 
                 //TODO: Playlist support, play next video.
                 
@@ -158,51 +159,39 @@ namespace Video_Syncer.Models
             }*/
         }
 
-        public void UpdateVideoStatistics(double seconds, string youtubeId)
+
+        private void UpdateTime()
         {
             long currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
+            if (lastCheck == 0)
+            {
+                lastCheck = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                return;
+            }
+
+            long timeSinceLastCheck = currentTime - lastCheck;
+            double timeSinceLastCheckD = Convert.ToDouble(timeSinceLastCheck);
+            double timeToAdd = timeSinceLastCheckD / 1000;
+            videoTimeSeconds += timeToAdd;
+            System.Diagnostics.Debug.WriteLine("Added " + timeToAdd + " to video time for a total of " + videoTimeSeconds);
+            lastCheck = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+        }
+
+        public void UpdateVideoStatistics(double seconds, string youtubeId)
+        {
             if (GetSuggestedVideoState() == VideoState.Playing)
             {
                 // Keep the server's interpretation of the video's time up to date with
                 // the passing of time. This is so the server doesn't lag behind the client
                 // and their playing video.
 
-                if(lastCheck == 0)
-                {
-                    lastCheck = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                    return;
-                }
-
-                long timeSinceLastCheck = currentTime - lastCheck;
-                double timeSinceLastCheckD = Convert.ToDouble(timeSinceLastCheck);
-                double timeToAdd = timeSinceLastCheckD / 1000;
-                videoTimeSeconds += timeToAdd;
-                System.Diagnostics.Debug.WriteLine("Added " + timeToAdd + " to video time for a total of " + videoTimeSeconds);
-                lastCheck = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                UpdateTime();
             }
             else
             {
                 lastCheck = DateTimeOffset.Now.ToUnixTimeMilliseconds();
                 System.Diagnostics.Debug.WriteLine("Video is not playing. Video is " + GetSuggestedVideoState());
-            }
-
-            long timeLimitSinceLastChange = 5000;
-            
-            long timeSinceLastChange = currentTime - lastTimeChange;
-
-            if (timeSinceLastChange > timeLimitSinceLastChange)
-            {
-                int gracePeriod = 1;
-                double timeDifference = seconds - videoTimeSeconds;
-            
-                /*if (timeDifference > gracePeriod || timeDifference < (gracePeriod * -1))
-                {
-                    videoTimeSeconds = seconds;
-                    lastChange = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                    return;
-                }*/
-                
             }
         }
 
