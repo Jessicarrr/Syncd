@@ -133,12 +133,12 @@ function startTrackingTime() {
     setTimeDisplay(currentTimeFormatted, totalDurationFormatted);
     setTimeout(startTrackingTime, 1000);
 }
-k
+
 function setTimeDisplay(formattedCurrentTime, formattedTotalTime) {
     if (formattedCurrentTime == null || formattedTotalTime == null || timeDisplay == null) {
         return;
     }
-    timeDisplay.innerHTML = currentTimeFormatted + " / " + totalDurationFormatted;
+    timeDisplay.innerHTML = formattedCurrentTime + " / " + formattedTotalTime;
 }
 
 function setTimeSliderPercentage(percentage) {
