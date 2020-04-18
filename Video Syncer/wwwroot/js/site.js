@@ -39,6 +39,12 @@ document.getElementById("usernameBox").addEventListener("keyup", function (e) {
 }); 
 
 function isUsingInternetExplorer() {
+    var edgeString = /Edge/;
+
+    if (edgeString.test(navigator.userAgent)) {
+        return false;
+    }
+
     if (window.document.documentMode) {
         return true;
     }
