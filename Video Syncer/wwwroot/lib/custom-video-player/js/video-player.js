@@ -104,54 +104,57 @@ function startTrackingTime() {
     var currentTime = getCurrentVideoTimeCallback();
     var totalDuration = getTotalVideoDurationCallback();
 
-    if (currentTime == null) {
-        throw "startTrackingTime() - Error: getCurrentVideoTimeCallback returned null.";
-    }
-    if (totalDuration == null) {
-        throw "startTrackingTime() - getTotalVideoDurationCallback returned null";
-    }
-    if (isNaN(currentTime)) {
-        throw "startTrackingTime() - getCurrentVideoTimeCallback returned a value that is NaN."
-    }
-    if (isNaN(totalDuration)) {
-        throw "startTrackingTime() - getTotalVideoDurationCallback returned a value that is NaN."
-    }
     if (timeSlider == null || !isHTMLElement(timeSlider)) {
         throw "startTrackingTime() - The UI for the time slider has not yet been set, so this function cannot change it.";
     }
 
 
-    var percentage = (currentTime / totalDuration) * 100;
-    var currentTimeFormatted = secondsToFormattedTime(currentTime);
-    var totalDurationFormatted = secondsToFormattedTime(totalDuration);
+    var percentage;
+    var currentTimeFormatted;
+    var totalDurationFormatted;
 
-    if (isNaN(percentage)) {
-        setTimeout(startTrackingTime, 1000);
+    if (isNullOrNaN(currentTime) || isNullOrNaN(totalDuration)) {
+        percentage = timeSlider.value || 0;
+
+        if (isNullOrNaN(currentTime)) {
+            currentTimeFormatted = "--:--:--";
+        }
+        if (isNullOrNaN(totalDuration)) {
+            totalDurationFormatted = "--:--:--";
+        }
+    }
+    else {
+        percentage = (currentTime / totalDuration) * 100;
+        currentTimeFormatted = secondsToFormattedTime(currentTime);
+        totalDurationFormatted = secondsToFormattedTime(totalDuration);
+    }
+    
+    setTimeSliderPercentage(percentage);
+    setTimeDisplay(currentTimeFormatted, totalDurationFormatted);
+    setTimeout(startTrackingTime, 1000);
+}
+k
+function setTimeDisplay(formattedCurrentTime, formattedTotalTime) {
+    if (formattedCurrentTime == null || formattedTotalTime == null || timeDisplay == null) {
         return;
     }
+    timeDisplay.innerHTML = currentTimeFormatted + " / " + totalDurationFormatted;
+}
 
+function setTimeSliderPercentage(percentage) {
+    if (timeSlider == null || !isHTMLElement(timeSlider) || isNullOrNaN(percentage)) {
+        return;
+    }
     if (!userDraggingTimeSlider) {
         timeSlider.value = percentage;
     }
+}
 
-    if (currentTimeFormatted != null && totalDurationFormatted != null && timeDisplay != null) {
-        timeDisplay.innerHTML = currentTimeFormatted + " / " + totalDurationFormatted;
+function isNullOrNaN(number) {
+    if (number == null || isNaN(number)) {
+        return true;
     }
-    else {
-        if (currentTimeFormatted == null) {
-            console.log("currentTimeFormatted is null, coz currentTime is " + currentTime);
-        }
-
-        if (totalDurationFormatted == null) {
-            console.log("totalDurationFormatted is null, coz totalDuration is " + totalDuration);
-        }
-
-        if (timeDisplay == null) {
-            console.log("timeDisplay is null, coz it's " + timeDisplay);
-        }
-    }
-
-    setTimeout(startTrackingTime, 1000);
+    return false;
 }
 
 /**
