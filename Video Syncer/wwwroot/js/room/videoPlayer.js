@@ -54,12 +54,8 @@ function unpauseVideo() {
     player.playVideo();
 }
 
-function fullscreen() {
-    player.setSize(screen.width, screen.height);
-}
-
-function exitFullscreen() {
-    player.setSize(youtubeWidth, youtubeHeight);
+function setYoutubePlayerSize(width, height) {
+    player.setSize(width, height);
 }
 
 function toggleVideoPlaying() {
@@ -107,8 +103,7 @@ function onPlayerReady(event) {
     setVolumeChangeCallback(adjustVolume);
     setClickTimeSliderCallback(adjustTime);
     givePlayerAbilityToTrackTime(getVideoTime, getVideoTotalDuration);
-    setFullscreenCallback(fullscreen);
-    setExitFullscreenCallback(exitFullscreen);
+    setVideoSizeCallback(setYoutubePlayerSize);
 
     sendJoinRequest();
 }

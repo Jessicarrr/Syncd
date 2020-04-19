@@ -11,6 +11,9 @@ var playerAdded = false;
 var userDraggingTimeSlider = false;
 var isMouseOverPlayer = false;
 
+var originalWidth;
+var originalHeight;
+
 var containerDiv;
 var playerControlsDiv;
 var playerElement;
@@ -28,8 +31,7 @@ var volumeChangeCallback;
 var userClicksTimeSliderCallback;
 var getCurrentVideoTimeCallback;
 var getTotalVideoDurationCallback;
-var fullscreenCallback;
-var exitFullscreenCallback;
+var changeVideoSizeCallback;
 
 var shouldTrackTime = false;
 
@@ -157,33 +159,13 @@ function isNullOrNaN(number) {
     return false;
 }
 
-/**
- * Set the callback for fullscreen functionality. This is so the element we have wrapped around
- * can go fullscreen as well as the custom video player.
- * @param {any} newCallback The callback function
- */
-function setFullscreenCallback(newCallback) {
+function setChangeVideoSizeCallback(newCallback) {
     if (!isFunction(newCallback)) {
-        throw "setFullscreenCallback - newCallback parameter must be a function";
+        throw "setChangeVideoSizeCallback - newCallback parameter must be a function";
     }
 
-    fullscreenCallback = newCallback;
-
-    if (isFunction(exitFullscreenCallback) && fullscreenButton.onclick == null) {
-        addFullscreenButtonClick();
-    }
-}
-
-function setExitFullscreenCallback(newCallback) {
-    if (!isFunction(newCallback)) {
-        throw "setExitFullscreenCallback - newCallback parameter must be a function";
-    }
-
-    exitFullscreenCallback = newCallback;
-
-    if (isFunction(fullscreenCallback) && fullscreenButton.onclick == null) {
-        addFullscreenButtonClick();
-    }
+    changeVideoSizeCallback = newCallback;
+    addFullscreenButtonClick();
 }
 
 function addFullscreenButtonClick() {
@@ -204,16 +186,14 @@ function addFullscreenButtonClick() {
 
 function doFullscreenCallbacks() {
     if (isFullscreen()) {
-        fullscreenCallback();
+        changeVideoSizeCallback(screen.width, screen.height);
     }
     else {
-        exitFullscreenCallback();
+        changeVideoSizeCallback(originalWidth, originalHeight);
     }
 }
 
 function addFullscreenListeners() {
-
-
     /* Standard syntax */
     document.addEventListener("fullscreenchange", function () {
         doFullscreenCallbacks();
@@ -242,14 +222,9 @@ function isFullscreen() {
 }
 
 function tryFullScreen() {
-    if (fullscreenCallback == null || !isFunction(fullscreenCallback)) {
-        throw "tryFullscreen() - Fullscreen callback must be set first. " +
-            "Please use setFullscreenCallback(..) and setExitFullscreenCallback(..)";
-    }
-
-    if (exitFullscreenCallback == null || !isFunction(exitFullscreenCallback)) {
-        throw "tryFullscreen() - Exit fullscreen callback must be set first. " +
-            "Please use setExitFullscreenCallback(..)";
+    if (changeVideoSizeCallback == null || !isFunction(changeVideoSizeCallback)) {
+        throw "tryFullscreen() - Change video size callback must be set first. " +
+            "Please use setChangeVideoSizeCallback(..)";
     }
 
     if (containerDiv.requestFullscreen) {
@@ -271,14 +246,9 @@ function tryFullScreen() {
 
 function tryExitFullscreen() {
 
-    if (fullscreenCallback == null || !isFunction(fullscreenCallback)) {
-        throw "tryFullscreen() - Fullscreen callback must be set first. " +
-        "Please use setFullscreenCallback(..) and setExitFullscreenCallback(..)";
-    }
-
-    if (exitFullscreenCallback == null || !isFunction(exitFullscreenCallback)) {
-        throw "tryFullscreen() - Exit fullscreen callback must be set first. " +
-        "Please use setExitFullscreenCallback(..)";
+    if (changeVideoSizeCallback == null || !isFunction(changeVideoSizeCallback)) {
+        throw "tryExitFullscreen() - changeVideoSizeCallback must be set first. " +
+        "Please use setChangeVideoSizeCallback(...)";
     }
 
     if (document.exitFullscreen) {
@@ -419,6 +389,8 @@ function createPlayerOverObject(object, playerWidth, playerHeight) {
     containerDiv.style.height = playerHeight + "px";
     containerDiv.style.width = playerWidth + "px";
 
+    originalWidth = playerWidth;
+    originalHeight = playerHeight;
     currentWidth = playerWidth;
     currentHeight = playerHeight;
     playerElement = object;
