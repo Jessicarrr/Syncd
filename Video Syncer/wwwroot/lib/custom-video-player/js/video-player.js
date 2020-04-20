@@ -97,7 +97,7 @@ function videoPlayerTick() {
         trackTime();
         
     }
-    catch {
+    catch(err) {
         console.log("videoPlayerTick - Error with in video-player.js videoPlayerTick() caught");
     }
     
