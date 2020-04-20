@@ -2,7 +2,7 @@
 var playerControlsDivId = "cvpl-videoPlayerOverlay";
 var volumeSliderId = "cvpl-volumeSlider";
 var volumeButtonHoverId = "cvpl-customVolumeButton";
-var bottomButtonDivId = "cvpl-bottomButtonDiv"
+var bottomButtonDivId = "cvpl-bottomButtonDiv";
 var timeSliderId = "cpvl-timeSlider";
 var timeDisplayId = "cvpl-timeDisplay";
 var fullscreenButtonId = "cvpl-fullscreenButton";
@@ -11,8 +11,8 @@ var playerAdded = false;
 var userDraggingTimeSlider = false;
 var isMouseOverPlayer = false;
 
-var originalWidth;
-var originalHeight;
+var lastWidth;
+var lastHeight;
 
 var containerDiv;
 var playerControlsDiv;
@@ -57,7 +57,7 @@ function makeButtonAreaVisible() {
     fadeIn(bottomButtonDiv);
 }
 
-function fadeOut(element, toOpacity=0) {
+function fadeOut(element, toOpacity = 0) {
     if (element == null || !isHTMLElement(element)) {
         throw "fadeOut(element) - param must be a html element, you sent \"" + element + "\"";
     }
@@ -72,7 +72,7 @@ function fadeOut(element, toOpacity=0) {
     element.style.visibility = "hidden";
 }
 
-function fadeIn(element, toOpacity=1) {
+function fadeIn(element, toOpacity = 1) {
     if (element == null || !isHTMLElement(element)) {
         throw "fadeIn(element, toOpacity=1) - param 1 must be an html element, you sent \"" + element + "\"";
     }
@@ -86,34 +86,34 @@ function fadeIn(element, toOpacity=1) {
     element.style.transition = '0.2s';
     element.style.opacity = toOpacity;
 
+
+}
+
+function videoPlayerTick() {
+    try {
+        if (isFunction(changeVideoSizeCallback)) {
+            fixVideoPlayerSize();
+        }
+        trackTime();
+        
+    }
+    catch {
+        console.log("videoPlayerTick - Error with in video-player.js videoPlayerTick() caught");
+    }
     
 }
 
-function startTrackingTime() {
-    if (!shouldTrackTime) {
-        console.log("startTrackingTime() - shouldTrackTime == false. Stopping time tracking.")
-        return;
-    }
-
-    if (!isFunction(getCurrentVideoTimeCallback)) {
-        throw "startTrackingTime() - param 1 getCurrentVideoTimeCallback must be a function";
-    }
-
-    if (!isFunction(getTotalVideoDurationCallback)) {
-        throw "startTrackingTime() - param 2 getTotalVideoDurationCallback must be a function";
-    }
-
-    var currentTime = getCurrentVideoTimeCallback();
-    var totalDuration = getTotalVideoDurationCallback();
-
-    if (timeSlider == null || !isHTMLElement(timeSlider)) {
-        throw "startTrackingTime() - The UI for the time slider has not yet been set, so this function cannot change it.";
-    }
-
-
+function trackTime() {
     var percentage;
     var currentTimeFormatted;
     var totalDurationFormatted;
+
+    if (timeSlider == null || !isHTMLElement(timeSlider)) {
+        return;
+    }
+
+    var currentTime = getCurrentVideoTimeCallback() || null;
+    var totalDuration = getTotalVideoDurationCallback() || null;
 
     if (isNullOrNaN(currentTime) || isNullOrNaN(totalDuration)) {
         percentage = timeSlider.value || 0;
@@ -130,10 +130,9 @@ function startTrackingTime() {
         currentTimeFormatted = secondsToFormattedTime(currentTime);
         totalDurationFormatted = secondsToFormattedTime(totalDuration);
     }
-    
+
     setTimeSliderPercentage(percentage);
     setTimeDisplay(currentTimeFormatted, totalDurationFormatted);
-    setTimeout(startTrackingTime, 1000);
 }
 
 function setTimeDisplay(formattedCurrentTime, formattedTotalTime) {
@@ -181,7 +180,7 @@ function addFullscreenButtonClick() {
             console.log("fullscreen - exiting fullscreen");
             tryExitFullscreen();
         }
-    }
+    };
 }
 
 function doFullscreenCallbacks() {
@@ -189,7 +188,7 @@ function doFullscreenCallbacks() {
         changeVideoSizeCallback(screen.width, screen.height);
     }
     else {
-        changeVideoSizeCallback(originalWidth, originalHeight);
+        changeVideoSizeCallback(lastWidth, lastHeight);
     }
 }
 
@@ -216,15 +215,13 @@ function addFullscreenListeners() {
 }
 
 function isFullscreen() {
-    return document.isFullScreen || document.fullscreenElement
-        || document.webkitFullscreenElement || document.mozFullScreenElement
-        || document.msFullscreenElement;
+    return document.isFullScreen || document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
 }
 
 function tryFullScreen() {
     if (changeVideoSizeCallback == null || !isFunction(changeVideoSizeCallback)) {
         throw "tryFullscreen() - Change video size callback must be set first. " +
-            "Please use setChangeVideoSizeCallback(..)";
+        "Please use setChangeVideoSizeCallback(..)";
     }
 
     if (containerDiv.requestFullscreen) {
@@ -300,11 +297,8 @@ function givePlayerAbilityToTrackTime(paramGetCurrentVideoTimeCallback, paramGet
         throw "givePlayerAbilityToTrackTime - The callbacks passed to this function must not have any parameters.";
     }
 
-    getCurrentVideoTimeCallback = paramGetCurrentVideoTimeCallback
+    getCurrentVideoTimeCallback = paramGetCurrentVideoTimeCallback;
     getTotalVideoDurationCallback = paramGetTotalVideoDurationCallback;
-
-    shouldTrackTime = true;
-    startTrackingTime();
 }
 
 function setVolumeChangeCallback(newCallback) {
@@ -326,7 +320,7 @@ function setClickTimeSliderCallback(newCallback) {
 
     if (newCallback.length !== 1) {
         throw "setUserChangesTimeCallback - This callback requires one parameter " +
-            "(number between 0 and 100 which represents the percentage progress through the video)";
+        "(number between 0 and 100 which represents the percentage progress through the video)";
     }
 
     userClicksTimeSliderCallback = newCallback;
@@ -381,7 +375,7 @@ function createPlayerOverObject(object, playerWidth, playerHeight) {
     var objectParent = object.parentNode;
     containerDiv = document.createElement("div");
     playerControlsDiv = document.createElement("div");
-    
+
     containerDiv.setAttribute("id", containerDivId);
     playerControlsDiv.setAttribute("id", playerControlsDivId);
 
@@ -389,10 +383,8 @@ function createPlayerOverObject(object, playerWidth, playerHeight) {
     containerDiv.style.height = playerHeight + "px";
     containerDiv.style.width = playerWidth + "px";
 
-    originalWidth = playerWidth;
-    originalHeight = playerHeight;
-    currentWidth = playerWidth;
-    currentHeight = playerHeight;
+    lastWidth = playerWidth;
+    lastHeight = playerHeight;
     playerElement = object;
 
     objectParent.replaceChild(containerDiv, object);
@@ -401,16 +393,25 @@ function createPlayerOverObject(object, playerWidth, playerHeight) {
 
     createHTML(playerControlsDiv);
     setupListeners();
+    setupTicks();
 
-    console.log("createPlayerOverObject - Finished creating custom video player")
+    console.log("createPlayerOverObject - Finished creating custom video player");
+}
+
+function setupTicks() {
+    setInterval(videoPlayerTick, 900);
 }
 
 function setupListeners() {
+    window.addEventListener("resize", function () {
+        fixVideoPlayerSize();
+    }, true);
+
     containerDiv.onmouseenter = function () {
         isMouseOverPlayer = true;
         fadeIn(bottomButtonDiv);
         fadeIn(timeSlider);
-    }
+    };
 
     containerDiv.onmouseleave = function () {
         isMouseOverPlayer = false;
@@ -420,12 +421,20 @@ function setupListeners() {
                 fadeOut(bottomButtonDiv);
                 fadeOut(timeSlider);
             }
-            
+
         }, 1000);
-        
-    }
+
+    };
 }
 
+function fixVideoPlayerSize() {
+    if (containerDiv.offsetWidth != lastWidth || containerDiv.offsetHeight != lastHeight) {
+        changeVideoSizeCallback(containerDiv.offsetWidth, containerDiv.offsetHeight);
+        lastWidth = containerDiv.offsetWidth;
+        lastHeight = containerDiv.offsetHeight;
+        console.log("set to " + lastWidth + " x " + lastHeight);
+    }
+}
 
 
 function createHTML(playerControlsDiv) {
@@ -463,11 +472,11 @@ function createTimeSlider(playerControlsDiv) {
 
     timeSlider.onmousedown = function () {
         userDraggingTimeSlider = true;
-    }
+    };
 
     timeSlider.onmouseup = function () {
         userDraggingTimeSlider = false;
-    }
+    };
 
     timeSlider.onclick = function () {
         console.log("change - " + timeSlider.value);
@@ -476,7 +485,7 @@ function createTimeSlider(playerControlsDiv) {
             userClicksTimeSliderCallback(timeSlider.value);
 
         }
-    }
+    };
 }
 
 function createButtonDiv(playerControlsDiv) {
@@ -499,8 +508,8 @@ function createPlayButton() {
         if (isFunction(toggleVideoPlayingCallback)) {
             toggleVideoPlayingCallback();
         }
-    }
-    
+    };
+
     bottomButtonDiv.appendChild(playButton);
 }
 
@@ -517,7 +526,7 @@ function createVolumeSlider() {
     volumeSlider.setAttribute("max", "100");
     volumeSlider.setAttribute("value", "50");
     volumeSlider.style.visibility = "hidden";
-    
+
 
     volumeHoverButton = document.createElement("button");
     volumeHoverButton.setAttribute("id", volumeButtonHoverId);
@@ -552,10 +561,9 @@ function createVolumeSlider() {
 
     volumeSlider.oninput = function () {
         if (isFunction(volumeChangeCallback)) {
-            console.log("volume slider value = " + volumeSlider.value);
             volumeChangeCallback(volumeSlider.value);
         }
-    }
+    };
 
     bottomButtonDiv.appendChild(volumeHoverButton);
     bottomButtonDiv.appendChild(volumeSlider);
