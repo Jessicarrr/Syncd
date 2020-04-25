@@ -14,10 +14,9 @@ namespace Video_Syncer.Controllers
         [Route("room/{id}")]
         public IActionResult FindRoom(string id)
         {
-            RoomManager roomManager = RoomManager.GetSingletonInstance();
-            Room room = roomManager.GetRoom(id);
+            Room room = TryGetRoom(id);
 
-            if(room == null)
+            if (room == null)
             {
                 return View("RoomNotFound");
             }
@@ -45,8 +44,12 @@ namespace Video_Syncer.Controllers
         [HttpPost]
         public JsonResult EndVideo([FromBody]VideoStateChangeRequest request)
         {
-            RoomManager roomManager = RoomManager.GetSingletonInstance();
-            Room room = roomManager.GetRoom(request.roomId);
+            if (request == null)
+            {
+                return null;
+            }
+
+            Room room = TryGetRoom(request.roomId);
 
             if (room == null)
             {
@@ -66,10 +69,14 @@ namespace Video_Syncer.Controllers
         [HttpPost]
         public JsonResult PlayVideo([FromBody]VideoStateChangeRequest request)
         {
-            RoomManager roomManager = RoomManager.GetSingletonInstance();
-            Room room = roomManager.GetRoom(request.roomId);
+            if (request == null)
+            {
+                return null;
+            }
 
-            if(room == null)
+            Room room = TryGetRoom(request.roomId);
+
+            if (room == null)
             {
                 return null;
             }
@@ -87,8 +94,12 @@ namespace Video_Syncer.Controllers
         [HttpPost]
         public JsonResult PauseVideo([FromBody]VideoStateChangeRequest request)
         {
-            RoomManager roomManager = RoomManager.GetSingletonInstance();
-            Room room = roomManager.GetRoom(request.roomId);
+            if (request == null)
+            {
+                return null;
+            }
+
+            Room room = TryGetRoom(request.roomId);
 
             if (room == null)
             {
@@ -108,8 +119,12 @@ namespace Video_Syncer.Controllers
         [HttpPost]
         public JsonResult ChangeVideo([FromBody]VideoChangeRequest request)
         {
-            RoomManager roomManager = RoomManager.GetSingletonInstance();
-            Room room = roomManager.GetRoom(request.roomId);
+            if (request == null)
+            {
+                return null;
+            }
+
+            Room room = TryGetRoom(request.roomId);
 
             if (room == null)
             {
@@ -130,8 +145,12 @@ namespace Video_Syncer.Controllers
         [HttpPost]
         public JsonResult BufferVideo([FromBody]VideoStateChangeRequest request)
         {
-            RoomManager roomManager = RoomManager.GetSingletonInstance();
-            Room room = roomManager.GetRoom(request.roomId);
+            if (request == null)
+            {
+                return null;
+            }
+
+            Room room = TryGetRoom(request.roomId);
 
             if (room == null)
             {
@@ -151,8 +170,12 @@ namespace Video_Syncer.Controllers
         [HttpPost]
         public JsonResult TimeUpdate([FromBody]TimeChangeRequest request)
         {
-            RoomManager roomManager = RoomManager.GetSingletonInstance();
-            Room room = roomManager.GetRoom(request.roomId);
+            if (request == null)
+            {
+                return null;
+            }
+
+            Room room = TryGetRoom(request.roomId);
 
             if (room == null)
             {
@@ -169,11 +192,30 @@ namespace Video_Syncer.Controllers
                 return Json(callback);
             }
         }
+
+        private Room TryGetRoom(string roomId)
+        {
+            try
+            {
+                RoomManager roomManager = RoomManager.GetSingletonInstance();
+                Room room = roomManager.GetRoom(roomId);
+                return room;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
         [HttpPost]
         public JsonResult Update([FromBody]UpdateRequest request)
         {
-            RoomManager roomManager = RoomManager.GetSingletonInstance();
-            Room room = roomManager.GetRoom(request.roomId);
+            if(request == null)
+            {
+                return null;
+            }
+
+            Room room = TryGetRoom(request.roomId);
 
             if (room == null)
             {
@@ -208,10 +250,14 @@ namespace Video_Syncer.Controllers
         [HttpPost]
         public JsonResult Join([FromBody]JoinRequest request)
         {
-            RoomManager roomManager = RoomManager.GetSingletonInstance();
-            Room room = roomManager.GetRoom(request.roomId);
+            if (request == null)
+            {
+                return null;
+            }
 
-            if(room == null)
+            Room room = TryGetRoom(request.roomId);
+
+            if (room == null)
             {
                 return Json(new { success = false });
             }
@@ -236,8 +282,12 @@ namespace Video_Syncer.Controllers
         [HttpPost]
         public JsonResult Leave([FromBody]LeaveRequest request)
         {
-            RoomManager roomManager = RoomManager.GetSingletonInstance();
-            Room room = roomManager.GetRoom(request.roomId);
+            if (request == null)
+            {
+                return null;
+            }
+
+            Room room = TryGetRoom(request.roomId);
 
             if (room == null)
             {
