@@ -12,16 +12,15 @@ namespace Video_Syncer.Middleware
 
         public CustomMiddleware(RequestDelegate next)
         {
-            
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public Task Invoke(HttpContext context)
         {
             System.Diagnostics.Debug.WriteLine("custom middleware is called");
 
             // Call the next delegate/middleware in the pipeline
-            await _next(context);
+            return _next(context);
         }
     }
 }
