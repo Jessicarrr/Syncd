@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Video_Syncer.Middleware;
 
 namespace Video_Syncer
 {
@@ -39,6 +40,7 @@ namespace Video_Syncer
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseMiddleware<CustomMiddleware>();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
