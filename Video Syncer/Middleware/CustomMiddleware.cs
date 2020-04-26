@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Video_Syncer.Helpers;
 
 namespace Video_Syncer.Middleware
 {
@@ -17,7 +18,7 @@ namespace Video_Syncer.Middleware
 
         public Task Invoke(HttpContext context)
         {
-            System.Diagnostics.Debug.WriteLine("custom middleware is called");
+            SessionHelper.SetupSession(context);
 
             // Call the next delegate/middleware in the pipeline
             return _next(context);
