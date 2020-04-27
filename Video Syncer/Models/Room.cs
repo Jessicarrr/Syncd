@@ -231,6 +231,17 @@ namespace Video_Syncer.Models
             return user;
         }
 
+        public bool IsUserSessionIDMatching(int userId, string sessionID)
+        {
+            User user = GetUserById(userId);
+
+            if(String.Equals(user.sessionID, sessionID))
+            {
+                return true;
+            }
+            return false;
+        }
+
         public User Join(string name, string sessionID)
         {
             User user = CreateNewUser(name, sessionID);

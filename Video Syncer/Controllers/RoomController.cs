@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -50,20 +51,31 @@ namespace Video_Syncer.Controllers
             }
 
             Room room = TryGetRoom(request.roomId);
-
+            
             if (room == null)
             {
                 return null;
             }
-            else
+
+            string sessionID = HttpContext.Session.Id;
+
+            if (!room.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                room.NewVideoState(request.userId, VideoState.Ended);
-                VideoStateChangeCallback callback = new VideoStateChangeCallback()
+                Trace.WriteLine("[VSY] End Video Request - session ID did not match in room \"" + room.id + "\"! Session ID of the request was " + sessionID);
+                VideoStateChangeCallback callback2 = new VideoStateChangeCallback()
                 {
-                    success = true
+                    success = false
                 };
-                return Json(callback);
+                return Json(callback2);
             }
+
+            room.NewVideoState(request.userId, VideoState.Ended);
+            VideoStateChangeCallback callback = new VideoStateChangeCallback()
+            {
+                success = true
+            };
+            return Json(callback);
+
         }
 
         [HttpPost]
@@ -80,15 +92,25 @@ namespace Video_Syncer.Controllers
             {
                 return null;
             }
-            else
+
+            string sessionID = HttpContext.Session.Id;
+
+            if (!room.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                room.NewVideoState(request.userId, VideoState.Playing);
-                VideoStateChangeCallback callback = new VideoStateChangeCallback()
+                Trace.WriteLine("[VSY] Play Video Request - session ID did not match in room \"" + room.id + "\"! Session ID of the request was " + sessionID);
+                VideoStateChangeCallback callback2 = new VideoStateChangeCallback()
                 {
-                    success = true
+                    success = false
                 };
-                return Json(callback);
+                return Json(callback2);
             }
+
+            room.NewVideoState(request.userId, VideoState.Playing);
+            VideoStateChangeCallback callback = new VideoStateChangeCallback()
+            {
+                success = true
+            };
+            return Json(callback);
         }
 
         [HttpPost]
@@ -105,15 +127,25 @@ namespace Video_Syncer.Controllers
             {
                 return null;
             }
-            else
+
+            string sessionID = HttpContext.Session.Id;
+
+            if (!room.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                room.NewVideoState(request.userId, VideoState.Paused);
-                VideoStateChangeCallback callback = new VideoStateChangeCallback()
+                Trace.WriteLine("[VSY] Pause Request - session ID did not match in room \"" + room.id + "\"! Session ID of the request was " + sessionID);
+                VideoStateChangeCallback callback2 = new VideoStateChangeCallback()
                 {
-                    success = true
+                    success = false
                 };
-                return Json(callback);
+                return Json(callback2);
             }
+
+            room.NewVideoState(request.userId, VideoState.Paused);
+            VideoStateChangeCallback callback = new VideoStateChangeCallback()
+            {
+                success = true
+            };
+            return Json(callback);
         }
 
         [HttpPost]
@@ -130,16 +162,25 @@ namespace Video_Syncer.Controllers
             {
                 return null;
             }
-            else
+
+            string sessionID = HttpContext.Session.Id;
+
+            if (!room.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                room.NewVideo(request.youtubeVideoId);
-                Console.WriteLine("Changing video to " + request.youtubeVideoId);
-                VideoStateChangeCallback callback = new VideoStateChangeCallback()
+                Trace.WriteLine("[VSY] Change Video Request - session ID did not match in room \"" + room.id + "\"! Session ID of the request was " + sessionID);
+                VideoStateChangeCallback callback2 = new VideoStateChangeCallback()
                 {
-                    success = true
+                    success = false
                 };
-                return Json(callback);
+                return Json(callback2);
             }
+
+            room.NewVideo(request.youtubeVideoId);
+            VideoStateChangeCallback callback = new VideoStateChangeCallback()
+            {
+                success = true
+            };
+            return Json(callback);
         }
 
         [HttpPost]
@@ -156,15 +197,25 @@ namespace Video_Syncer.Controllers
             {
                 return null;
             }
-            else
+
+            string sessionID = HttpContext.Session.Id;
+
+            if (!room.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                room.NewVideoState(request.userId, VideoState.Buffering);
-                VideoStateChangeCallback callback = new VideoStateChangeCallback()
+                Trace.WriteLine("[VSY] Buffer Video Request - session ID did not match in room \"" + room.id + "\"! Session ID of the request was " + sessionID);
+                VideoStateChangeCallback callback2 = new VideoStateChangeCallback()
                 {
-                    success = true
+                    success = false
                 };
-                return Json(callback);
+                return Json(callback2);
             }
+
+            room.NewVideoState(request.userId, VideoState.Buffering);
+            VideoStateChangeCallback callback = new VideoStateChangeCallback()
+            {
+                success = true
+            };
+            return Json(callback);
         }
 
         [HttpPost]
@@ -176,21 +227,32 @@ namespace Video_Syncer.Controllers
             }
 
             Room room = TryGetRoom(request.roomId);
+            
 
             if (room == null)
             {
                 return null;
             }
-            else
-            {
-                room.TimeUpdate(request.videoTimeSeconds);
 
-                TimeChangeRequestCallback callback = new TimeChangeRequestCallback()
+            string sessionID = HttpContext.Session.Id;
+
+            if (!room.IsUserSessionIDMatching(request.userId, sessionID))
+            {
+                Trace.WriteLine("[VSY] Time Update Request - session ID did not match in room \"" + room.id + "\"! Session ID of the request was " + sessionID);
+                LeaveRequestCallback callback2 = new LeaveRequestCallback()
                 {
-                    success = true
+                    success = false
                 };
-                return Json(callback);
+                return Json(callback2);
             }
+
+            room.TimeUpdate(request.videoTimeSeconds);
+
+            TimeChangeRequestCallback callback = new TimeChangeRequestCallback()
+            {
+                success = true
+            };
+            return Json(callback);
         }
 
         private Room TryGetRoom(string roomId)
@@ -221,27 +283,34 @@ namespace Video_Syncer.Controllers
             {
                 return null;
             }
-            else
+
+            string sessionID = HttpContext.Session.Id;
+
+            if (!room.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                // update room
-                room.UpdateVideoStatistics(
-                    request.videoTimeSeconds,
-                    request.currentYoutubeVideoId);
-
-                // update user
-                room.UpdateUser(request.userId, request.videoTimeSeconds);
-
-                // send users back
-                UpdateRequestCallback callback = new UpdateRequestCallback()
-                {
-                    userList = room.userList,
-                    currentYoutubeVideoId = room.currentYoutubeVideoId,
-                    name = room.name,
-                    currentVideoState = room.GetStateForUser(request.userId),
-                    videoTimeSeconds = room.videoTimeSeconds
-                };
-                return Json(callback);
+                Trace.WriteLine("[VSY] General Update Request - session ID did not match in room \"" + room.id + "\"! Session ID of the request was " + sessionID);
+                return null;
             }
+
+            // update room
+            room.UpdateVideoStatistics(
+                request.videoTimeSeconds,
+                request.currentYoutubeVideoId);
+
+            // update user
+            room.UpdateUser(request.userId, request.videoTimeSeconds);
+
+            // send users back
+            UpdateRequestCallback callback = new UpdateRequestCallback()
+            {
+                userList = room.userList,
+                currentYoutubeVideoId = room.currentYoutubeVideoId,
+                name = room.name,
+                currentVideoState = room.GetStateForUser(request.userId),
+                videoTimeSeconds = room.videoTimeSeconds
+            };
+            return Json(callback);
+
 
 
             //return Json("Server says thank you! Data received was " + request.name + " and " + request.roomId);
@@ -292,21 +361,31 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                LeaveRequestCallback callback = new LeaveRequestCallback()
+                LeaveRequestCallback callback2 = new LeaveRequestCallback()
                 {
                     success = false
                 };
-                return Json(callback);
+                return Json(callback2);
             }
-            else
+
+            string sessionID = HttpContext.Session.Id;
+
+            if (!room.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                room.Leave(request.userId);
-                LeaveRequestCallback callback = new LeaveRequestCallback()
+                Trace.WriteLine("[VSY] Leave Room Request - session ID did not match in room \"" + room.id + "\"! Session ID of the request was " + sessionID);
+                LeaveRequestCallback callback2 = new LeaveRequestCallback()
                 {
-                    success = true
+                    success = false
                 };
-                return Json(callback);
+                return Json(callback2);
             }
+
+            room.Leave(request.userId);
+            LeaveRequestCallback callback = new LeaveRequestCallback()
+            {
+                success = true
+            };
+            return Json(callback);
 
 
             //return Json("Server says thank you! Data received was " + request.name + " and " + request.roomId);
