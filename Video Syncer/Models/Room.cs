@@ -174,7 +174,7 @@ namespace Video_Syncer.Models
             double timeSinceLastCheckD = Convert.ToDouble(timeSinceLastCheck);
             double timeToAdd = timeSinceLastCheckD / 1000;
             videoTimeSeconds += timeToAdd;
-            System.Diagnostics.Debug.WriteLine("Added " + timeToAdd + " to video time for a total of " + videoTimeSeconds);
+            Console.WriteLine("Added " + timeToAdd + " to video time for a total of " + videoTimeSeconds);
             lastCheck = DateTimeOffset.Now.ToUnixTimeMilliseconds();
         }
 
@@ -191,7 +191,7 @@ namespace Video_Syncer.Models
             else
             {
                 lastCheck = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                System.Diagnostics.Debug.WriteLine("Video is not playing. Video is " + GetSuggestedVideoState());
+                Console.WriteLine("Video is not playing. Video is " + GetSuggestedVideoState());
             }
         }
 

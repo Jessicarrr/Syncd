@@ -133,7 +133,7 @@ namespace Video_Syncer.Controllers
             else
             {
                 room.NewVideo(request.youtubeVideoId);
-                System.Diagnostics.Debug.WriteLine("Changing video to " + request.youtubeVideoId);
+                Console.WriteLine("Changing video to " + request.youtubeVideoId);
                 VideoStateChangeCallback callback = new VideoStateChangeCallback()
                 {
                     success = true

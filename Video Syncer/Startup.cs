@@ -9,7 +9,9 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Video_Syncer.Middleware;
+using Microsoft.Extensions.Logging;
 
 namespace Video_Syncer
 {
@@ -44,7 +46,7 @@ namespace Video_Syncer
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -56,6 +58,10 @@ namespace Video_Syncer
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            var logger = loggerFactory.CreateLogger("Startup");
+            logger.LogWarning("Logger configured!");
+            Console.WriteLine("hello test");
+
             app.UseSession();
             app.UseMiddleware<CustomMiddleware>();
             
