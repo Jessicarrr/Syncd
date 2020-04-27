@@ -198,10 +198,7 @@ function serverChangeVideo(paramVideoId, seconds = 0) {
 
     currentVideoId = paramVideoId;
 
-    var ytUrl = buildYoutubeUrl(currentVideoId);
-    callApiWithCallback(ytUrl, function (data) {
-        document.getElementById("video-title").innerHTML = data.title;
-    });
+    setVideoTitle();
 }
 
 function changeVideo(paramVideoId, seconds = 0) {
@@ -213,12 +210,19 @@ function changeVideo(paramVideoId, seconds = 0) {
     currentVideoId = paramVideoId;
     sendVideoChangeRequest(paramVideoId);
 
+    setVideoTitle();
+}
+
+function setVideoTitle() {
     var ytUrl = buildYoutubeUrl(currentVideoId);
     callApiWithCallback(ytUrl, function (data) {
+        if (typeof (data.title) === 'undefined') {
+            document.getElementById("video-title").innerHTML = "[No video title found]";
+            return;
+        }
         document.getElementById("video-title").innerHTML = data.title;
     });
 }
-
 
 /**
  * Sets the video playing to what the server thinks the video should be,
