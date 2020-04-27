@@ -25,8 +25,8 @@ namespace Video_Syncer.Models
         private List<User> GetTestUsers()
         {
             var list = new List<User>();
-            User user = new User(1000, "mau mau");
-            User user2 = new User(1001, "jessicaroon");
+            User user = new User(1000, "mau mau", "xyz");
+            User user2 = new User(1001, "jessicaroon", "xyz");
 
             list.Add(user);
             list.Add(user2);

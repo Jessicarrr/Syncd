@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -174,7 +175,7 @@ namespace Video_Syncer.Models
             double timeSinceLastCheckD = Convert.ToDouble(timeSinceLastCheck);
             double timeToAdd = timeSinceLastCheckD / 1000;
             videoTimeSeconds += timeToAdd;
-            Console.WriteLine("Added " + timeToAdd + " to video time for a total of " + videoTimeSeconds);
+            //Trace.WriteLine("[VSY] Added " + timeToAdd + " to video time for a total of " + videoTimeSeconds);
             lastCheck = DateTimeOffset.Now.ToUnixTimeMilliseconds();
         }
 
@@ -191,7 +192,7 @@ namespace Video_Syncer.Models
             else
             {
                 lastCheck = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                Console.WriteLine("Video is not playing. Video is " + GetSuggestedVideoState());
+                //Trace.WriteLine("[VSY] Video is not playing. Video is " + GetSuggestedVideoState());
             }
         }
 
@@ -230,14 +231,15 @@ namespace Video_Syncer.Models
             return user;
         }
 
-        public User Join(string name)
+        public User Join(string name, string sessionID)
         {
-            User user = CreateNewUser(name);
+            User user = CreateNewUser(name, sessionID);
+            Trace.WriteLine("[VSY] [sessionID] Joining user with session id: " + sessionID);
             Join(user);
             return user;
         }
 
-        private User CreateNewUser(string name)
+        private User CreateNewUser(string name, string sessionID)
         {
             int userId = CreateUniqueUserId();
 
@@ -245,7 +247,7 @@ namespace Video_Syncer.Models
             {
                 name = name.Substring(0, usernameCharacterLimit);
             }
-            User user = new User(userId, name);
+            User user = new User(userId, name, sessionID);
             return user;
         }
 

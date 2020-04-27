@@ -263,7 +263,8 @@ namespace Video_Syncer.Controllers
             }
             else
             {
-                User user = room.Join(request.name);
+                string sessionID = HttpContext.Session.Id;
+                User user = room.Join(request.name, sessionID);
                 JoinRequestCallback callback = new JoinRequestCallback()
                 {
                     userId = user.id,
