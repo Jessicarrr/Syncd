@@ -35,7 +35,7 @@ namespace Video_Syncer.Models
             
         }
 
-        public bool isFull()
+        public bool IsFull()
         {
             if(userList.Count >= maxUsers)
             {
@@ -273,7 +273,7 @@ namespace Video_Syncer.Models
 
         private void Join(User user)
         {
-            if(!UserIdExists(user.id) && !isFull())
+            if(!UserIdExists(user.id) && !IsFull())
             {
                 userList.Add(user);
 

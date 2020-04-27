@@ -22,7 +22,7 @@ namespace Video_Syncer.Controllers
             }
             else
             {
-                if(room.isFull())
+                if(room.IsFull())
                 {
                     return View("RoomFull");
                 }
