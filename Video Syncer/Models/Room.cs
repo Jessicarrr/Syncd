@@ -26,6 +26,8 @@ namespace Video_Syncer.Models
 
         public int usernameCharacterLimit = 25;
 
+        public int disconnectedUserThresholdSeconds = 20;
+
         public Room(string id, string name = "")
         {
             this.id = id;
@@ -43,6 +45,18 @@ namespace Video_Syncer.Models
                 return true;
             }
             return false;
+        }
+
+        private void ForceLeaveDisconnectedUsers()
+        {
+            foreach (User user in userList)
+            {
+                if(user.SecondsSinceLastConnection() >= disconnectedUserThresholdSeconds)
+                {
+                    Trace.WriteLine("[VSY] User \"" + user.name + "\" (id: " + user.id + ") timed out from room " + id);
+                    Leave(user);
+                }
+            }
         }
 
         public void NewVideo(string youtubeId)
@@ -126,6 +140,8 @@ namespace Video_Syncer.Models
 
         public void NewVideoState(int userId, VideoState newState)
         {
+            User user = GetUserById(userId);
+
             if (newState == VideoState.Paused)
             {
                 SetStateForAll(VideoState.Paused);
@@ -148,6 +164,13 @@ namespace Video_Syncer.Models
                 
             }
             UpdateVideoStatistics(videoTimeSeconds, currentYoutubeVideoId);
+
+            if(user != null)
+            {
+                user.UpdateLastConnectionTime();
+            }
+
+            ForceLeaveDisconnectedUsers();
             
             /*
             else if (newState == VideoState.Unstarted)
@@ -228,6 +251,8 @@ namespace Video_Syncer.Models
             }
 
             user.videoTimeSeconds = seconds;
+            user.UpdateLastConnectionTime();
+            ForceLeaveDisconnectedUsers();
             return user;
         }
 
@@ -280,6 +305,8 @@ namespace Video_Syncer.Models
             if(UserIdExists(userId))
             {
                 User user = GetUserById(userId);
+
+                Trace.WriteLine("[VSY] User left! \"" + user.name + "\" (id: " + user.id + ") from room " + id);
                 userList.Remove(user);
             }
         }

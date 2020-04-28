@@ -12,6 +12,7 @@ namespace Video_Syncer.Models
         public int id { get; set; }
         public string name { get; set; }
         public string sessionID { get; set; }
+        public long lastConnectionTime { get; set; }
 
         public User(int Id, string Name, string sessionID)
         {
@@ -21,7 +22,22 @@ namespace Video_Syncer.Models
 
             videoState = VideoState.Unstarted;
             videoTimeSeconds = -1;
+
+            lastConnectionTime = DateTimeOffset.Now.ToUnixTimeMilliseconds(); 
         }
         
+        public int SecondsSinceLastConnection()
+        {
+            long now = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            long timeSinceLastConnectionMillis = now - lastConnectionTime;
+            int convertedToSeconds = Convert.ToInt32(timeSinceLastConnectionMillis / 1000);
+            return convertedToSeconds;
+        }
+
+        public void UpdateLastConnectionTime()
+        {
+            lastConnectionTime = DateTimeOffset.Now.ToUnixTimeMilliseconds(); 
+        }
+
     }
 }
