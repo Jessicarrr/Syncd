@@ -34,7 +34,21 @@ function tick() {
     var timeSinceLastNetworkUpdate = currentTime - lastNetworkSend;
 
     if (timeSinceLastNetworkUpdate > networkSendPeriod) {
-        sendUpdateRequest();
+
+        if (failedUpdatesInARow > 7) {
+            if (!isDisconnectWarningVisible()) {
+                showDisconnectWarning();
+            }
+            changeDisplayedDisconnectAttemptsNumber(failedJoinRequests);
+            sendJoinRequest();
+        }
+        else {
+            if (isDisconnectWarningVisible()) {
+                hideDisconnectWarning();
+            }
+            sendUpdateRequest();
+            
+        }
         lastNetworkSend = new Date().getTime();
     }
     

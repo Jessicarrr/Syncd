@@ -1,4 +1,6 @@
 ﻿var userId = -1;
+var failedUpdatesInARow = 0;
+var failedJoinRequests = 0; // represents how many times we tried to reconnect the disconnected user in a row
 
 /**
  * An event handler for when the user leaves the page. This includes refreshing, or navigating
@@ -64,6 +66,9 @@ function onJoinSuccess(response) {
         var currentUserName = user["name"];
         addUser(currentUserId, currentUserName);
     }
+    failedUpdatesInARow = 0;
+    failedJoinRequests = 0;
+    console.log("successfully joined room");
     tick();
 }
 
@@ -72,7 +77,7 @@ function onJoinSuccess(response) {
  * @param {any} response
  */
 function onJoinError(response) {
-    alert("error: " + response.statusText);
+    alert("error when trying to join room");
 }
 
 /**
@@ -232,6 +237,7 @@ function onLeaveError() {
 function sendUpdateRequest() {
     var videoTime = getVideoTime();
 
+    console.log("trying to send update");
     //console.log("sendUpdateRequest - Sending roomId " + roomId + " and userId " + userId + " youtube : " + currentVideoId + ", state: " + stateNumber + ", videoTimeSeconds: " + videoTime);
 
     $.ajax({
@@ -311,8 +317,10 @@ function onUpdateSuccess(response) {
             //console.log("Updated user" + currentUserName + "(" + currentUserId + ") with " + currentUserState + " and " + currentUserVideoTime);
         }
     }    
+    failedUpdatesInARow = 0;
 }
 
 function onUpdateError(response) {
+    failedUpdatesInARow += 1;
     console.log("Update failure.");
 }
