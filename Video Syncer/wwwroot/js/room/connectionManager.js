@@ -77,7 +77,7 @@ function onJoinSuccess(response) {
  * @param {any} response
  */
 function onJoinError(response) {
-    alert("error when trying to join room");
+    failedJoinRequests++;
 }
 
 /**
