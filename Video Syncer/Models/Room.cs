@@ -1,13 +1,18 @@
-﻿using System;
+﻿using Microsoft.Win32.SafeHandles;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Video_Syncer.Models
 {
-    public class Room
+    public class Room : IDisposable
     {
+        private bool disposed = false;
+        SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
         public string id { get; set; }
         public string name { get; set; }
 
@@ -28,6 +33,9 @@ namespace Video_Syncer.Models
 
         public int disconnectedUserThresholdSeconds = 20;
 
+        public int periodicTaskMilliseconds = 6000;
+        private CancellationTokenSource source;
+
         public Room(string id, string name = "")
         {
             this.id = id;
@@ -35,7 +43,43 @@ namespace Video_Syncer.Models
             
             currentYoutubeVideoId = "LXb3EKWsInQ";
             videoTimeSeconds = 0;
-            
+
+            StartPeriodicTasks();
+        }
+
+        private void StartPeriodicTasks()
+        {
+            source = new CancellationTokenSource();
+            new Task(async() => await PeriodicForceLeaveAllTimedOutUsers(), source.Token).Start();
+        }
+
+        private void CancelPeriodicTasks()
+        {
+            Trace.WriteLine("[VSY] CancelPeriodicTasks() ran on room " + id);
+            source.Cancel();
+        }
+
+        public async Task PeriodicForceLeaveAllTimedOutUsers()
+        {
+            while (true)
+            {
+                new Task(() => ForceLeaveAllTimedOutUsers()).Start();
+                await Task.Delay(periodicTaskMilliseconds);
+            }
+        }
+
+        private void ForceLeaveAllTimedOutUsers()
+        {
+            Trace.WriteLine("[VSY] Called ForceLeaveAllTimedOutUsersAsync in room " + id);
+
+            foreach (User user in userList)
+            {
+                if (user.SecondsSinceLastConnection() >= disconnectedUserThresholdSeconds)
+                {
+                    Trace.WriteLine("[VSY] User \"" + user.name + "\" (id: " + user.id + ") timed out from room " + id);
+                    Leave(user);
+                }
+            }
         }
 
         public bool IsFull()
@@ -45,18 +89,6 @@ namespace Video_Syncer.Models
                 return true;
             }
             return false;
-        }
-
-        private void ForceLeaveDisconnectedUsers()
-        {
-            foreach (User user in userList)
-            {
-                if(user.SecondsSinceLastConnection() >= disconnectedUserThresholdSeconds)
-                {
-                    Trace.WriteLine("[VSY] User \"" + user.name + "\" (id: " + user.id + ") timed out from room " + id);
-                    Leave(user);
-                }
-            }
         }
 
         public void NewVideo(string youtubeId)
@@ -169,8 +201,6 @@ namespace Video_Syncer.Models
             {
                 user.UpdateLastConnectionTime();
             }
-
-            ForceLeaveDisconnectedUsers();
             
             /*
             else if (newState == VideoState.Unstarted)
@@ -252,7 +282,6 @@ namespace Video_Syncer.Models
 
             user.videoTimeSeconds = seconds;
             user.UpdateLastConnectionTime();
-            ForceLeaveDisconnectedUsers();
             return user;
         }
 
@@ -359,6 +388,27 @@ namespace Video_Syncer.Models
                 }
             }
             return null;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if(disposed)
+                return;
+
+            if (disposing)
+            {
+                handle.Dispose();
+                CancelPeriodicTasks();
+                Trace.WriteLine("[VSY] Room " + id + " disposed.");
+            }
+
+            disposed = true;
         }
     }
 }
