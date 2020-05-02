@@ -12,7 +12,7 @@ namespace Video_Syncer.Models
     public class Room : IDisposable
     {
         private bool disposed = false;
-        SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
+        private SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
         public string id { get; set; }
         public string name { get; set; }
 
@@ -50,7 +50,12 @@ namespace Video_Syncer.Models
         private void StartPeriodicTasks()
         {
             source = new CancellationTokenSource();
-            new Task(async() => await PeriodicForceLeaveAllTimedOutUsers(), source.Token).Start();
+            var task = Task.Run(async () => {
+
+                await PeriodicForceLeaveAllTimedOutUsers(source.Token);
+
+            },
+            source.Token);
         }
 
         private void CancelPeriodicTasks()
@@ -59,10 +64,15 @@ namespace Video_Syncer.Models
             source.Cancel();
         }
 
-        public async Task PeriodicForceLeaveAllTimedOutUsers()
+        public async Task PeriodicForceLeaveAllTimedOutUsers(CancellationToken token)
         {
             while (true)
             {
+                if(token.IsCancellationRequested)
+                {
+                    break;
+                }
+
                 new Task(() => ForceLeaveAllTimedOutUsers()).Start();
                 await Task.Delay(periodicTaskMilliseconds);
             }

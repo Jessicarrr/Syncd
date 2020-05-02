@@ -1,15 +1,26 @@
-﻿using System;
+﻿using Microsoft.Win32.SafeHandles;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Video_Syncer.Models
 {
-    public class RoomManager
+    public class RoomManager : IDisposable
     {
         private static readonly RoomManager roomManager = new RoomManager();
 
         public List<Room> roomList = new List<Room>();
+        private CancellationTokenSource source;
+        private int periodicTaskMilliseconds = 10000;
+
+        private bool disposed = false;
+        private SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
+
+
 
         public Room CreateNewRoom()
         {
@@ -22,22 +33,14 @@ namespace Video_Syncer.Models
             return room;
         }
 
-        private List<User> GetTestUsers()
-        {
-            var list = new List<User>();
-            User user = new User(1000, "mau mau", "xyz");
-            User user2 = new User(1001, "jessicaroon", "xyz");
-
-            list.Add(user);
-            list.Add(user2);
-
-            return list;
-
-        }
-
         public static RoomManager GetSingletonInstance()
         {
             return roomManager;
+        }
+
+        private RoomManager()
+        {
+            StartPeriodicTasks();
         }
 
         private string CreateRandomName()
@@ -116,6 +119,77 @@ namespace Video_Syncer.Models
                 }
             }
             return false;
+        }
+
+        private void StartPeriodicTasks()
+        {
+            source = new CancellationTokenSource();
+            var task = Task.Run(async () =>
+            {
+                await PeriodicDestroyEmptyRooms(source.Token);
+            }, 
+            source.Token);
+        }
+
+        private void CancelPeriodicTasks()
+        {
+            Trace.WriteLine("[VSY] CancelPeriodicTasks() ran on room ");
+            source.Cancel();
+        }
+
+        public async Task PeriodicDestroyEmptyRooms(CancellationToken token)
+        {
+            while (true)
+            {
+                if(token.IsCancellationRequested)
+                {
+                    break;
+                }
+
+                new Task(() => DestroyEmptyRooms()).Start();
+                await Task.Delay(periodicTaskMilliseconds);
+            }
+        }
+
+        private void DestroyEmptyRooms()
+        {
+            Trace.WriteLine("[VSY] Called DestroyEmptyRooms()");
+
+            foreach (Room room in roomList)
+            {
+                if(room.userList.Count <= 0)
+                {
+                    Trace.WriteLine("[VSY] Destroying room " + room.id);
+                    room.Dispose();
+                    roomList.Remove(room);
+                }
+                if(roomList.Count <= 0)
+                {
+                    Trace.WriteLine("[VSY] All rooms are destroyed, stopping RoomManager periodic tasks");
+                    source.Cancel();
+                }
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                handle.Dispose();
+                CancelPeriodicTasks();
+                Trace.WriteLine("[VSY] Room Manager disposed.");
+            }
+
+            disposed = true;
         }
     }
 }
