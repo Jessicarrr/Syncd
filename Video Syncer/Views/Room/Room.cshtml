@@ -47,8 +47,12 @@
 
 <h3 id="video-title"></h3>
 
+<hr />
+
+<label for="searchBar" id="searchBarLabel">Add a video</label>
 <div id="searchArea">
-    <input id="searchBar" type="text" placeholder="Add Youtube video" />
+    
+    <input id="searchBar" type="text" placeholder="Place URL here" />
     <button id="addButton" type="button">Add</button>
 </div>
 
@@ -58,20 +62,6 @@
     </div>
 
 </div>
-
-<table class="debugTable">
-    <tr>
-        <th>Debug</th>
-    </tr>
-    <tr>
-        <td>Video state:</td>
-        <td id="videoState">N/A</td>
-    </tr>
-    <tr>
-        <td>Video time:</td>
-        <td id="videoTime">N/A</td>
-    </tr>
-</table>
 
 
 @foreach (User user in Model.userList)

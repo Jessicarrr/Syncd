@@ -146,8 +146,6 @@ function onPlayerStateChange(event) {
             break;
 
     }
-
-    document.getElementById("videoState").innerHTML = stateText;
 }
 
 function stateIntToString(stateNumber) {

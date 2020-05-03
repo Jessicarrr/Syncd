@@ -22,14 +22,6 @@ function tick() {
 
     setTimeout(tick, tickMs);
 
-    if (!isNaN(time)) {
-        document.getElementById("videoTime").innerHTML = formatVideoTime(time);
-    }
-    else {
-        document.getElementById("videoTime").innerHTML = "N/A";
-
-    }
-
     var currentTime = new Date().getTime();
     var timeSinceLastNetworkUpdate = currentTime - lastNetworkSend;
 
