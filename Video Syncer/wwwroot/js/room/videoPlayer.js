@@ -1,8 +1,8 @@
 ﻿var stateText = "[Video State]"; // the current video state (paused/playing/etc) in a readable format for UI purposes.
 var stateNumber = -1; // the current video state (paused/playing/etc)
 
-var youtubeWidth = '850';
-var youtubeHeight = '478';
+var youtubeWidth = '1062';
+var youtubeHeight = '597';
 function startLoadingYoutubePlayer() {
     // 1. This code loads the IFrame Player API code asynchronously.
     var tag = document.createElement('script');
