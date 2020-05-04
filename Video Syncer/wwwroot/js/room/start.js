@@ -7,6 +7,8 @@
     createPlayerOverObject(playerHTMLObject, youtubeWidth, youtubeHeight);
 
     setupHidePlayerCheckbox();
+
+    addTestVideos();
 });
 
 var tickMs = 200; // how often to run function tick()

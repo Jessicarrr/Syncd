@@ -13,6 +13,7 @@
 <!-- End custom video player lib -->
 
 <script src="~/js/room/userListManager.js"></script>
+<script src="~/js/room/playlist-manager.js"></script>
 <script src="~/js/room/videoPlayer.js"></script>
 <script src="~/js/room/videoListManager.js"></script>
 <script src="~/js/room/connectionManager.js"></script>
@@ -56,13 +57,21 @@
     <button id="addButton" type="button">Add</button>
 </div>
 
-<div id="userListArea">
-    <div class="usersHeading">
-        <h5>Users</h5>
+<div id="user-and-playlist-area">
+    <div id="playlist-area">
+        <div class="table-heading">
+            <h5>Playlist</h5>
+        </div>
+
     </div>
 
-</div>
+    <div id="userListArea">
+        <div class="table-heading">
+            <h5>Users</h5>
+        </div>
 
+    </div>
+</div>
 
 @foreach (User user in Model.userList)
 {

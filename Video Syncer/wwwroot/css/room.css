@@ -1,64 +1,47 @@
-﻿#searchBar {
-    width: 70%;
+﻿
+
+/* Playlist */
+#playlist-area {
+    height: 35%;
     margin-bottom: 10px;
+    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .3), 1px 1px 1px 1px rgba(0, 0, 0, .3);
+    margin-right: 10%;
+    min-width: 40%;
+    max-width: 50%;
 }
 
-#searchBarLabel {
-    font-size: 17px;
+.playlist-div {
+    border-bottom: 1px solid gray;
+    margin-bottom: 2px;
+    padding: 0px 5px 20px 5px;
 }
 
-.playerArea{
-    display: flex;
+.playlist-title {
+    font-size: 16px;
 }
 
+.playlist-author {
+    float: left;
+    margin-right: 3px;
+    padding-right: 3px;
+    font-size: 12px;
+}
 
+/* user list */
 #userListArea {
     height: 35%;
     margin-bottom: 10px;
     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .3), 1px 1px 1px 1px rgba(0, 0, 0, .3);
-    margin-left: 2%;
     white-space: nowrap;
+    margin-right: 1%;
     min-width: 16%;
     max-width: 25%;
-}
-
-table {
-    display: inline-block;
-    margin-right: 5px;
-}
-
-
-
-th, td {
-    padding-left: 3px;
-    padding-right: 3px;
-    /*border: 1px solid black;*/
-}
-tr{ 
-
-}
-
-#alert-disconnected {
-    display: none;
-}
-
-.usersHeading {
-    padding: 3px 0px 0px 3px;
-    border-bottom: 1px solid gray;
-}
-
-#video-title{ 
-    margin-bottom: 2%;
 }
 
 .userDiv {
     border-bottom: 1px solid gray;
     margin-bottom: 2px;
     padding: 0px 5px 5px 5px;
-}
-
-.userDivElement {
-    margin: 0;
 }
 
 p[id$="userName"] {
@@ -85,3 +68,68 @@ p[id$="userState"] {
 p[id$="userTime"] {
     font-size: 12px;
 }
+
+/* playlist & userlist */
+
+.userDivElement, .playlist-div-element {
+    margin: 0;
+}
+
+#user-and-playlist-area {
+    overflow: hidden;
+    width: 75%;
+}
+
+#userListArea {
+    float: left;
+}
+
+#playlist-area {
+    float: left;
+}
+
+.table-heading {
+    padding: 3px 0px 0px 3px;
+    border-bottom: 1px solid gray;
+}
+
+table {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+th, td {
+    padding-left: 3px;
+    padding-right: 3px;
+    /*border: 1px solid black;*/
+}
+
+tr{ 
+
+}
+
+/* ungrouped page elements */
+#alert-disconnected {
+    display: none;
+}
+
+#video-title{ 
+    margin-bottom: 2%;
+}
+
+#searchBar {
+    width: 70%;
+    margin-bottom: 10px;
+}
+
+#searchBarLabel {
+    font-size: 17px;
+}
+
+.playerArea {
+    display: flex;
+}
+
+
+
+
