@@ -335,8 +335,6 @@ namespace Video_Syncer.Controllers
             // update user
             room.UpdateUser(request.userId, request.videoTimeSeconds);
 
-            Trace.WriteLine("[VSY] Playlist has " + room.playlist.Count);
-
             // send users back
             UpdateRequestCallback callback = new UpdateRequestCallback()
             {

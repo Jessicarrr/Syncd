@@ -71,6 +71,10 @@ function createUIForPlaylistVideo(titleParam, urlParam, authorParam) {
     playlistDiv.appendChild(authorElement);
     playlistDiv.appendChild(urlElement);
 
+    playlistDiv.onclick = function () {
+        changeVideo(urlParam);
+    }
+
     return playlistDiv;
 }
 
