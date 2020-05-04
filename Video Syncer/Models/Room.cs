@@ -17,7 +17,7 @@ namespace Video_Syncer.Models
         public string name { get; set; }
 
         public string currentYoutubeVideoId { get; set; }
-        public List<string> youtubePlaylist { get; set; }
+        public List<PlaylistObject> playlist { get; set; }
 
         public double videoTimeSeconds { get; set; }
 
@@ -43,6 +43,8 @@ namespace Video_Syncer.Models
             
             currentYoutubeVideoId = "LXb3EKWsInQ";
             videoTimeSeconds = 0;
+
+            playlist = new List<PlaylistObject>();
 
             StartPeriodicTasks();
         }
@@ -80,7 +82,7 @@ namespace Video_Syncer.Models
 
         private void ForceLeaveAllTimedOutUsers()
         {
-            Trace.WriteLine("[VSY] Called ForceLeaveAllTimedOutUsersAsync in room " + id);
+            //Trace.WriteLine("[VSY] Called ForceLeaveAllTimedOutUsersAsync in room " + id);
 
             foreach (User user in userList)
             {
@@ -99,6 +101,18 @@ namespace Video_Syncer.Models
                 return true;
             }
             return false;
+        }
+
+        public void AddToPlaylist(string youtubeId)
+        {
+            PlaylistObject obj = new PlaylistObject();
+            Random random = new Random();
+
+            obj.title = youtubeId;
+            obj.author = "[author]";
+            obj.videoId = youtubeId;
+
+            playlist.Add(obj);
         }
 
         public void NewVideo(string youtubeId)

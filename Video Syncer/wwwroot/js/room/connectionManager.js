@@ -164,6 +164,26 @@ function sendVideoEndedRequest() {
  * Send a message to the server asking to change the currently playing video.
  * @param {any} videoIdParam The YouTube video ID. Usually after the "v=" part of a youtube video URL.
  */
+function sendAddToPlaylistRequest(videoIdParam) {
+    $.ajax({
+        url: '/room/AddToPlaylist',
+        method: 'POST',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(
+            {
+                userId: userId,
+                roomId: roomId,
+                youtubeVideoId: videoIdParam
+            }
+        )
+    });
+}
+
+/**
+ * Send a message to the server asking to change the currently playing video.
+ * @param {any} videoIdParam The YouTube video ID. Usually after the "v=" part of a youtube video URL.
+ */
 function sendVideoChangeRequest(videoIdParam) {
     $.ajax({
         url: '/room/ChangeVideo',
@@ -176,9 +196,7 @@ function sendVideoChangeRequest(videoIdParam) {
                 roomId: roomId,
                 youtubeVideoId : videoIdParam
             }
-        )/*,
-        success: onJoinSuccess,
-        error: onJoinError*/
+        )
     });
 }
 
@@ -236,8 +254,6 @@ function onLeaveError() {
  */
 function sendUpdateRequest() {
     var videoTime = getVideoTime();
-
-    console.log("trying to send update");
     //console.log("sendUpdateRequest - Sending roomId " + roomId + " and userId " + userId + " youtube : " + currentVideoId + ", state: " + stateNumber + ", videoTimeSeconds: " + videoTime);
 
     $.ajax({
@@ -295,10 +311,28 @@ function onUpdateSuccess(response) {
     var newVideo = response["currentYoutubeVideoId"];
     var newVideoState = response["currentVideoState"];
     var newVideoTimeSeconds = response["videoTimeSeconds"];
+    var playlist = response["playlist"];
 
     //console.log("onUpdateSuccess - Received from server video " + newVideo + " with state " + newVideoState + " and time " + newVideoTimeSeconds);
 
     serverSetVideoAndState(newVideo, newVideoState, newVideoTimeSeconds);
+
+    if (playlist != null) {
+        removeAllPlaylistVideos();
+
+        for (var key in playlist) {
+            var videoObject = playlist[key];
+
+            var videoObjectTitle = videoObject["title"];
+            var videoObjectAuthor = videoObject["author"];
+            var videoObjectId = videoObject["videoId"];
+
+            addDataToPlaylist(videoObjectTitle, videoObjectId, videoObjectAuthor);
+        }
+    }
+    else {
+        console.log("playlist is null");
+    }
 
     if (newUserList != null) {
         removeUsers();

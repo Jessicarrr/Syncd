@@ -149,6 +149,41 @@ namespace Video_Syncer.Controllers
         }
 
         [HttpPost]
+        public JsonResult AddToPlaylist([FromBody]AddToPlaylistRequest request)
+        {
+            if (request == null)
+            {
+                return null;
+            }
+
+            Room room = TryGetRoom(request.roomId);
+
+            if (room == null)
+            {
+                return null;
+            }
+
+            string sessionID = HttpContext.Session.Id;
+
+            if (!room.IsUserSessionIDMatching(request.userId, sessionID))
+            {
+                Trace.WriteLine("[VSY] Add to Playlist Request - session ID did not match in room \"" + room.id + "\"! Session ID of the request was " + sessionID);
+                VideoStateChangeCallback callback2 = new VideoStateChangeCallback()
+                {
+                    success = false
+                };
+                return Json(callback2);
+            }
+
+            room.AddToPlaylist(request.youtubeVideoId);
+            VideoStateChangeCallback callback = new VideoStateChangeCallback()
+            {
+                success = true
+            };
+            return Json(callback);
+        }
+
+        [HttpPost]
         public JsonResult ChangeVideo([FromBody]VideoChangeRequest request)
         {
             if (request == null)
@@ -300,6 +335,8 @@ namespace Video_Syncer.Controllers
             // update user
             room.UpdateUser(request.userId, request.videoTimeSeconds);
 
+            Trace.WriteLine("[VSY] Playlist has " + room.playlist.Count);
+
             // send users back
             UpdateRequestCallback callback = new UpdateRequestCallback()
             {
@@ -307,11 +344,10 @@ namespace Video_Syncer.Controllers
                 currentYoutubeVideoId = room.currentYoutubeVideoId,
                 name = room.name,
                 currentVideoState = room.GetStateForUser(request.userId),
-                videoTimeSeconds = room.videoTimeSeconds
+                videoTimeSeconds = room.videoTimeSeconds,
+                playlist = room.playlist
             };
             return Json(callback);
-
-
 
             //return Json("Server says thank you! Data received was " + request.name + " and " + request.roomId);
         }

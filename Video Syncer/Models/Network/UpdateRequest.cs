@@ -20,7 +20,7 @@ namespace Video_Syncer.Models.Network
         public string name { get; set; }
 
         public string currentYoutubeVideoId { get; set; }
-        public List<string> youtubePlaylist { get; set; }
+        public List<PlaylistObject> playlist { get; set; }
         public VideoState currentVideoState { get; set; }
         public double videoTimeSeconds { get; set; }
 

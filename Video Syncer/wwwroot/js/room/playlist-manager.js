@@ -1,16 +1,42 @@
-﻿
-function addTestVideos() {
-    var ui1 = createUIForPlaylistVideo("first title", "url1234567", "maxaroon");
-    var ui2 = createUIForPlaylistVideo("how to set up your first video this is a really long title", "url1234567", "stalbeers");
-    var ui3 = createUIForPlaylistVideo("this will be an even longer title. this is how to set up your first video! i will be showing you guys how to do that. good job guys. i love you all. really relaly really really long title!", "url1234567", "stalley bears");
-    var ui4 = createUIForPlaylistVideo("shh", "url1234567", "mau mau");
+﻿/**
+ * Gets the video ID from the youtube video URL in the search bar, and
+ * calls the function to change the video.
+ */
+function addVideoFromSearchBar() {
+    var searchBarText = document.getElementById('searchBar').value;
+    var videoId = getVideoIdFromYoutubeUrl(searchBarText);
 
-    for (var i = 0; i < 10; i++) {
-        addVideoToTable(ui1);
-        addVideoToTable(ui2);
-        addVideoToTable(ui3);
-        addVideoToTable(ui4);
+    if (videoId != null) {
+        sendAddToPlaylistRequest(videoId);
+        document.getElementById('searchBar').value = "";
     }
+    else {
+        alert("not a valid video");
+    }
+}
+
+/**
+ * Logic for getting the youtube video ID out of an entire youtube url.
+ * @param {any} url The url of the youtube video.
+ */
+function getVideoIdFromYoutubeUrl(url) {
+    if (!url.includes("youtu") || !url.includes("v=")) {
+        return null;
+    }
+
+    var idArea = url.split("v=")[1];
+
+    if (idArea.includes("&")) {
+        return idArea.substring(0, idArea.indexOf("&"));
+    }
+    else {
+        return idArea;
+    }
+}
+
+function addDataToPlaylist(title, videoId, author) {
+    var ui = createUIForPlaylistVideo(title, videoId, author);
+    addVideoToTable(ui);
 }
 
 /**
@@ -46,4 +72,15 @@ function createUIForPlaylistVideo(titleParam, urlParam, authorParam) {
     playlistDiv.appendChild(urlElement);
 
     return playlistDiv;
+}
+
+/**
+ * Remove all videos from the playlist UI
+ */
+function removeAllPlaylistVideos() {
+    var elements = document.getElementsByClassName("playlist-div");
+
+    while (elements.length > 0) {
+        elements[0].parentNode.removeChild(elements[0]);
+    }
 }

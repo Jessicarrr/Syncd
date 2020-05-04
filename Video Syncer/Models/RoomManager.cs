@@ -133,7 +133,7 @@ namespace Video_Syncer.Models
 
         private void CancelPeriodicTasks()
         {
-            Trace.WriteLine("[VSY] CancelPeriodicTasks() ran on room ");
+            Trace.WriteLine("[VSY] CancelPeriodicTasks() ran on room Manager");
             source.Cancel();
         }
 
@@ -153,7 +153,7 @@ namespace Video_Syncer.Models
 
         private void DestroyEmptyRooms()
         {
-            Trace.WriteLine("[VSY] Called DestroyEmptyRooms()");
+            //Trace.WriteLine("[VSY] Called DestroyEmptyRooms()");
 
             foreach (Room room in roomList)
             {
