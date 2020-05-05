@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Video_Syncer.Models.Playlist;
 
 namespace Video_Syncer.Models
 {
@@ -17,7 +18,7 @@ namespace Video_Syncer.Models
         public string name { get; set; }
 
         public string currentYoutubeVideoId { get; set; }
-        public List<PlaylistObject> playlist { get; set; }
+        public PlaylistManager playlistManager { get; set; }
 
         public double videoTimeSeconds { get; set; }
 
@@ -44,7 +45,7 @@ namespace Video_Syncer.Models
             currentYoutubeVideoId = "LXb3EKWsInQ";
             videoTimeSeconds = 0;
 
-            playlist = new List<PlaylistObject>();
+            playlistManager = new PlaylistManager();
 
             StartPeriodicTasks();
         }
@@ -101,18 +102,6 @@ namespace Video_Syncer.Models
                 return true;
             }
             return false;
-        }
-
-        public void AddToPlaylist(string youtubeId)
-        {
-            PlaylistObject obj = new PlaylistObject();
-            Random random = new Random();
-
-            obj.title = youtubeId;
-            obj.author = "[author]";
-            obj.videoId = youtubeId;
-
-            playlist.Add(obj);
         }
 
         public void NewVideo(string youtubeId)

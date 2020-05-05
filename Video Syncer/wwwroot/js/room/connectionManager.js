@@ -325,9 +325,10 @@ function onUpdateSuccess(response) {
 
             var videoObjectTitle = videoObject["title"];
             var videoObjectAuthor = videoObject["author"];
-            var videoObjectId = videoObject["videoId"];
+            var videoObjectVideoId = videoObject["videoId"];
+            var videoObjectUniqueId = videoObject["id"];
 
-            addDataToPlaylist(videoObjectTitle, videoObjectId, videoObjectAuthor);
+            addDataToPlaylist(videoObjectUniqueId, videoObjectTitle, videoObjectVideoId, videoObjectAuthor);
         }
     }
     else {

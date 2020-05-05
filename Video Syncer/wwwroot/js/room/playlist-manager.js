@@ -34,8 +34,8 @@ function getVideoIdFromYoutubeUrl(url) {
     }
 }
 
-function addDataToPlaylist(title, videoId, author) {
-    var ui = createUIForPlaylistVideo(title, videoId, author);
+function addDataToPlaylist(id, title, videoId, author) {
+    var ui = createUIForPlaylistVideo(id, title, videoId, author);
     addVideoToTable(ui);
 }
 
@@ -47,13 +47,15 @@ function addVideoToTable(playlistDiv) {
     document.getElementById("playlist-area").appendChild(playlistDiv);
 }
 
-function createUIForPlaylistVideo(titleParam, urlParam, authorParam) {
+function createUIForPlaylistVideo(idParam, titleParam, urlParam, authorParam) {
     var playlistDiv = document.createElement("div");
     var titleElement = document.createElement("p");
     var authorElement = document.createElement("p");
     var urlElement = document.createElement("p");
+    var idElement = document.createElement("p");
 
     urlElement.hidden = true;
+    idElement.hidden = true;
 
     playlistDiv.classList.add("playlist-div");
 
@@ -62,14 +64,17 @@ function createUIForPlaylistVideo(titleParam, urlParam, authorParam) {
     authorElement.classList.add("playlist-div-element", "playlist-author");
 
     urlElement.classList.add = "playlist-url-hidden";
+    idElement.classList.add = "playlist-item-id-hidden";
 
     titleElement.innerHTML = titleParam;
     authorElement.innerHTML = authorParam;
     urlElement.innerHTML = urlParam;
+    idElement.innerHTML = idParam;
 
     playlistDiv.appendChild(titleElement);
     playlistDiv.appendChild(authorElement);
     playlistDiv.appendChild(urlElement);
+    playlistDiv.appendChild(idElement);
 
     playlistDiv.onclick = function () {
         changeVideo(urlParam);

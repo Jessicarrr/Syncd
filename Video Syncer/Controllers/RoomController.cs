@@ -175,7 +175,7 @@ namespace Video_Syncer.Controllers
                 return Json(callback2);
             }
 
-            room.AddToPlaylist(request.youtubeVideoId);
+            room.playlistManager.AddToPlaylist(request.youtubeVideoId);
             VideoStateChangeCallback callback = new VideoStateChangeCallback()
             {
                 success = true
@@ -343,7 +343,7 @@ namespace Video_Syncer.Controllers
                 name = room.name,
                 currentVideoState = room.GetStateForUser(request.userId),
                 videoTimeSeconds = room.videoTimeSeconds,
-                playlist = room.playlist
+                playlist = room.playlistManager.playlist
             };
             return Json(callback);
 
