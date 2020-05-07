@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Video_Syncer.api.receiver;
 
 namespace Video_Syncer.Models.Playlist
 {
@@ -11,6 +14,7 @@ namespace Video_Syncer.Models.Playlist
         public List<PlaylistObject> playlist = new List<PlaylistObject>();
 
         private int uniqueIdLength = 15;
+        private NoEmbedHandler noembed = new NoEmbedHandler();
 
         public void AddToPlaylist(string youtubeId)
         {
@@ -22,7 +26,27 @@ namespace Video_Syncer.Models.Playlist
             obj.author = "[author]";
             obj.videoId = youtubeId;
 
-            playlist.Add(obj);
+            CancellationTokenSource source = new CancellationTokenSource();
+            Task.Run(async () =>
+            {
+                await noembed.GetYoutubeData(youtubeId, source).ContinueWith(result =>
+                {
+                    JObject jResult = result.Result;
+
+                    if(jResult != null)
+                    {
+                        JToken authorToken;
+                        JToken titleToken;
+
+                        jResult.TryGetValue("author_name", out authorToken);
+                        jResult.TryGetValue("title", out titleToken);
+
+                        obj.title = titleToken.ToObject<string>();
+                        obj.author = authorToken.ToObject<string>();
+                    }
+                    playlist.Add(obj);
+                });
+            });
         }
 
         private string GenerateUniqueId()
