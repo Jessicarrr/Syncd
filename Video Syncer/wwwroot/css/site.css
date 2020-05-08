@@ -181,3 +181,16 @@ body {
     background: #373737 !important;
     color: #d1d1d1 !important;
 }
+
+
+
+a.night-mode {
+    color: white;
+}
+a.night-mode:hover {
+    color: white;
+}
+
+a.btn-info.night-mode {
+    background: #102172;
+}

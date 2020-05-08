@@ -28,18 +28,7 @@ window.onload = function (event) {
 
     var nightToggle = document.getElementById("night-mode-toggle");
     nightToggle.onclick = function () {
-        var element = document.getElementById("whole-body");
-        var navbar = document.getElementsByClassName("navbar-default");
-
-        if (nightToggle.checked) {
-            element.classList.add("night-mode");
-        }
-        else {
-            element.classList.remove("night-mode");
-
-            //nvar bar shpould be
-            // background-image: linear-gradient(to bottom,#3c3c3c 0,#222 100%)
-        }
+        toggleNightMode(nightToggle.checked);
     }
 
 };
@@ -55,6 +44,32 @@ document.getElementById("usernameBox").addEventListener("keyup", function (e) {
         userSetName();
     }
 }); 
+
+function toggleNightMode(nightmode) {
+    var body = document.querySelector('body');
+    var textInputs = document.querySelectorAll("input[type=text]");
+    var links = document.querySelectorAll("a");
+
+    var allElementsToChange = new Array();
+
+    Array.prototype.push.apply(allElementsToChange, textInputs);
+    Array.prototype.push.apply(allElementsToChange, links);
+
+    if (nightmode) {
+        body.classList.add("night-mode");
+
+        allElementsToChange.forEach(function (item) {
+            item.classList.add("night-mode");
+        });
+    }
+    else {
+        body.classList.remove("night-mode");
+
+        allElementsToChange.forEach(function (item) {
+            item.classList.remove("night-mode");
+        });
+    }
+}
 
 function isUsingInternetExplorer() {
     var edgeString = /Edge/;
