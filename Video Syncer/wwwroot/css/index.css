@@ -5,6 +5,9 @@
     height: 65%;
     margin: auto;
     text-align: center;
+    /*border: solid 1px;*/
+    /*border-color: #bdbdbd;*/
+    
 }
 
 .create-room-btn {

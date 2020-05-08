@@ -178,19 +178,54 @@ body {
 }
 
 .night-mode {
-    background: #373737 !important;
-    color: #d1d1d1 !important;
+    background: #373737;
+    color: #d0d0d0;
 }
 
-
+h3.night-mode {
+    color: #fff;
+}
 
 a.night-mode {
-    color: white;
+    color: #d0d0d0;
 }
 a.night-mode:hover {
     color: white;
 }
 
 a.btn-info.night-mode {
-    background: #102172;
+    background: #3a3353;
+    border-color: #272237;
+    box-shadow: 0px 2px 4px #1f1f1f;
+}
+
+input[type=text].night-mode {
+    background: #2c2c2c;
+    border-color: #525252;
+}
+
+#usernameBox.night-mode {
+    background: #373737;
+    color: #d0d0d0;
+}
+
+nav.night-mode {
+    border-bottom: solid 1px;
+    border-color: #272237;
+    box-shadow: 0px 4px 7px #1f1f1f;
+}
+
+nav {
+    border-bottom: solid 1px;
+    border-color: #d7d7d7;
+    box-shadow: 0px 6px 7px #1f1f1f;
+    /*background-image: linear-gradient(white, #e6e6e6);*/
+}
+
+.nav-link {
+    color: black;
+}
+
+.navbar-brand {
+    color: black;
 }

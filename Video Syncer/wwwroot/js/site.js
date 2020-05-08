@@ -56,11 +56,21 @@ function toggleNightMode(nightmode) {
     var body = document.querySelector('body');
     var textInputs = document.querySelectorAll("input[type=text]");
     var links = document.querySelectorAll("a");
+    var navs = document.querySelectorAll("nav");
+    /*var h3s = document.querySelectorAll("h3");
+    var h2s = document.querySelectorAll("h2");*/
+    /*var h1s = document.querySelectorAll("h1");
+    var ps = document.querySelectorAll("p");*/
 
     var allElementsToChange = new Array();
 
     Array.prototype.push.apply(allElementsToChange, textInputs);
     Array.prototype.push.apply(allElementsToChange, links);
+    Array.prototype.push.apply(allElementsToChange, navs);
+    /*Array.prototype.push.apply(allElementsToChange, h3s);
+    Array.prototype.push.apply(allElementsToChange, h2s);*/
+    /*Array.prototype.push.apply(allElementsToChange, h1s);
+    Array.prototype.push.apply(allElementsToChange, ps);*/
 
     if (nightmode) {
         body.classList.add("night-mode");
