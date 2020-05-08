@@ -22,9 +22,10 @@ namespace Video_Syncer.Models.Playlist
             Random random = new Random();
 
             obj.id = GenerateUniqueId();
-            obj.title = youtubeId;
-            obj.author = "[author]";
+            obj.title = "http://youtube.com/watch?v=" + youtubeId + " (title not found)";
+            obj.author = "(unable to find video author)";
             obj.videoId = youtubeId;
+            playlist.Add(obj);
 
             CancellationTokenSource source = new CancellationTokenSource();
             Task.Run(async () =>
@@ -44,7 +45,7 @@ namespace Video_Syncer.Models.Playlist
                         obj.title = titleToken.ToObject<string>();
                         obj.author = authorToken.ToObject<string>();
                     }
-                    playlist.Add(obj);
+                    
                 });
             });
         }
