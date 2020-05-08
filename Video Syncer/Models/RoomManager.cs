@@ -157,7 +157,7 @@ namespace Video_Syncer.Models
 
             foreach (Room room in roomList)
             {
-                if(room.userList.Count <= 0)
+                if(room.userManager.userList.Count <= 0)
                 {
                     Trace.WriteLine("[VSY] Destroying room " + room.id);
                     room.Dispose();
