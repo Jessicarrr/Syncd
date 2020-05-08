@@ -6,6 +6,8 @@
 var usernameCookie = "username";
 var usernameCharacterLimit = 25;
 
+var nightModeCookie = "night-mode";
+
 window.onload = function (event) {
     createNewName();
     var errorMsg = document.getElementById("alert-username-too-long");
@@ -27,13 +29,18 @@ window.onload = function (event) {
     }
 
     var nightToggle = document.getElementById("night-mode-toggle");
-    nightToggle.onclick = function () {
-        toggleNightMode(nightToggle.checked);
+
+    if (getCookie(nightModeCookie) === "true") {
+        toggleNightMode(true);
+        nightToggle.checked = true;
+        setCookie(nightModeCookie, true, 14);
     }
 
+    nightToggle.onclick = function () {
+        toggleNightMode(nightToggle.checked);
+        setCookie(nightModeCookie, nightToggle.checked, 14);
+    }
 };
-
-
 
 document.getElementById("usernameBox").onfocusout = function () {
     userSetName();
