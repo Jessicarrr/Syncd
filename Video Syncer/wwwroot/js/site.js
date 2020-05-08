@@ -26,7 +26,25 @@ window.onload = function (event) {
         ieWarning.style.display = "block";
     }
 
+    var nightToggle = document.getElementById("night-mode-toggle");
+    nightToggle.onclick = function () {
+        var element = document.getElementById("whole-body");
+        var navbar = document.getElementsByClassName("navbar-default");
+
+        if (nightToggle.checked) {
+            element.classList.add("night-mode");
+        }
+        else {
+            element.classList.remove("night-mode");
+
+            //nvar bar shpould be
+            // background-image: linear-gradient(to bottom,#3c3c3c 0,#222 100%)
+        }
+    }
+
 };
+
+
 
 document.getElementById("usernameBox").onfocusout = function () {
     userSetName();
