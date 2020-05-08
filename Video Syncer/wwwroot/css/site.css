@@ -41,7 +41,7 @@ a {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #102172;
+    background-color: #b6b6b6;
     -webkit-transition: .4s;
     transition: .4s;
 
@@ -60,7 +60,7 @@ a {
 }
 
 input:checked + .slider {
-    background-color: #caeaff;
+    background-color: #1861ac;
 
 }
 
