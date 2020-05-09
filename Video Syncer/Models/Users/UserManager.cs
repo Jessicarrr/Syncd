@@ -13,6 +13,8 @@ namespace Video_Syncer.Models.Users
         public int disconnectedUserThresholdSeconds = 20;
         private string roomId;
 
+        public List<string> allowedSessionIds = new List<string>();
+
         public int usernameCharacterLimit = 25;
 
         public UserManager(string roomId)

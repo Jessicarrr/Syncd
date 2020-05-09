@@ -29,6 +29,9 @@ namespace Video_Syncer.Controllers
                 }
                 else
                 {
+                    string sessionID = HttpContext.Session.Id;
+                    room.userManager.allowedSessionIds.Add(sessionID);
+
                     RoomModel model = new RoomModel()
                     {
                         id = room.id,
@@ -367,6 +370,12 @@ namespace Video_Syncer.Controllers
             else
             {
                 string sessionID = HttpContext.Session.Id;
+
+                if (!room.userManager.allowedSessionIds.Contains(sessionID))
+                {
+                    return Json(new { success = false });
+                }
+
                 User user = room.Join(request.name, sessionID);
                 JoinRequestCallback callback = new JoinRequestCallback()
                 {
