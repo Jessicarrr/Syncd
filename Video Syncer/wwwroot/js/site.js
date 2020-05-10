@@ -54,6 +54,7 @@ document.getElementById("usernameBox").addEventListener("keyup", function (e) {
 
 function toggleNightMode(nightmode) {
     var body = document.querySelector('body');
+    var playlistOptions = document.querySelectorAll(".playlist-options-button");
     var textInputs = document.querySelectorAll("input[type=text]");
     var links = document.querySelectorAll("a");
     var navs = document.querySelectorAll("nav");
@@ -67,6 +68,7 @@ function toggleNightMode(nightmode) {
     Array.prototype.push.apply(allElementsToChange, textInputs);
     Array.prototype.push.apply(allElementsToChange, links);
     Array.prototype.push.apply(allElementsToChange, navs);
+    Array.prototype.push.apply(allElementsToChange, playlistOptions);
     /*Array.prototype.push.apply(allElementsToChange, h3s);
     Array.prototype.push.apply(allElementsToChange, h2s);*/
     /*Array.prototype.push.apply(allElementsToChange, h1s);

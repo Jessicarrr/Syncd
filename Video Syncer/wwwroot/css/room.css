@@ -13,12 +13,20 @@
 .playlist-div {
     border-bottom: 1px solid gray;
     margin-bottom: 2px;
-    padding: 0px 5px 20px 5px;
+    
+}
+
+.playlist-info-div {
+    width: 93%;
+    height: 100%;
     cursor: pointer;
+    display: inline-block;
 }
 
 .playlist-title {
     font-size: 16px;
+    width: 100%;
+    
 }
 
 .playlist-author {
@@ -26,6 +34,25 @@
     margin-right: 3px;
     padding-right: 3px;
     font-size: 12px;
+}
+
+.playlist-options-button {
+    float: right;
+    bottom: 0;
+    right: 0;
+    background: transparent;
+    border: transparent;
+    color: black;
+
+}
+
+.playlist-options-button.night-mode{
+    float: right;
+    bottom: 0;
+    right: 0;
+    background: transparent;
+    border: transparent;
+    color: white;
 }
 
 /* user list */

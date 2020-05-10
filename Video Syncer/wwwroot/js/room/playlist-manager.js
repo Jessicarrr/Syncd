@@ -49,15 +49,18 @@ function addVideoToTable(playlistDiv) {
 
 function createUIForPlaylistVideo(idParam, titleParam, urlParam, authorParam) {
     var playlistDiv = document.createElement("div");
+    var playlistInfoDiv = document.createElement("div");
     var titleElement = document.createElement("p");
     var authorElement = document.createElement("p");
     var urlElement = document.createElement("p");
     var idElement = document.createElement("p");
+    var buttonElement = document.createElement("button");
 
     urlElement.hidden = true;
     idElement.hidden = true;
 
     playlistDiv.classList.add("playlist-div");
+    playlistInfoDiv.classList.add("playlist-info-div");
 
     titleElement.classList.add("playlist-div-element", "playlist-title");
 
@@ -66,21 +69,35 @@ function createUIForPlaylistVideo(idParam, titleParam, urlParam, authorParam) {
     urlElement.classList.add = "playlist-url-hidden";
     idElement.classList.add = "playlist-item-id-hidden";
 
+    buttonElement.classList.add("playlist-options-button");
+
+    buttonElement.innerHTML = "...";
+
     titleElement.innerHTML = titleParam;
     authorElement.innerHTML = authorParam;
     urlElement.innerHTML = urlParam;
     idElement.innerHTML = idParam;
 
-    playlistDiv.appendChild(titleElement);
-    playlistDiv.appendChild(authorElement);
-    playlistDiv.appendChild(urlElement);
-    playlistDiv.appendChild(idElement);
+    playlistInfoDiv.appendChild(titleElement);
+    
+    playlistInfoDiv.appendChild(authorElement);
+    
+    playlistInfoDiv.appendChild(urlElement);
+    playlistInfoDiv.appendChild(idElement);
 
-    playlistDiv.onclick = function () {
-        changeVideo(urlParam);
-    }
+    playlistDiv.appendChild(playlistInfoDiv);
+    playlistDiv.appendChild(buttonElement);
+    
+    playlistInfoDiv.setAttribute("onclick", "clickPlaylistItem(\"" + urlParam + "\");");
+    /*buttonElement.onclick = function (e) {
+        e.preventDefault();
+    }*/
 
     return playlistDiv;
+}
+
+function clickPlaylistItem(urlParam) {
+    changeVideo(urlParam);
 }
 
 /**
