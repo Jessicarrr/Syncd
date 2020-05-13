@@ -14,6 +14,24 @@
     });
 }
 
+function closeDropdownsOnClick(onclickEvent) {
+    var classNameMatches = onclickEvent.target.className === "playlist-dropdown-button";
+    var classNameMatches2 = onclickEvent.target.className === "dropdown-content";
+    var isOptionsButton = onclickEvent.target.matches(".playlist-options-button");
+
+    if (!isOptionsButton && !classNameMatches && !classNameMatches2) {
+        var allDropdowns = document.getElementsByClassName("dropdown-content");
+
+        for (var i = 0; i < allDropdowns.length; i++) {
+            var currentDropdown = allDropdowns[i];
+
+            if (currentDropdown.style.display === "block") {
+                currentDropdown.style.display = "none";
+            }
+        }
+    }
+}
+
 function isDisconnectWarningVisible() {
     var disconnectWarning = document.getElementById("alert-disconnected");
 

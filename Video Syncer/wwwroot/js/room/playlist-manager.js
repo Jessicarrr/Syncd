@@ -1,4 +1,10 @@
-﻿/**
+﻿var playlistItems = new Array();
+
+var objectPlaylistIdKey = "playlistId";
+var objectVideoIdKey = "videoId";
+var objectDivKey = "playlistItemDiv";
+
+/**
  * Gets the video ID from the youtube video URL in the search bar, and
  * calls the function to change the video.
  */
@@ -35,8 +41,97 @@ function getVideoIdFromYoutubeUrl(url) {
 }
 
 function addDataToPlaylist(id, title, videoId, author) {
+    var alreadyContains = playlistContainsPlaylistId(id);
+
+    if (alreadyContains) {
+        return false;
+    }
+
     var ui = createUIForPlaylistVideo(id, title, videoId, author);
+
+    var newObject = {};
+    newObject[objectPlaylistIdKey] = id;
+    newObject[objectVideoIdKey] = videoId;
+    newObject[objectDivKey] = ui;
+
+    playlistItems.push(newObject);
     addVideoToTable(ui);
+    return true;
+}
+
+function compareAndRemovePlaylistItems(paramPlaylist) {
+    var itemsToRemove = new Array();
+    var newItems = new Array();
+
+    for (var key in paramPlaylist) {
+        var videoObject = paramPlaylist[key];
+        var videoObjectUniqueId = videoObject["id"];
+
+        newItems.push(videoObjectUniqueId);
+    }
+
+    playlistItems.forEach(function (element) {
+        var currentPlaylistId = element[objectPlaylistIdKey];
+
+        if (!newItems.includes(currentPlaylistId)) {
+            itemsToRemove.push(currentPlaylistId);
+        }
+    });
+
+    itemsToRemove.forEach(function (element) {
+        removeFromPlaylist(element);
+    });
+}
+
+function compareAndAddPlaylistItems(paramPlaylist) {
+    for (var key in paramPlaylist) {
+        var videoObject = paramPlaylist[key];
+
+        var videoObjectTitle = videoObject["title"];
+        var videoObjectAuthor = videoObject["author"];
+        var videoObjectVideoId = videoObject["videoId"];
+        var videoObjectUniqueId = videoObject["id"];
+
+        addDataToPlaylist(videoObjectUniqueId, videoObjectTitle, videoObjectVideoId, videoObjectAuthor);
+    }
+}
+
+function removeFromPlaylist(id) {
+    for (var i = 0; i < playlistItems.length; i++) {
+        var currentPlaylistItem = playlistItems[i];
+        var currentPlaylistId = currentPlaylistItem[objectPlaylistIdKey];
+
+        if (currentPlaylistId === id) {
+            var playlistArea = document.getElementById("playlist-area");
+            playlistArea.removeChild(currentPlaylistItem[objectDivKey]);
+            playlistItems.splice(i, 1); // remove one element at position i
+        }
+    }
+}
+
+function playlistContainsId(playlist, id) {
+    var answer = false;
+
+    playlist.forEach(function (element) {
+        if (element[objectPlaylistIdKey] === id) {
+            answer = true;
+        }
+    });
+    return answer;
+}
+
+function playlistContainsPlaylistId(playlistId) {
+    var answer = false;
+
+    playlistItems.forEach(function (element) {
+        console.log(element[objectPlaylistIdKey] + " === " + playlistId + "?");
+
+        if (element[objectPlaylistIdKey] === playlistId) {
+            answer = true;
+        }
+    });
+
+    return answer;
 }
 
 /**
@@ -54,7 +149,7 @@ function createUIForPlaylistVideo(idParam, titleParam, urlParam, authorParam) {
     var authorElement = document.createElement("p");
     var urlElement = document.createElement("p");
     var idElement = document.createElement("p");
-    var buttonElement = document.createElement("button");
+    var buttonElement = createDropdownButtonForItem(idParam, urlParam);
 
     urlElement.hidden = true;
     idElement.hidden = true;
@@ -68,10 +163,6 @@ function createUIForPlaylistVideo(idParam, titleParam, urlParam, authorParam) {
 
     urlElement.classList.add = "playlist-url-hidden";
     idElement.classList.add = "playlist-item-id-hidden";
-
-    buttonElement.classList.add("playlist-options-button");
-
-    buttonElement.innerHTML = "...";
 
     titleElement.innerHTML = titleParam;
     authorElement.innerHTML = authorParam;
@@ -89,15 +180,76 @@ function createUIForPlaylistVideo(idParam, titleParam, urlParam, authorParam) {
     playlistDiv.appendChild(buttonElement);
     
     playlistInfoDiv.setAttribute("onclick", "clickPlaylistItem(\"" + urlParam + "\");");
-    /*buttonElement.onclick = function (e) {
-        e.preventDefault();
-    }*/
+    
 
     return playlistDiv;
 }
 
 function clickPlaylistItem(urlParam) {
     changeVideo(urlParam);
+}
+
+function createDropdownButtonForItem(playlistItemId, playlistVideoId) {
+    var wholeAreaDiv = document.createElement("div");
+    var dropdownButton = document.createElement("p");
+
+    var dropdownDiv = document.createElement("div");
+    var copyLinkButton = document.createElement("p");
+    var openInBrowserButton = document.createElement("p");
+    var deleteButton = document.createElement("p");
+
+    copyLinkButton.innerHTML = "Copy link";
+    openInBrowserButton.innerHTML = "Open in browser";
+    deleteButton.innerHTML = "Delete";
+    dropdownButton.innerHTML = "...";
+
+    copyLinkButton.classList.add("playlist-dropdown-button");
+    openInBrowserButton.classList.add("playlist-dropdown-button");
+    deleteButton.classList.add("playlist-dropdown-button");
+    dropdownDiv.classList.add("dropdown-content");
+    dropdownButton.classList.add("playlist-options-button");
+    wholeAreaDiv.classList.add("dropdown");
+    dropdownDiv.id = playlistItemId + "-dropdown";
+
+    dropdownDiv.appendChild(copyLinkButton);
+    dropdownDiv.appendChild(openInBrowserButton);
+    dropdownDiv.appendChild(deleteButton);
+
+    wholeAreaDiv.appendChild(dropdownButton);
+    wholeAreaDiv.appendChild(dropdownDiv);
+
+    dropdownButton.onclick = function (e) {
+        var currentDisplay = dropdownDiv.style.display;
+
+        if (currentDisplay === "none") {
+            dropdownDiv.style.display = "block";
+        }
+        else {
+            dropdownDiv.style.display = "none";
+        }
+        console.log("clicked on " + dropdownDiv + ", id is " + dropdownDiv.id);
+        //alert("clicked on video " + urlParam);
+    };
+
+    copyLinkButton.onclick = function () {
+        var newElement = document.createElement('textarea');
+        newElement.value = "http://youtube.com/watch?v=" + playlistVideoId;
+        document.body.appendChild(newElement);
+        newElement.select();
+        newElement.setSelectionRange(0, 99999); /*For mobile devices*/
+        document.execCommand("copy");
+        document.body.removeChild(newElement);
+    };
+
+    openInBrowserButton.onclick = function () {
+        window.open("https://www.youtube.com/watch?v=" + playlistVideoId);
+    };
+
+    deleteButton.onclick = function () {
+        alert('delete id with ' + playlistItemId);
+    };
+
+    return wholeAreaDiv;
 }
 
 /**

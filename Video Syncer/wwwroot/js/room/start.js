@@ -7,6 +7,10 @@
     createPlayerOverObject(playerHTMLObject, youtubeWidth, youtubeHeight);
 
     setupHidePlayerCheckbox();
+
+    window.onclick = function (event) {
+        closeDropdownsOnClick(event);
+    }
 });
 
 var tickMs = 200; // how often to run function tick()

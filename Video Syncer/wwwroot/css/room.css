@@ -6,6 +6,7 @@
     margin-bottom: 10px;
     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .3), 1px 1px 1px 1px rgba(0, 0, 0, .3);
     margin-right: 10%;
+    margin-bottom: 15%;
     min-width: 40%;
     max-width: 50%;
 }
@@ -40,19 +41,40 @@
     float: right;
     bottom: 0;
     right: 0;
-    background: transparent;
-    border: transparent;
-    color: black;
+    cursor: pointer;
+    padding-right: 3px;
+
 
 }
 
-.playlist-options-button.night-mode{
-    float: right;
-    bottom: 0;
-    right: 0;
-    background: transparent;
-    border: transparent;
-    color: white;
+.playlist-dropdown-button {
+
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    z-index: 1;
+    padding-top: 5px;
+    padding-left: 5px;
+}
+
+.dropdown-content p {
+    text-decoration: none;
+    display: block;
+    color: black;   
+    cursor: pointer;
+}
+
+.dropdown-content p.hover {
+    background-color: #ddd;
 }
 
 /* user list */

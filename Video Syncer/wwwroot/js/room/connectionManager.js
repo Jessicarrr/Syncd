@@ -318,7 +318,11 @@ function onUpdateSuccess(response) {
     serverSetVideoAndState(newVideo, newVideoState, newVideoTimeSeconds);
 
     if (playlist != null) {
-        removeAllPlaylistVideos();
+        compareAndRemovePlaylistItems(playlist);
+        compareAndAddPlaylistItems(playlist);
+
+
+        /*removeAllPlaylistVideos();
 
         for (var key in playlist) {
             var videoObject = playlist[key];
@@ -329,7 +333,7 @@ function onUpdateSuccess(response) {
             var videoObjectUniqueId = videoObject["id"];
 
             addDataToPlaylist(videoObjectUniqueId, videoObjectTitle, videoObjectVideoId, videoObjectAuthor);
-        }
+        }*/
     }
     else {
         console.log("playlist is null");
