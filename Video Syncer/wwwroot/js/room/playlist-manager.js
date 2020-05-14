@@ -246,7 +246,7 @@ function createDropdownButtonForItem(playlistItemId, playlistVideoId) {
     };
 
     deleteButton.onclick = function () {
-        alert('delete id with ' + playlistItemId);
+        sendDeletePlaylistItemRequest(playlistItemId);
     };
 
     return wholeAreaDiv;

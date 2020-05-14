@@ -16,6 +16,18 @@ namespace Video_Syncer.Models.Playlist
         private int uniqueIdLength = 15;
         private NoEmbedHandler noembed = new NoEmbedHandler();
 
+        public bool RemoveFromPlaylist(string itemId)
+        {
+            foreach(PlaylistObject obj in playlist)
+            {
+                if(String.Equals(obj.id, itemId))
+                {
+                    playlist.Remove(obj);
+                    return true;
+                }
+            }
+            return false;
+        }
         public void AddToPlaylist(string youtubeId)
         {
             PlaylistObject obj = new PlaylistObject();
@@ -90,7 +102,7 @@ namespace Video_Syncer.Models.Playlist
             return false;
         }
 
-        public void nextVideo()
+        public void NextVideo()
         {
 
         }

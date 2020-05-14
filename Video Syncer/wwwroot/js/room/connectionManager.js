@@ -301,6 +301,25 @@ function sendTimeUpdate(newVideoTime) {
 }
 
 /**
+ * Update the server about what time the user is at in their YouTube video.
+ */
+function sendDeletePlaylistItemRequest(playlistItemId) {
+    $.ajax({
+        url: '/room/RemoveFromPlaylist',
+        method: 'POST',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(
+            {
+                roomId: roomId,
+                userId: userId,
+                playlistItemId: playlistItemId
+            }
+        )
+    });
+}
+
+/**
  * Fetched a response to sendUpdateRequest() - the server sent back information about where our
  * YouTube video player should be, including the video id, the state of the video, and the video
  * time.

@@ -116,6 +116,8 @@ namespace Video_Syncer.Controllers
             return Json(callback);
         }
 
+
+
         [HttpPost]
         public JsonResult PauseVideo([FromBody]VideoStateChangeRequest request)
         {
@@ -144,6 +146,41 @@ namespace Video_Syncer.Controllers
             }
 
             room.NewVideoState(request.userId, VideoState.Paused);
+            VideoStateChangeCallback callback = new VideoStateChangeCallback()
+            {
+                success = true
+            };
+            return Json(callback);
+        }
+
+        [HttpPost]
+        public JsonResult RemoveFromPlaylist([FromBody]RemoveFromPlaylistRequest request)
+        {
+            if(request == null)
+            {
+                return null;
+            }
+
+            Room room = TryGetRoom(request.roomId);
+
+            if (room == null)
+            {
+                return null;
+            }
+
+            string sessionID = HttpContext.Session.Id;
+
+            if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
+            {
+                Trace.WriteLine("[VSY] Add to Playlist Request - session ID did not match in room \"" + room.id + "\"! Session ID of the request was " + sessionID);
+                RemoveFromPlaylistCallback callback2 = new RemoveFromPlaylistCallback()
+                {
+                    success = false
+                };
+                return Json(callback2);
+            }
+
+            room.playlistManager.RemoveFromPlaylist(request.playlistItemId);
             VideoStateChangeCallback callback = new VideoStateChangeCallback()
             {
                 success = true
