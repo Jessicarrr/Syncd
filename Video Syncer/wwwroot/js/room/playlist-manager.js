@@ -239,14 +239,17 @@ function createDropdownButtonForItem(playlistItemId, playlistVideoId) {
         newElement.setSelectionRange(0, 99999); /*For mobile devices*/
         document.execCommand("copy");
         document.body.removeChild(newElement);
+        closeDropdowns();
     };
 
     openInBrowserButton.onclick = function () {
         window.open("https://www.youtube.com/watch?v=" + playlistVideoId);
+        closeDropdowns();
     };
 
     deleteButton.onclick = function () {
         sendDeletePlaylistItemRequest(playlistItemId);
+        closeDropdowns();
     };
 
     return wholeAreaDiv;
