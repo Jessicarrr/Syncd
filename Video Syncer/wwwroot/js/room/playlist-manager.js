@@ -179,14 +179,14 @@ function createUIForPlaylistVideo(idParam, titleParam, urlParam, authorParam) {
     playlistDiv.appendChild(playlistInfoDiv);
     playlistDiv.appendChild(buttonElement);
     
-    playlistInfoDiv.setAttribute("onclick", "clickPlaylistItem(\"" + urlParam + "\");");
+    playlistInfoDiv.setAttribute("onclick", "clickPlaylistItem(\"" + idParam + "\");");
     
 
     return playlistDiv;
 }
 
-function clickPlaylistItem(urlParam) {
-    changeVideo(urlParam);
+function clickPlaylistItem(idParam) {
+    sendPlayPlaylistItemRequest(idParam);
 }
 
 function createDropdownButtonForItem(playlistItemId, playlistVideoId) {

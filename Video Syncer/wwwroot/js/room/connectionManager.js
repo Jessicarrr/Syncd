@@ -303,6 +303,25 @@ function sendTimeUpdate(newVideoTime) {
 /**
  * Update the server about what time the user is at in their YouTube video.
  */
+function sendPlayPlaylistItemRequest(playlistItemId) {
+    $.ajax({
+        url: '/room/PlayPlaylistVideo',
+        method: 'POST',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(
+            {
+                roomId: roomId,
+                userId: userId,
+                playlistItemId: playlistItemId
+            }
+        )
+    });
+}
+
+/**
+ * Send the server a request to delete a playlist item
+ */
 function sendDeletePlaylistItemRequest(playlistItemId) {
     $.ajax({
         url: '/room/RemoveFromPlaylist',

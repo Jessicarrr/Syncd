@@ -83,6 +83,29 @@ namespace Video_Syncer.Models
             videoTimeSeconds = 0;
         }
 
+        public bool PlayPlaylistVideo(string playlistId)
+        {
+            PlaylistObject obj = playlistManager.PlayPlaylistObject(playlistId);
+
+            if(obj != null)
+            {
+                NewVideo(obj);
+                return true;
+            }
+            return false;
+        }
+
+        public void NewVideo(PlaylistObject obj)
+        {
+            if(obj == null)
+            {
+                return;
+            }
+            currentYoutubeVideoId = obj.videoId;
+            userManager.SetStateForAll(VideoState.Playing);
+            videoTimeSeconds = 0;
+        }
+
         public VideoState GetSuggestedVideoState()
         {
             if (userManager.userList.Count == 0)
@@ -116,6 +139,8 @@ namespace Video_Syncer.Models
                 UpdateTime();
 
                 //TODO: Playlist support, play next video.
+                PlaylistObject obj = playlistManager.GoToNextVideo();
+                NewVideo(obj);
                 
             }
             UpdateVideoStatistics(videoTimeSeconds, currentYoutubeVideoId);

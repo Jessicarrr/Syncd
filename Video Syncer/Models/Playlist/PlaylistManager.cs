@@ -16,6 +16,8 @@ namespace Video_Syncer.Models.Playlist
         private int uniqueIdLength = 15;
         private NoEmbedHandler noembed = new NoEmbedHandler();
 
+        private PlaylistObject currentItemPlaying = null;
+
         public bool RemoveFromPlaylist(string itemId)
         {
             foreach(PlaylistObject obj in playlist)
@@ -85,7 +87,7 @@ namespace Video_Syncer.Models.Playlist
             return finalId;
         }
 
-        private bool PlaylistContainsId(string id)
+        public bool PlaylistContainsId(string id)
         {
             foreach(PlaylistObject obj in playlist)
             {
@@ -97,14 +99,63 @@ namespace Video_Syncer.Models.Playlist
             return false;
         }
 
+        public PlaylistObject PlayPlaylistObject(string id)
+        {
+            IEnumerable<PlaylistObject> list = playlist.Where(item => item.id == id);
+
+            if(list.Count() == 0)
+            {
+                return null;
+            }
+
+            PlaylistObject requestedObject = list.First();
+            currentItemPlaying = requestedObject;
+            return requestedObject;
+        }
+
         public bool DeleteVideo(string id)
         {
             return false;
         }
 
-        public void NextVideo()
+        public void ChangeItemPlaying(PlaylistObject obj)
         {
+            this.currentItemPlaying = obj;
+        }
 
+        public PlaylistObject GoToNextVideo()
+        {
+            if(playlist.Count == 0)
+            {
+                return null;
+            }
+
+            if(currentItemPlaying == null)
+            {
+                currentItemPlaying = playlist.First();
+                return playlist.First();
+            }
+            else
+            {
+                int maxIndex = playlist.Count;
+                int currentIndex = playlist.FindIndex(item => item.id == currentItemPlaying.id);
+                
+                if(currentIndex == -1)
+                {
+                    return null;
+                }
+
+                if(currentIndex == maxIndex)
+                {
+                    return null;
+                }
+                else
+                {
+                    int nextIndex = currentIndex + 1;
+                    currentItemPlaying = playlist[nextIndex];
+                    return playlist[nextIndex];
+                }
+            }
         }
     }
 }
