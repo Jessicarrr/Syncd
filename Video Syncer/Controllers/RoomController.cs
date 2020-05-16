@@ -415,6 +415,7 @@ namespace Video_Syncer.Controllers
             {
                 userList = room.userManager.userList,
                 currentYoutubeVideoId = room.currentYoutubeVideoId,
+                currentYoutubeVideoTitle = room.currentYoutubeVideoTitle,
                 name = room.name,
                 currentVideoState = room.userManager.GetStateForUser(request.userId),
                 videoTimeSeconds = room.videoTimeSeconds,
@@ -454,6 +455,7 @@ namespace Video_Syncer.Controllers
                     userId = user.id,
                     userList = room.userManager.userList,
                     currentYoutubeVideoId = room.currentYoutubeVideoId,
+                    currentYoutubeVideoTitle = room.currentYoutubeVideoTitle,
                     currentVideoState = room.userManager.GetStateForUser(user.id),
                     videoTimeSeconds = room.videoTimeSeconds
                 };

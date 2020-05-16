@@ -124,8 +124,6 @@ function playlistContainsPlaylistId(playlistId) {
     var answer = false;
 
     playlistItems.forEach(function (element) {
-        console.log(element[objectPlaylistIdKey] + " === " + playlistId + "?");
-
         if (element[objectPlaylistIdKey] === playlistId) {
             answer = true;
         }

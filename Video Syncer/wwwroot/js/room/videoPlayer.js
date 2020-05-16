@@ -195,8 +195,6 @@ function serverChangeVideo(paramVideoId, seconds = 0) {
     });
 
     currentVideoId = paramVideoId;
-
-    setVideoTitle();
 }
 
 function changeVideo(paramVideoId, seconds = 0) {
@@ -207,19 +205,6 @@ function changeVideo(paramVideoId, seconds = 0) {
     
     currentVideoId = paramVideoId;
     sendVideoChangeRequest(paramVideoId);
-
-    setVideoTitle();
-}
-
-function setVideoTitle() {
-    var ytUrl = buildYoutubeUrl(currentVideoId);
-    callApiWithCallback(ytUrl, function (data) {
-        if (typeof (data.title) === 'undefined') {
-            document.getElementById("video-title").innerHTML = "[No video title found]";
-            return;
-        }
-        document.getElementById("video-title").innerHTML = data.title;
-    });
 }
 
 /**

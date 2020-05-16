@@ -19,6 +19,8 @@ namespace Video_Syncer.Models
         public string name { get; set; }
 
         public string currentYoutubeVideoId { get; set; }
+
+        public string currentYoutubeVideoTitle { get; set; }
         public PlaylistManager playlistManager { get; set; }
         public Models.Users.UserManager userManager { get; }
 
@@ -37,6 +39,7 @@ namespace Video_Syncer.Models
             this.name = name;
             
             currentYoutubeVideoId = "LXb3EKWsInQ";
+            currentYoutubeVideoTitle = "";
             videoTimeSeconds = 0;
 
             playlistManager = new PlaylistManager();
@@ -79,6 +82,7 @@ namespace Video_Syncer.Models
         public void NewVideo(string youtubeId)
         {
             currentYoutubeVideoId = youtubeId;
+            currentYoutubeVideoTitle = "";
             userManager.SetStateForAll(VideoState.Playing);
             videoTimeSeconds = 0;
         }
@@ -102,6 +106,7 @@ namespace Video_Syncer.Models
                 return;
             }
             currentYoutubeVideoId = obj.videoId;
+            currentYoutubeVideoTitle = obj.title;
             userManager.SetStateForAll(VideoState.Playing);
             videoTimeSeconds = 0;
         }

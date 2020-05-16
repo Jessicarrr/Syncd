@@ -60,3 +60,12 @@ function changeDisplayedDisconnectAttemptsNumber(number) {
 
     disconnectWarning.innerHTML = disconnectWarning.innerHTML.replace(/attempts: \d+/, ('attempts: ' + number));
 }
+
+function setVideoTitle(title) {
+    var currentVideoTitle = document.getElementById("video-title").innerHTML;
+
+    if (currentVideoTitle === title ) {
+        return;
+    }
+    document.getElementById("video-title").innerHTML = title;
+}

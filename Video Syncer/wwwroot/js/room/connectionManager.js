@@ -47,6 +47,7 @@ function onJoinSuccess(response) {
     var newUserList = response["userList"];
 
     var newVideo = response["currentYoutubeVideoId"]; // the YouTube video the room says we should play
+    var newVideoTitle = response["currentYoutubeVideoTitle"]; // the video title
     var newVideoState = response["currentVideoState"]; // the state of the YouTube video. Paused/playing/ended/etc
     var newVideoTimeSeconds = response["videoTimeSeconds"]; // the time in seconds the video should be at.
 
@@ -54,6 +55,7 @@ function onJoinSuccess(response) {
 
     // set up the YouTube player with the data from the server.
     serverSetVideoAndState(newVideo, newVideoState, newVideoTimeSeconds);
+    setVideoTitle(newVideoTitle);
 
     /*
      * For loop to populate the user list with all users in the room
@@ -347,6 +349,7 @@ function sendDeletePlaylistItemRequest(playlistItemId) {
 function onUpdateSuccess(response) {
     var newUserList = response["userList"];
     var newVideo = response["currentYoutubeVideoId"];
+    var newVideoTitle = response["currentYoutubeVideoTitle"]; // the video title
     var newVideoState = response["currentVideoState"];
     var newVideoTimeSeconds = response["videoTimeSeconds"];
     var playlist = response["playlist"];
@@ -354,6 +357,7 @@ function onUpdateSuccess(response) {
     //console.log("onUpdateSuccess - Received from server video " + newVideo + " with state " + newVideoState + " and time " + newVideoTimeSeconds);
 
     serverSetVideoAndState(newVideo, newVideoState, newVideoTimeSeconds);
+    setVideoTitle(newVideoTitle);
 
     if (playlist != null) {
         compareAndRemovePlaylistItems(playlist);
