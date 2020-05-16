@@ -22,6 +22,30 @@ namespace Video_Syncer.Models.Users
             this.roomId = roomId;
         }
 
+        public bool ChangeName(int userId, string newName)
+        {
+            if(String.IsNullOrEmpty(newName))
+            {
+                return false;
+            }
+
+            User relevantUser = userList.FirstOrDefault(obj => obj.id == userId);
+
+            if(relevantUser == null)
+            {
+                return false;
+            }
+
+            if(newName.Length > usernameCharacterLimit)
+            {
+                relevantUser.name = newName.Substring(0, usernameCharacterLimit);
+                return true;
+            }
+
+            relevantUser.name = newName;
+            return true;
+        }
+
         public bool AddToUserList(User user)
         {
             if (!UserIdExists(user.id) && !IsFull())

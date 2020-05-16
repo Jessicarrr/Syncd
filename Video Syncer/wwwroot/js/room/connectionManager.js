@@ -82,6 +82,24 @@ function onJoinError(response) {
     failedJoinRequests++;
 }
 
+function sendChangeNameRequest(newName) {
+    $.ajax({
+        url: '/room/ChangeName',
+        method: 'POST',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(
+            {
+                userId: userId,
+                roomId: roomId,
+                newName: newName
+            }
+        )/*,
+        success: onJoinSuccess,
+        error: onJoinError*/
+    });
+}
+
 /**
  * Send a request to the server to play the video. This is normally executed
  * when the user presses play on the YouTube video player.

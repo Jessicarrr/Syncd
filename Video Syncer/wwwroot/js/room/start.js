@@ -11,6 +11,18 @@
     window.onclick = function (event) {
         closeDropdownsOnClick(event);
     }
+
+    document.getElementById("usernameBox").addEventListener("focusout", function () {
+        var newNameDefault = document.getElementById("usernameBox").value;
+        sendChangeNameRequest(newNameDefault);
+    });
+
+    document.getElementById("usernameBox").addEventListener("keyup", function (e) {
+        if (e.keyCode === 13) {
+            var newNameDefault = document.getElementById("usernameBox").value;
+            sendChangeNameRequest(newNameDefault);
+        }
+    }); 
 });
 
 var tickMs = 200; // how often to run function tick()

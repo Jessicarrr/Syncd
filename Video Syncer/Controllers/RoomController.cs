@@ -46,6 +46,41 @@ namespace Video_Syncer.Controllers
         }
 
         [HttpPost]
+        public JsonResult ChangeName([FromBody]ChangeUsernameRequest request)
+        {
+            if (request == null)
+            {
+                return null;
+            }
+
+            Room room = TryGetRoom(request.roomId);
+
+            if (room == null)
+            {
+                return null;
+            }
+
+            string sessionID = HttpContext.Session.Id;
+
+            if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
+            {
+                Trace.WriteLine("[VSY] End Video Request - session ID did not match in room \"" + room.id + "\"! Session ID of the request was " + sessionID);
+                ChangeUsernameCallback callback2 = new ChangeUsernameCallback()
+                {
+                    success = false
+                };
+                return Json(callback2);
+            }
+            bool wasSuccessful = room.userManager.ChangeName(request.userId, request.newName);
+
+            ChangeUsernameCallback callback = new ChangeUsernameCallback()
+            {
+                success = wasSuccessful
+            };
+            return Json(callback);
+        }
+
+        [HttpPost]
         public JsonResult EndVideo([FromBody]VideoStateChangeRequest request)
         {
             if (request == null)
