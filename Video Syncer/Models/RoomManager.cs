@@ -157,12 +157,21 @@ namespace Video_Syncer.Models
 
             foreach (Room room in roomList)
             {
-                if(room.userManager.userList.Count <= 0)
+                int roomAgeInMinutes = room.GetMinutesSinceRoomCreation();
+
+                if(roomAgeInMinutes <= 1)
+                {
+                    Trace.WriteLine("[VSY] Will not destroy room " + room.id + " because it is only "
+                        + roomAgeInMinutes + " minute(s) old. (Room must be more than 1 minute old to destroy)");
+                    return;
+                }
+                else if(room.userManager.userList.Count <= 0)
                 {
                     Trace.WriteLine("[VSY] Destroying room " + room.id);
                     room.Dispose();
                     roomList.Remove(room);
                 }
+
                 if(roomList.Count <= 0)
                 {
                     Trace.WriteLine("[VSY] All rooms are destroyed, stopping RoomManager periodic tasks");

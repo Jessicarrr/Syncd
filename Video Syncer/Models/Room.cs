@@ -33,6 +33,8 @@ namespace Video_Syncer.Models
         public int periodicTaskMilliseconds = 6000;
         private CancellationTokenSource source;
 
+        public long roomCreationTime;
+
         public Room(string id, string name = "")
         {
             this.id = id;
@@ -44,6 +46,7 @@ namespace Video_Syncer.Models
 
             playlistManager = new PlaylistManager();
             userManager = new Models.Users.UserManager(id);
+            roomCreationTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
             StartPeriodicTasks();
         }
@@ -247,6 +250,15 @@ namespace Video_Syncer.Models
                     userManager.SetStateForUser(user.id, GetSuggestedVideoState());
                 }
             }
+        }
+
+        public int GetMinutesSinceRoomCreation()
+        {
+            long currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            long timeSinceCreation = currentTime - roomCreationTime;
+
+            int minutes = (int) (timeSinceCreation / 60000);
+            return minutes;
         }
 
         public void Leave(User user)
