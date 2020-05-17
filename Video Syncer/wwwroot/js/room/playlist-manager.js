@@ -201,13 +201,16 @@ function createDropdownButtonForItem(playlistItemId, playlistVideoId) {
     deleteButton.innerHTML = "Delete";
     dropdownButton.innerHTML = "...";
 
-    copyLinkButton.classList.add("playlist-dropdown-button");
-    openInBrowserButton.classList.add("playlist-dropdown-button");
-    deleteButton.classList.add("playlist-dropdown-button");
-    dropdownDiv.classList.add("dropdown-content");
-    dropdownButton.classList.add("playlist-options-button");
-    wholeAreaDiv.classList.add("dropdown");
+        copyLinkButton.classList.add("playlist-dropdown-button");
+        openInBrowserButton.classList.add("playlist-dropdown-button");
+        deleteButton.classList.add("playlist-dropdown-button");
+        dropdownDiv.classList.add("dropdown-content");
+        dropdownButton.classList.add("playlist-options-button");
+        wholeAreaDiv.classList.add("dropdown");
+    
     dropdownDiv.id = playlistItemId + "-dropdown";
+
+    dropdownDiv.style.display = "none";
 
     dropdownDiv.appendChild(copyLinkButton);
     dropdownDiv.appendChild(openInBrowserButton);
@@ -221,6 +224,19 @@ function createDropdownButtonForItem(playlistItemId, playlistVideoId) {
 
         if (currentDisplay === "none") {
             dropdownDiv.style.display = "block";
+
+            if (isNightMode) {
+                copyLinkButton.classList.add("playlist-dropdown-button", "night-mode");
+                openInBrowserButton.classList.add("playlist-dropdown-button", "night-mode");
+                deleteButton.classList.add("playlist-dropdown-button", "night-mode");
+                dropdownDiv.classList.add("dropdown-content", "night-mode");
+            }
+            else {
+                copyLinkButton.classList.remove("night-mode");
+                openInBrowserButton.classList.remove("night-mode");
+                deleteButton.classList.remove("night-mode");
+                dropdownDiv.classList.remove("night-mode");
+            }
         }
         else {
             dropdownDiv.style.display = "none";

@@ -7,6 +7,7 @@ var usernameCookie = "username";
 var usernameCharacterLimit = 25;
 
 var nightModeCookie = "night-mode";
+var isNightMode = false;
 
 window.onload = function (event) {
     createNewName();
@@ -34,6 +35,7 @@ window.onload = function (event) {
         toggleNightMode(true);
         nightToggle.checked = true;
         setCookie(nightModeCookie, true, 14);
+        isNightMode = true;
     }
 
     nightToggle.onclick = function () {
@@ -74,12 +76,16 @@ function toggleNightMode(nightmode) {
     /*Array.prototype.push.apply(allElementsToChange, h1s);
     Array.prototype.push.apply(allElementsToChange, ps);*/
 
+
+
     if (nightmode) {
         body.classList.add("night-mode");
 
         allElementsToChange.forEach(function (item) {
             item.classList.add("night-mode");
         });
+
+        isNightMode = true;
     }
     else {
         body.classList.remove("night-mode");
@@ -87,6 +93,8 @@ function toggleNightMode(nightmode) {
         allElementsToChange.forEach(function (item) {
             item.classList.remove("night-mode");
         });
+
+        isNightMode = false;
     }
 }
 
