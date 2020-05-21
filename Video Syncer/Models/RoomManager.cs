@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Video_Syncer.logging;
 
 namespace Video_Syncer.Models
 {
@@ -133,7 +134,7 @@ namespace Video_Syncer.Models
 
         private void CancelPeriodicTasks()
         {
-            Trace.WriteLine("[VSY] CancelPeriodicTasks() ran on room Manager");
+            CTrace.TraceInformation("CancelPeriodicTasks() ran on room Manager");
             source.Cancel();
         }
 
@@ -153,7 +154,7 @@ namespace Video_Syncer.Models
 
         private void DestroyEmptyRooms()
         {
-            //Trace.WriteLine("[VSY] Called DestroyEmptyRooms()");
+            //CTrace.WriteLine("Called DestroyEmptyRooms()");
 
             foreach (Room room in roomList)
             {
@@ -161,22 +162,22 @@ namespace Video_Syncer.Models
 
                 if(roomAgeInMinutes <= 1)
                 {
-                    Trace.WriteLine("[VSY] Will not destroy room " + room.id + " because it is only "
+                    CTrace.WriteLine("Will not destroy room " + room.id + " because it is only "
                         + roomAgeInMinutes + " minute(s) old. (Room must be more than 1 minute old to destroy)");
                     return;
                 }
                 else if(room.userManager.userList.Count <= 0)
                 {
-                    Trace.WriteLine("[VSY] Destroying room " + room.id);
+                    CTrace.TraceInformation("Destroying room " + room.id);
                     room.Dispose();
                     roomList.Remove(room);
                 }
 
-                if(roomList.Count <= 0)
+                /*if(roomList.Count <= 0)
                 {
-                    Trace.WriteLine("[VSY] All rooms are destroyed, stopping RoomManager periodic tasks");
+                    CTrace.TraceInformation("All rooms are destroyed, stopping RoomManager periodic tasks");
                     source.Cancel();
-                }
+                }*/
             }
         }
 
@@ -195,7 +196,7 @@ namespace Video_Syncer.Models
             {
                 handle.Dispose();
                 CancelPeriodicTasks();
-                Trace.WriteLine("[VSY] Room Manager disposed.");
+                CTrace.TraceInformation("Room Manager disposed.");
             }
 
             disposed = true;
