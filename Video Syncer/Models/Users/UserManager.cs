@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Video_Syncer.logging;
 
 namespace Video_Syncer.Models.Users
 {
@@ -60,7 +61,7 @@ namespace Video_Syncer.Models.Users
         {
             if (UserIdExists(user.id))
             {
-                Trace.WriteLine("[VSY] User removed! \"" + user.name + "\" (id: " + user.id + ") from room " + roomId);
+                CTrace.TraceInformation("User removed! \"" + user.name + "\" (id: " + user.id + ") from room " + roomId);
                 userList.Remove(user);
             }
         }
@@ -80,13 +81,13 @@ namespace Video_Syncer.Models.Users
 
         public void ForceLeaveAllTimedOutUsers()
         {
-            //Trace.WriteLine("[VSY] Called ForceLeaveAllTimedOutUsersAsync in room " + id);
+            //CTrace.WriteLine("Called ForceLeaveAllTimedOutUsersAsync in room " + id);
 
             foreach (User user in userList)
             {
                 if (user.SecondsSinceLastConnection() >= disconnectedUserThresholdSeconds)
                 {
-                    Trace.WriteLine("[VSY] User \"" + user.name + "\" (id: " + user.id + ") timed out from room " + roomId);
+                    CTrace.TraceInformation("User \"" + user.name + "\" (id: " + user.id + ") timed out from room " + roomId);
                     RemoveFromUserList(user);
                 }
             }
