@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Video_Syncer.logging;
 using Video_Syncer.Models.Playlist;
 using Video_Syncer.Models.Users;
 
@@ -64,7 +65,7 @@ namespace Video_Syncer.Models
 
         private void CancelPeriodicTasks()
         {
-            Trace.WriteLine("[VSY] CancelPeriodicTasks() ran on room " + id);
+            CTrace.TraceInformation("CancelPeriodicTasks() ran on room " + id);
             source.Cancel();
         }
 
@@ -181,7 +182,7 @@ namespace Video_Syncer.Models
             double timeSinceLastCheckD = Convert.ToDouble(timeSinceLastCheck);
             double timeToAdd = timeSinceLastCheckD / 1000;
             videoTimeSeconds += timeToAdd;
-            //Trace.WriteLine("[VSY] Added " + timeToAdd + " to video time for a total of " + videoTimeSeconds);
+            //CTrace.WriteLine("Added " + timeToAdd + " to video time for a total of " + videoTimeSeconds);
             lastCheck = DateTimeOffset.Now.ToUnixTimeMilliseconds();
         }
 
@@ -198,7 +199,7 @@ namespace Video_Syncer.Models
             else
             {
                 lastCheck = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                //Trace.WriteLine("[VSY] Video is not playing. Video is " + GetSuggestedVideoState());
+                //CTrace.WriteLine("Video is not playing. Video is " + GetSuggestedVideoState());
             }
         }
 
@@ -227,7 +228,7 @@ namespace Video_Syncer.Models
         public User Join(string name, string sessionID)
         {
             User user = userManager.CreateNewUser(name, sessionID);
-            Trace.WriteLine("[VSY] [sessionID] Joining user with session id: " + sessionID);
+            CTrace.TraceInformation("Joining user \"" + name + "\" with session id: " + sessionID);
             Join(user);
             return user;
         }
@@ -281,7 +282,7 @@ namespace Video_Syncer.Models
             {
                 handle.Dispose();
                 CancelPeriodicTasks();
-                Trace.WriteLine("[VSY] Room " + id + " disposed.");
+                CTrace.WriteLine("Room " + id + " disposed.");
             }
 
             disposed = true;
