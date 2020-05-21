@@ -160,14 +160,14 @@ namespace Video_Syncer.Models
             {
                 int roomAgeInMinutes = room.GetMinutesSinceRoomCreation();
 
-                if(roomAgeInMinutes <= 1)
+                if(room.userManager.userList.Count <= 0)
                 {
-                    CTrace.WriteLine("Will not destroy room " + room.id + " because it is only "
-                        + roomAgeInMinutes + " minute(s) old. (Room must be more than 1 minute old to destroy)");
-                    return;
-                }
-                else if(room.userManager.userList.Count <= 0)
-                {
+                    if (roomAgeInMinutes < 1)
+                    {
+                        CTrace.WriteLine("Will not destroy room " + room.id + " because it is only "
+                            + roomAgeInMinutes + " minute(s) old. (Room must be more than 1 minute old to destroy)");
+                        return;
+                    }
                     CTrace.TraceInformation("Destroying room " + room.id);
                     room.Dispose();
                     roomList.Remove(room);
