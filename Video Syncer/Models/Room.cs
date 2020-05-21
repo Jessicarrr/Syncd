@@ -235,6 +235,7 @@ namespace Video_Syncer.Models
 
         public void Leave(int userId)
         {
+            CTrace.TraceInformation("User with user id " + userId + " has left.");
             userManager.RemoveFromUserList(userId);
         }
 
