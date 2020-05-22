@@ -3,4 +3,84 @@
 }
 <h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<link rel="stylesheet" type="text/css" href="~/css/privacy.css">
+
+<p class="privacy-paragraph">This website was built to be as minimally invasive to your privacy as possible.</p>
+
+<p class="privacy-title">Cookies</p>
+<p class="privacy-paragraph">This website uses cookies, which are small files stored on your computer so that
+your computer can remember your settings on this website. These settings are:</p>
+<ul>
+    <li><b>Night mode</b>: A cookie is used to remember whether you use night mode. This is so that night mode
+doesn't keep turning off when you want to have it on. This data is not stored by us or sent to us.</li>
+    <li><b>Your username</b>: This is so whatever username you set is remembered whenever you browse our website.
+Your username is sent to us whenever you enter a video watching room. This is so that your name can appear in the
+list of users who are in the room. Once you leave the room, your username is forgotten by the room, but is logged
+by our server (see "logging" below).</li>
+    <li><b>Session</b>: A "session" is created whenever you enter our website. When you browse our website, our server
+gives you a unique ID so that we know who is sending us requests. This is so whenever you're in one of our video watching
+rooms, a malicious user can't start sending requests on your behalf. Your unique session ID will be stored with us
+until you haven't done anything on our website for 1 hour, at which point it is deleted. However, do know that your session
+ID will be logged (see "logging" below), so there is a chance your session ID will be remembered longer than one hour.
+If you visit our website again after that one hour period, you will be given a unique ID that will be deleted again after 1
+hour of not doing anything on our site. This data is not used for anything but for double checking whether requests are coming
+from you and not another user, as well as fixing any potential bugs or problems on our website.</li>
+</ul>
+
+<p class="privacy-title">Logging</p>
+<p class="privacy-paragraph">Logging is basically the server writing down various things about what's happening. For example,
+if an error occurs in one of our rooms, the error is logged so that we know what happened, how it happened, and how we can
+fix it.</p>
+<p class="privacy-paragraph">
+Logging is purely used for the purposes of making our website better and (hopefully) problem free. It's useful for us to
+log many different events, so that in the case a problem appears, we can
+fix it and make sure that problem doesn't happen again. We log many different things so we have as much information to help
+us as possible. We only start logging things once you've entered a room, so you being on our home page (or this privacy page)
+is not logged. We don't log any of your personal information, the only things about you that we log include:
+</p>
+<ul>
+    <li>
+        <b>Your username</b>: The username you set on our website. This is used so we know which user is doing what when
+        in a room, such as playing the video or adding a new video. This helps us fix any unforeseen problems when users do certain
+        actions we may not have expected them to do when creating this website.
+    </li>
+    <li>
+        <b>Your session ID</b>: Your session ID is logged by us in certain circumstances, such as when you join a room
+        or when something goes wrong with your session, such as a different session ID trying to make a request using your
+        details.
+    </li>
+    <li>
+        <b>Your user ID</b>: This is different to your session ID as described above. Whenever you enter a new room to watch videos,
+        the server assigns you a unique ID. This is so that if you have the same name as someone else in the room, we will have
+        the ability to differentiate both of you when you send us information such as whether the video is playing, or what time you're
+        at in the video, and other information necessary to sync you up with whoever you're watching videos with.
+    </li>
+    <li>
+        <b>What you're doing in our rooms</b>: Data will be logged about what you're doing in our rooms. This is done whenever you take
+        an action that will affect other users in the room. For example, if you press play on a video, data will be sent telling us
+        your user id (as described above), as well as your request to play the video. This is used for logging, as well as making the video
+        play for everyone else in the room so that you're all synced up. Data is sent for various actions such as when you change your name
+        while in a room, when you pause the video or interact with it in any way that would affect other people in the room, when you add
+        a new video to the playlist, when you remove a video from the playlist, and anything in general that would need to be synced up
+        with other users in the room. Actions you might take while in a room that aren't sent to us include actions that would only affect you
+        and not anybody else in the room. For example, if you press "open in browser" on a playlist item, the only thing this would do is open
+        the playlist video in your browser, nobody else (including us) would be informed of this action. Other examples would include when
+        you copy a link to the video in your browser, or if you press the fullscreen button on the video, or if you type anything into the
+        "add a video" text box without pressing the "add" button, or adjusting the volume on the video, or pressing anything on the YouTube
+        player once you've selected the "disable player" checkbox.
+    </li>
+</ul>
+<p class="privacy-title">The data your browser sends us when you're watching videos on our website</p>
+<p class="privacy-paragraph">
+    Your browser will send us various things about what you're doing when you're in a room watching videos on our website.
+    This data is used for syncing you up with other users in a room, as well as for logging and thus for fixing any problems that may arise
+    on our website. We will remember any actions taken that would have an affect on other users experience, such as when you play the video,
+    pause the video, add a new video to the playlist, etc. Logging is especially prudent for us whenever an error occurs on our website or when
+    something unforeseen goes wrong.
+</p>
+
+<p class="privacy-paragraph">
+    Other than what's listed above, we do not collect any data about you. We especially make it a point to not collect any of your
+    personal information, such as your real name, your email, your birthday, etc. We want this website to be simple to use and accessible
+    to people who may not feel comfortable with sharing that information.
+</p>
