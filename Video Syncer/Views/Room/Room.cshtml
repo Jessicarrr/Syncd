@@ -1,4 +1,7 @@
 ﻿@model Video_Syncer.Views.Room.RoomModel
+@{
+    ViewData["Title"] = "Room";
+}
 
 <script>
     var roomId = "@Model.id";
@@ -42,7 +45,7 @@
 
 <input type="checkbox" id="hide-player-checkbox" />
 <label for="hide-player-checkbox">Disable player</label>
-<br/>
+<br />
 
 <h3 id="video-title"></h3>
 
@@ -50,7 +53,7 @@
 
 <label for="searchBar" id="searchBarLabel">Add a video</label>
 <div id="searchArea">
-    
+
     <input id="searchBar" type="text" placeholder="Place URL here" />
     <button id="addButton" type="button">Add</button>
 </div>
