@@ -37,7 +37,7 @@ namespace Video_Syncer
 
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromSeconds(600);
+                options.IdleTimeout = TimeSpan.FromHours(1);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
