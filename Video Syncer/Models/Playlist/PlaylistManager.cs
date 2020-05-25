@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Video_Syncer.api.receiver;
+using Video_Syncer.logging;
 
 namespace Video_Syncer.Models.Playlist
 {
@@ -59,7 +60,10 @@ namespace Video_Syncer.Models.Playlist
                         obj.title = titleToken.ToObject<string>();
                         obj.author = authorToken.ToObject<string>();
                     }
-                    
+                    else
+                    {
+                        CTrace.TraceWarning("noembed.GetYoutubeData returned null for video with youtube id " + youtubeId);
+                    }
                 });
             });
         }

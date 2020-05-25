@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Video_Syncer.api.receiver.manager;
+using Video_Syncer.logging;
 using Video_Syncer.Models.Playlist;
 
 namespace Video_Syncer.api.receiver
@@ -38,22 +39,13 @@ namespace Video_Syncer.api.receiver
                 {
                     JObject json = JObject.Parse(result.Result);
                     return json;
-
-
-                    /*JToken authorToken;
-                    JToken titleToken;
-
-                    json.TryGetValue("author_name", out authorToken);
-                    json.TryGetValue("title", out titleToken);
-
-                    obj.title = titleToken.ToObject<string>();
-                    obj.author = authorToken.ToObject<string>();*/
                 });
 
                 return jObj;
             }
             catch(ApiException e)
             {
+                CTrace.TraceError("ApiException in NoEmbedHandler.GetYoutubeData, statusCode =  " + e.statusCode + " with message " + e.Message);
                 return null;
             }
         }

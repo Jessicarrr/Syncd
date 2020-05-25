@@ -228,7 +228,7 @@ namespace Video_Syncer.Models
         public User Join(string name, string sessionID)
         {
             User user = userManager.CreateNewUser(name, sessionID);
-            CTrace.TraceInformation("Joining user \"" + name + "\" with session id: " + sessionID);
+            CTrace.TraceInformation("Joining user \"" + user.name + "\"");
             Join(user);
             return user;
         }

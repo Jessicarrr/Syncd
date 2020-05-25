@@ -78,6 +78,12 @@ namespace Video_Syncer.Controllers
             }
             bool wasSuccessful = room.userManager.ChangeName(request.userId, request.newName);
 
+            if(!wasSuccessful)
+            {
+                CTrace.TraceWarning("RoomManager.ChangeName was not successful (wasSuccessful == " + wasSuccessful + ") with userId " 
+                    + request.userId + " and new name = " + request.newName);
+            }
+
             ChangeUsernameCallback callback = new ChangeUsernameCallback()
             {
                 success = wasSuccessful
@@ -237,6 +243,13 @@ namespace Video_Syncer.Controllers
             }
 
             bool wasSuccessful = room.PlayPlaylistVideo(request.playlistItemId);
+
+            if (!wasSuccessful)
+            {
+                CTrace.TraceWarning("RoomManager.PlayPlaylistVideo was not successful (wasSuccessful == " + wasSuccessful + ") with userId "
+                    + request.userId + " and new item to play playlist id = " + request.playlistItemId);
+            }
+
             PlayPlaylistVideoCallback callback = new PlayPlaylistVideoCallback()
             {
                 success = wasSuccessful

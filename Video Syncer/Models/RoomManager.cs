@@ -30,6 +30,7 @@ namespace Video_Syncer.Models
             Room room = new Room(roomId, roomName);
             //room.userList = GetTestUsers();
 
+            CTrace.TraceInformation("New room created with name " + room.name + " and id " + room.id);
             roomList.Add(room);
             return room;
         }
