@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Security.Application;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,8 +58,14 @@ namespace Video_Syncer.Models.Playlist
                         jResult.TryGetValue("author_name", out authorToken);
                         jResult.TryGetValue("title", out titleToken);
 
-                        obj.title = titleToken.ToObject<string>();
-                        obj.author = authorToken.ToObject<string>();
+                        string author = authorToken.ToObject<string>();
+                        string title = titleToken.ToObject<string>();
+
+                        author = Microsoft.Security.Application.Encoder.HtmlEncode(author);
+                        title = Microsoft.Security.Application.Encoder.HtmlEncode(title);
+
+                        obj.title = title;
+                        obj.author = author;
                     }
                     else
                     {
