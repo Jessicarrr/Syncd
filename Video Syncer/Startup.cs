@@ -12,6 +12,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Video_Syncer.Middleware;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
+using Microsoft.ApplicationInsights.TraceListener;
+using Video_Syncer.logging;
 
 namespace Video_Syncer
 {
@@ -33,6 +36,7 @@ namespace Video_Syncer
                 //options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            Trace.Listeners.Add(new ApplicationInsightsTraceListener());
             services.AddDistributedMemoryCache();
 
             services.AddSession(options =>
@@ -43,6 +47,8 @@ namespace Video_Syncer
             });
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddControllersWithViews();
+            services.AddApplicationInsightsTelemetry();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,8 +65,9 @@ namespace Video_Syncer
                 app.UseHsts();
             }
             var logger = loggerFactory.CreateLogger("Startup");
-            logger.LogWarning("Logger configured!");
-            Console.WriteLine("hello test");
+            logger.LogWarning("[VSY] Logger configured!");
+            CTrace.logger = logger;
+            
 
             app.UseSession();
             app.UseMiddleware<CustomMiddleware>();
