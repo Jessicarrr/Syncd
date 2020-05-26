@@ -76,14 +76,15 @@ namespace Video_Syncer
                 app.UseHsts();
             }
             using (var loggerFactory2 = LoggerFactory.Create(builder => {
-                    builder.AddConsole();
-                    builder.AddDebug();
-                    builder.AddConfiguration(Configuration.GetSection("Logging"));
-                    builder.AddAzureWebAppDiagnostics();
-                }))
+                builder.AddConsole();
+                builder.AddDebug();
+                builder.AddConfiguration(Configuration.GetSection("Logging"));
+                builder.AddAzureWebAppDiagnostics();
+                builder.AddApplicationInsights("ikey");
+            }))
             {
                 var logger = loggerFactory2.CreateLogger("Startup");
-                logger.LogWarning("[VSY] Logger configured!");
+                logger.LogError("[VSY] Logger configured!");
                 CTrace.logger = logger;
             }
 
