@@ -118,6 +118,17 @@ namespace Video_Syncer.Models.Users
             }*/
         }
 
+        public bool AllHasState(VideoState state)
+        {
+            IEnumerable<User> usersWithoutState = userList.Where(user => user.videoState != state);
+
+            if(usersWithoutState.Count() > 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public VideoState GetStateForUser(int userId)
         {
             foreach (User user in userList)

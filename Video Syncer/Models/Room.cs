@@ -144,13 +144,16 @@ namespace Video_Syncer.Models
             }
             else if(newState == VideoState.Ended)
             {
-                userManager.SetStateForAll(VideoState.Ended);
-                UpdateTime();
+                userManager.SetStateForUser(userId, VideoState.Ended);
 
-                //TODO: Playlist support, play next video.
-                PlaylistObject obj = playlistManager.GoToNextVideo();
-                NewVideo(obj);
-                
+                if(userManager.AllHasState(VideoState.Ended))
+                {
+                    UpdateTime();
+
+                    //TODO: Playlist support, play next video.
+                    PlaylistObject obj = playlistManager.GoToNextVideo();
+                    NewVideo(obj);
+                }
             }
             UpdateVideoStatistics(videoTimeSeconds, currentYoutubeVideoId);
 
