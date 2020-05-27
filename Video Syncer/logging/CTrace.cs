@@ -14,6 +14,8 @@ namespace Video_Syncer.logging
 
         public static void WriteLine(string message)
         {
+            Trace.WriteLine(tag + " " + GetFormattedDateTime() + ": " + message);
+
             if (logger == null)
                 return;
 
@@ -22,6 +24,8 @@ namespace Video_Syncer.logging
 
         public static void TraceInformation(string message)
         {
+            Trace.TraceInformation(tag + " " + GetFormattedDateTime() + ": " + message);
+
             if (logger == null)
                 return;
 
@@ -30,6 +34,8 @@ namespace Video_Syncer.logging
 
         public static void TraceWarning(string message)
         {
+            Trace.TraceWarning(tag + " " + GetFormattedDateTime() + ": " + message);
+
             if (logger == null)
                 return;
 
@@ -38,6 +44,8 @@ namespace Video_Syncer.logging
 
         public static void TraceError(string message)
         {
+            Trace.TraceError(tag + " " + GetFormattedDateTime() + ": " + message);
+
             if (logger == null)
                 return;
 

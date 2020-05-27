@@ -6,6 +6,10 @@
     <ApplicationInsightsResourceId>/subscriptions/90c382a4-ef41-44c7-96a0-1635a3a1794f/resourcegroups/PrototypeVideoSyncingSite111ResourceGroup/providers/microsoft.insights/components/prototypevideosync</ApplicationInsightsResourceId>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+
 
   <ItemGroup>
     <PackageReference Include="AntiXSS" Version="4.3.0" />

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Video_Syncer.logging;
 using Video_Syncer.Models;
 using Video_Syncer.Models.Network;
@@ -13,6 +14,13 @@ namespace Video_Syncer.Controllers
 {
     public class RoomController : Controller
     {
+        public ILogger logger;
+
+        public RoomController(ILogger<RoomController> logger)
+        {
+            this.logger = logger;
+        }
+
         [Route("room/{id}")]
         public IActionResult FindRoom(string id)
         {
@@ -51,7 +59,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                CTrace.TraceError("request was null in RoomController.ChangeName");
+                logger.LogError("request was null in RoomController.ChangeName");
                 return null;
             }
 
@@ -162,6 +170,8 @@ namespace Video_Syncer.Controllers
                 return Json(callback2);
             }
 
+            logger.LogWarning("[VSY]************** VIDEO PLAYED ******************");
+
             room.NewVideoState(request.userId, VideoState.Playing);
             VideoStateChangeCallback callback = new VideoStateChangeCallback()
             {
@@ -177,7 +187,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                CTrace.TraceError("request was null in RoomController.PauseVideo");
+                logger.LogWarning("request was null in RoomController.PauseVideo");
                 return null;
             }
 
@@ -185,7 +195,7 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                CTrace.TraceWarning("Room was null in RoomController.PauseVideo. user id = " + request.userId
+                logger.LogWarning("Room was null in RoomController.PauseVideo. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
@@ -202,7 +212,6 @@ namespace Video_Syncer.Controllers
                 };
                 return Json(callback2);
             }
-
             room.NewVideoState(request.userId, VideoState.Paused);
             VideoStateChangeCallback callback = new VideoStateChangeCallback()
             {

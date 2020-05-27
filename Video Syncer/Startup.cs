@@ -53,6 +53,7 @@ namespace Video_Syncer
                 loggingBuilder.AddConsole();
                 loggingBuilder.AddDebug();
                 loggingBuilder.AddAzureWebAppDiagnostics();
+                loggingBuilder.AddApplicationInsights("ikey");
             });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
