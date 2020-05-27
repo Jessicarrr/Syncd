@@ -67,7 +67,7 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                CTrace.TraceWarning("Room was null in RoomController.ChangeName. user id = " + request.userId
+                logger.LogWarning("Room was null in RoomController.ChangeName. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
@@ -76,7 +76,7 @@ namespace Video_Syncer.Controllers
 
             if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                CTrace.TraceWarning("End Video Request - session ID did not match in room \""
+                logger.LogWarning("End Video Request - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 ChangeUsernameCallback callback2 = new ChangeUsernameCallback()
                 {
@@ -88,7 +88,7 @@ namespace Video_Syncer.Controllers
 
             if(!wasSuccessful)
             {
-                CTrace.TraceWarning("RoomManager.ChangeName was not successful (wasSuccessful == " + wasSuccessful + ") with userId " 
+                logger.LogWarning("RoomManager.ChangeName was not successful (wasSuccessful == " + wasSuccessful + ") with userId " 
                     + request.userId + " and new name = " + request.newName);
             }
 
@@ -104,7 +104,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                CTrace.TraceError("request was null in RoomController.EndVideo");
+                logger.LogError("request was null in RoomController.EndVideo");
                 return null;
             }
 
@@ -112,7 +112,7 @@ namespace Video_Syncer.Controllers
             
             if (room == null)
             {
-                CTrace.TraceWarning("Room was null in RoomController.EndVideo. user id = " + request.userId
+                logger.LogWarning("Room was null in RoomController.EndVideo. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
@@ -121,7 +121,7 @@ namespace Video_Syncer.Controllers
 
             if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                CTrace.TraceWarning("RoomController.EndVideo - session ID did not match in room \""
+                logger.LogWarning("RoomController.EndVideo - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 VideoStateChangeCallback callback2 = new VideoStateChangeCallback()
                 {
@@ -144,7 +144,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                CTrace.TraceError("request was null in RoomController.PlayVideo");
+                logger.LogError("request was null in RoomController.PlayVideo");
                 return null;
             }
 
@@ -152,7 +152,7 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                CTrace.TraceWarning("Room was null in RoomController.PlayVideo. user id = " + request.userId
+                logger.LogWarning("Room was null in RoomController.PlayVideo. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
@@ -161,7 +161,7 @@ namespace Video_Syncer.Controllers
 
             if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                CTrace.TraceWarning("RoomController.PlayVideo - session ID did not match in room \""
+                logger.LogWarning("RoomController.PlayVideo - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 VideoStateChangeCallback callback2 = new VideoStateChangeCallback()
                 {
@@ -204,7 +204,7 @@ namespace Video_Syncer.Controllers
 
             if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                CTrace.TraceWarning("RoomController.PauseVideo - session ID did not match in room \""
+                logger.LogWarning("RoomController.PauseVideo - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 VideoStateChangeCallback callback2 = new VideoStateChangeCallback()
                 {
@@ -225,7 +225,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                CTrace.TraceError("request was null in RoomController.PlayPlaylistVideo");
+                logger.LogError("request was null in RoomController.PlayPlaylistVideo");
                 return null;
             }
 
@@ -233,7 +233,7 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                CTrace.TraceWarning("Room was null in RoomController.PlayPlaylistVideo. user id = " + request.userId
+                logger.LogWarning("Room was null in RoomController.PlayPlaylistVideo. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
@@ -242,7 +242,7 @@ namespace Video_Syncer.Controllers
 
             if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                CTrace.TraceWarning("RoomController.PlayPlaylistVideo - session ID did not match in room \""
+                logger.LogWarning("RoomController.PlayPlaylistVideo - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 RemoveFromPlaylistCallback callback2 = new RemoveFromPlaylistCallback()
                 {
@@ -255,7 +255,7 @@ namespace Video_Syncer.Controllers
 
             if (!wasSuccessful)
             {
-                CTrace.TraceWarning("RoomManager.PlayPlaylistVideo was not successful (wasSuccessful == " + wasSuccessful + ") with userId "
+                logger.LogWarning("RoomManager.PlayPlaylistVideo was not successful (wasSuccessful == " + wasSuccessful + ") with userId "
                     + request.userId + " and new item to play playlist id = " + request.playlistItemId);
             }
 
@@ -271,7 +271,7 @@ namespace Video_Syncer.Controllers
         {
             if(request == null)
             {
-                CTrace.TraceError("request was null in RoomController.RemoveFromPlaylist");
+                logger.LogError("request was null in RoomController.RemoveFromPlaylist");
                 return null;
             }
 
@@ -279,7 +279,7 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                CTrace.TraceWarning("Room was null in RoomController.RemoveFromPlaylist. user id = " + request.userId
+                logger.LogWarning("Room was null in RoomController.RemoveFromPlaylist. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
@@ -288,7 +288,7 @@ namespace Video_Syncer.Controllers
 
             if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                CTrace.TraceWarning("RoomController.RemoveFromPlaylist - session ID did not match in room \""
+                logger.LogWarning("RoomController.RemoveFromPlaylist - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 RemoveFromPlaylistCallback callback2 = new RemoveFromPlaylistCallback()
                 {
@@ -310,7 +310,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                CTrace.TraceError("request was null in RoomController.AddToPlaylist");
+                logger.LogError("request was null in RoomController.AddToPlaylist");
                 return null;
             }
 
@@ -318,7 +318,7 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                CTrace.TraceWarning("Room was null in RoomController.AddToPlaylist. user id = " + request.userId
+                logger.LogWarning("Room was null in RoomController.AddToPlaylist. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
@@ -327,7 +327,7 @@ namespace Video_Syncer.Controllers
 
             if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                CTrace.TraceWarning("RoomController.AddToPlaylist - session ID did not match in room \""
+                logger.LogWarning("RoomController.AddToPlaylist - session ID did not match in room \""
                      + room.id + "\"! Session ID of the request was " + sessionID);
                 VideoStateChangeCallback callback2 = new VideoStateChangeCallback()
                 {
@@ -349,7 +349,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                CTrace.TraceError("request was null in RoomController.ChangeVideo");
+                logger.LogError("request was null in RoomController.ChangeVideo");
                 return null;
             }
 
@@ -357,7 +357,7 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                CTrace.TraceWarning("Room was null in RoomController.ChangeVideo. user id = " + request.userId
+                logger.LogWarning("Room was null in RoomController.ChangeVideo. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
@@ -366,7 +366,7 @@ namespace Video_Syncer.Controllers
 
             if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                CTrace.TraceWarning("RoomController.ChangeVideo - session ID did not match in room \""
+                logger.LogWarning("RoomController.ChangeVideo - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 VideoStateChangeCallback callback2 = new VideoStateChangeCallback()
                 {
@@ -388,7 +388,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                CTrace.TraceError("request was null in RoomController.BufferVideo");
+                logger.LogError("request was null in RoomController.BufferVideo");
                 return null;
             }
 
@@ -396,7 +396,7 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                CTrace.TraceWarning("Room was null in RoomController.BufferVideo. user id = " + request.userId
+                logger.LogWarning("Room was null in RoomController.BufferVideo. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
@@ -405,7 +405,7 @@ namespace Video_Syncer.Controllers
 
             if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                CTrace.TraceWarning("RoomController.BufferVideo - session ID did not match in room \""
+                logger.LogWarning("RoomController.BufferVideo - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 VideoStateChangeCallback callback2 = new VideoStateChangeCallback()
                 {
@@ -427,7 +427,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                CTrace.TraceError("request was null in RoomController.TimeUpdate");
+                logger.LogError("request was null in RoomController.TimeUpdate");
                 return null;
             }
 
@@ -436,7 +436,7 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                CTrace.TraceWarning("Room was null in RoomController.TimeUpdate. user id = " + request.userId
+                logger.LogWarning("Room was null in RoomController.TimeUpdate. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
@@ -445,7 +445,7 @@ namespace Video_Syncer.Controllers
 
             if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                CTrace.TraceWarning("RoomController.TimeUpdate - session ID did not match in room \""
+                logger.LogWarning("RoomController.TimeUpdate - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 LeaveRequestCallback callback2 = new LeaveRequestCallback()
                 {
@@ -482,7 +482,7 @@ namespace Video_Syncer.Controllers
         {
             if(request == null)
             {
-                CTrace.TraceError("request was null in RoomController.Update");
+                logger.LogError("request was null in RoomController.Update");
                 return null;
             }
 
@@ -490,7 +490,7 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                CTrace.TraceWarning("Room was null in RoomController.Update. user id = " + request.userId
+                logger.LogWarning("Room was null in RoomController.Update. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
@@ -499,7 +499,7 @@ namespace Video_Syncer.Controllers
 
             if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                CTrace.TraceWarning("RoomController.Update - session ID did not match in room \""
+                logger.LogWarning("RoomController.Update - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 return null;
             }
@@ -533,7 +533,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                CTrace.TraceError("request was null in RoomController.Join");
+                logger.LogError("request was null in RoomController.Join");
                 return null;
             }
 
@@ -541,7 +541,7 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                CTrace.TraceWarning("Room was null in RoomController.Join. user name = " + request.name
+                logger.LogWarning("Room was null in RoomController.Join. user name = " + request.name
                     + ", room id was " + request.roomId);
                 return Json(new { success = false });
             }
@@ -576,7 +576,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                CTrace.TraceError("request was null in RoomController.Leave");
+                logger.LogError("request was null in RoomController.Leave");
                 return null;
             }
 
@@ -584,7 +584,7 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                CTrace.TraceWarning("Room was null in RoomController.Leave. user id = " + request.userId
+                logger.LogWarning("Room was null in RoomController.Leave. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 LeaveRequestCallback callback2 = new LeaveRequestCallback()
                 {
@@ -597,7 +597,7 @@ namespace Video_Syncer.Controllers
 
             if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                CTrace.TraceWarning("RoomController.Leave - session ID did not match in room \""
+                logger.LogWarning("RoomController.Leave - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 LeaveRequestCallback callback2 = new LeaveRequestCallback()
                 {
