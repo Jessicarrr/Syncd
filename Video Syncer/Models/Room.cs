@@ -88,7 +88,7 @@ namespace Video_Syncer.Models
 
         private void CancelPeriodicTasks()
         {
-            logger.LogInformation("CancelPeriodicTasks() ran on room " + id);
+            logger.LogInformation("[VSY]CancelPeriodicTasks() ran on room " + id);
             source.Cancel();
         }
 
@@ -254,14 +254,14 @@ namespace Video_Syncer.Models
         public User Join(string name, string sessionID)
         {
             User user = UserManager.CreateNewUser(name, sessionID);
-            logger.LogInformation("Joining user \"" + user.name + "\"");
+            logger.LogInformation("[VSY]Joining user \"" + user.name + "\"");
             Join(user);
             return user;
         }
 
         public void Leave(int userId)
         {
-            logger.LogInformation("User with user id " + userId + " has left.");
+            logger.LogInformation("[VSY]User with user id " + userId + " has left.");
             UserManager.RemoveFromUserList(userId);
         }
 
@@ -309,7 +309,7 @@ namespace Video_Syncer.Models
             {
                 handle.Dispose();
                 CancelPeriodicTasks();
-                logger.LogDebug("Room " + id + " disposed.");
+                logger.LogDebug("[VSY]Room " + id + " disposed.");
             }
 
             disposed = true;

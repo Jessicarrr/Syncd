@@ -34,7 +34,7 @@ namespace Video_Syncer.Models
             Room room = new Room(new PlaylistManager(), new UserManager(), roomId, roomName);
             //room.userList = GetTestUsers();
 
-            logger.LogInformation("New room created with name " + room.name + " and id " + room.id);
+            logger.LogInformation("[VSY]New room created with name " + room.name + " and id " + room.id);
             roomList.Add(room);
             return room;
         }
@@ -203,7 +203,7 @@ namespace Video_Syncer.Models
             {
                 handle.Dispose();
                 CancelPeriodicTasks();
-                logger.LogInformation("Room Manager disposed.");
+                logger.LogInformation("[VSY]Room Manager disposed.");
             }
 
             disposed = true;
