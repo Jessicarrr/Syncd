@@ -13,5 +13,7 @@ namespace Video_Syncer.Models.Playlist
         public PlaylistObject PlayPlaylistObject(string id);
         public void ChangeItemPlaying(PlaylistObject obj);
         public PlaylistObject GoToNextVideo();
+
+        public List<PlaylistObject> GetPlaylist();
     }
 }

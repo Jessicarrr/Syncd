@@ -300,7 +300,7 @@ namespace Video_Syncer.Controllers
                 return Json(callback2);
             }
 
-            room.playlistManager.RemoveFromPlaylist(request.playlistItemId);
+            room.PlaylistManager.RemoveFromPlaylist(request.playlistItemId);
             RemoveFromPlaylistCallback callback = new RemoveFromPlaylistCallback()
             {
                 success = true
@@ -339,7 +339,7 @@ namespace Video_Syncer.Controllers
                 return Json(callback2);
             }
 
-            room.playlistManager.AddToPlaylist(request.youtubeVideoId);
+            room.PlaylistManager.AddToPlaylist(request.youtubeVideoId);
             VideoStateChangeCallback callback = new VideoStateChangeCallback()
             {
                 success = true
@@ -523,7 +523,7 @@ namespace Video_Syncer.Controllers
                 name = room.name,
                 currentVideoState = room.UserManager.GetStateForUser(request.userId),
                 videoTimeSeconds = room.videoTimeSeconds,
-                playlist = room.PlaylistManager.playlist,
+                playlist = room.PlaylistManager.GetPlaylist(),
                 success = true
             };
             return Json(callback);

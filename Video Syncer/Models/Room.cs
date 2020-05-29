@@ -46,7 +46,7 @@ namespace Video_Syncer.Models
             currentYoutubeVideoTitle = "";
             videoTimeSeconds = 0;
 
-            playlistManager = new PlaylistManager();
+            PlaylistManager = new PlaylistManager();
             UserManager = new Models.Users.UserManager(id);
             roomCreationTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
@@ -111,7 +111,7 @@ namespace Video_Syncer.Models
 
         public bool PlayPlaylistVideo(string playlistId)
         {
-            PlaylistObject obj = playlistManager.PlayPlaylistObject(playlistId);
+            PlaylistObject obj = PlaylistManager.PlayPlaylistObject(playlistId);
 
             if(obj != null)
             {
@@ -169,7 +169,7 @@ namespace Video_Syncer.Models
                     UpdateTime();
 
                     //TODO: Playlist support, play next video.
-                    PlaylistObject obj = playlistManager.GoToNextVideo();
+                    PlaylistObject obj = PlaylistManager.GoToNextVideo();
                     NewVideo(obj);
                 }
             }

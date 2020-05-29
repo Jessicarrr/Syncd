@@ -75,6 +75,11 @@ namespace Video_Syncer.Models.Playlist
             });
         }
 
+        public List<PlaylistObject> GetPlaylist()
+        {
+            return playlist;
+        }
+
         private string GenerateUniqueId()
         {
             StringBuilder stringBuilder = new StringBuilder();
