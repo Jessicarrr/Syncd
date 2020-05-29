@@ -7,6 +7,8 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Video_Syncer.logging;
+using Video_Syncer.Models.Playlist;
+using Video_Syncer.Models.Users;
 
 namespace Video_Syncer.Models
 {
@@ -26,7 +28,7 @@ namespace Video_Syncer.Models
 
             // Room room = ActivatorUtilities.CreateInstance<Room>(serviceProvider);
             // https://stackoverflow.com/questions/37189984/dependency-injection-with-classes-other-than-a-controller-class/44252662
-            Room room = new Room(roomId, roomName);
+            Room room = new Room(new PlaylistManager(), new UserManager(), roomId, roomName);
             //room.userList = GetTestUsers();
 
             CTrace.TraceInformation("New room created with name " + room.name + " and id " + room.id);
