@@ -79,17 +79,6 @@ namespace Video_Syncer
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            using (var loggerFactory2 = LoggerFactory.Create(builder => {
-                builder.AddConsole();
-                builder.AddDebug();
-                builder.AddConfiguration(Configuration.GetSection("Logging"));
-                builder.AddAzureWebAppDiagnostics();
-                builder.AddApplicationInsights("ikey");
-            }))
-            {
-                var logger = loggerFactory2.CreateLogger("Startup");
-                logger.LogError("[VSY] Logger configured!");
-            }
 
             /*var logger = loggerFactory.CreateLogger("Startup");
 
