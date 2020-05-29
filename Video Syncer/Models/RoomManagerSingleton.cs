@@ -136,7 +136,7 @@ namespace Video_Syncer.Models
 
         private void CancelPeriodicTasks()
         {
-            logger.LogInformation("CancelPeriodicTasks() ran on room Manager");
+            logger.LogInformation("[VSY] CancelPeriodicTasks() ran on room Manager");
             source.Cancel();
         }
 
@@ -156,7 +156,7 @@ namespace Video_Syncer.Models
 
         public void DestroyRoom(Room room)
         {
-            logger.LogInformation("Destroying room " + room.id);
+            logger.LogInformation("[VSY] Destroying room " + room.id);
             room.Dispose();
             roomList.Remove(room);
         }
@@ -173,7 +173,7 @@ namespace Video_Syncer.Models
                 {
                     if (roomAgeInMinutes < 1)
                     {
-                        logger.LogInformation("Will not destroy room " + room.id + " because it is only "
+                        logger.LogInformation("[VSY] Will not destroy room " + room.id + " because it is only "
                             + roomAgeInMinutes + " minute(s) old. (Room must be more than 1 minute old to destroy)");
                         return;
                     }

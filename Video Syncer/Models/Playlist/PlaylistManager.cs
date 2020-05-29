@@ -77,7 +77,7 @@ namespace Video_Syncer.Models.Playlist
                     }
                     else
                     {
-                        logger.LogWarning("noembed.GetYoutubeData returned null for video with youtube id " + youtubeId);
+                        logger.LogWarning("[VSY] noembed.GetYoutubeData returned null for video with youtube id " + youtubeId);
                     }
                 });
             });

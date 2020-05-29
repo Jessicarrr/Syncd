@@ -358,7 +358,7 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                logger.LogWarning("Room was null in RoomController.ChangeVideo. user id = " + request.userId
+                logger.LogWarning("[VSY] Room was null in RoomController.ChangeVideo. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
@@ -367,7 +367,7 @@ namespace Video_Syncer.Controllers
 
             if (!room.UserManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                logger.LogWarning("RoomController.ChangeVideo - session ID did not match in room \""
+                logger.LogWarning("[VSY] RoomController.ChangeVideo - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 VideoStateChangeCallback callback2 = new VideoStateChangeCallback()
                 {
