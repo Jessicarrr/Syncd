@@ -85,7 +85,7 @@ namespace Video_Syncer.Models.Users
         {
             if (UserIdExists(user.id))
             {
-                logger.LogInformation("User removed! \"" + user.name + "\" (id: " + user.id + ") from room " + roomId);
+                logger.LogInformation("[VSY] User removed! \"" + user.name + "\" (id: " + user.id + ") from room " + roomId);
                 userList.Remove(user);
             }
         }
@@ -111,7 +111,7 @@ namespace Video_Syncer.Models.Users
             {
                 if (user.SecondsSinceLastConnection() >= disconnectedUserThresholdSeconds)
                 {
-                    logger.LogInformation("User \"" + user.name + "\" (id: " + user.id + ") timed out from room " + roomId);
+                    logger.LogInformation("[VSY] User \"" + user.name + "\" (id: " + user.id + ") timed out from room " + roomId);
                     RemoveFromUserList(user);
                 }
             }
