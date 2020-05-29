@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -18,13 +19,17 @@ namespace Video_Syncer.Models.Users
 
         public int usernameCharacterLimit = 25;
 
+        private ILogger logger;
+
         public UserManager(string roomId)
         {
             this.roomId = roomId;
+            logger = LoggingHandler.CreateLogger<UserManager>();
         }
 
         public UserManager()
         {
+            logger = LoggingHandler.CreateLogger<UserManager>();
         }
 
         public int GetNumUsers()
@@ -80,7 +85,7 @@ namespace Video_Syncer.Models.Users
         {
             if (UserIdExists(user.id))
             {
-                LoggingHandler.TraceInformation("User removed! \"" + user.name + "\" (id: " + user.id + ") from room " + roomId);
+                logger.LogInformation("User removed! \"" + user.name + "\" (id: " + user.id + ") from room " + roomId);
                 userList.Remove(user);
             }
         }
@@ -106,7 +111,7 @@ namespace Video_Syncer.Models.Users
             {
                 if (user.SecondsSinceLastConnection() >= disconnectedUserThresholdSeconds)
                 {
-                    LoggingHandler.TraceInformation("User \"" + user.name + "\" (id: " + user.id + ") timed out from room " + roomId);
+                    logger.LogInformation("User \"" + user.name + "\" (id: " + user.id + ") timed out from room " + roomId);
                     RemoveFromUserList(user);
                 }
             }

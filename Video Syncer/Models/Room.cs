@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32.SafeHandles;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -36,6 +37,8 @@ namespace Video_Syncer.Models
 
         public long roomCreationTime;
 
+        private ILogger logger;
+
 
         public Room(string id, string name = "")
         {
@@ -49,6 +52,7 @@ namespace Video_Syncer.Models
             PlaylistManager = new PlaylistManager();
             UserManager = new Models.Users.UserManager(id);
             roomCreationTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            logger = LoggingHandler.CreateLogger<Room>();
 
             StartPeriodicTasks();
         }
@@ -66,6 +70,7 @@ namespace Video_Syncer.Models
 
             this.UserManager = userManager;
             this.PlaylistManager = playlistManager;
+            logger = LoggingHandler.CreateLogger<Room>();
 
             StartPeriodicTasks();
         }
@@ -83,7 +88,7 @@ namespace Video_Syncer.Models
 
         private void CancelPeriodicTasks()
         {
-            LoggingHandler.TraceInformation("CancelPeriodicTasks() ran on room " + id);
+            logger.LogInformation("CancelPeriodicTasks() ran on room " + id);
             source.Cancel();
         }
 
@@ -249,14 +254,14 @@ namespace Video_Syncer.Models
         public User Join(string name, string sessionID)
         {
             User user = UserManager.CreateNewUser(name, sessionID);
-            LoggingHandler.TraceInformation("Joining user \"" + user.name + "\"");
+            logger.LogInformation("Joining user \"" + user.name + "\"");
             Join(user);
             return user;
         }
 
         public void Leave(int userId)
         {
-            LoggingHandler.TraceInformation("User with user id " + userId + " has left.");
+            logger.LogInformation("User with user id " + userId + " has left.");
             UserManager.RemoveFromUserList(userId);
         }
 
@@ -304,7 +309,7 @@ namespace Video_Syncer.Models
             {
                 handle.Dispose();
                 CancelPeriodicTasks();
-                LoggingHandler.WriteLine("Room " + id + " disposed.");
+                logger.LogDebug("Room " + id + " disposed.");
             }
 
             disposed = true;

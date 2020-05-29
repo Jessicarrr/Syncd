@@ -1,4 +1,5 @@
-﻿using Microsoft.Security.Application;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Security.Application;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,13 @@ namespace Video_Syncer.Models.Playlist
         private NoEmbedHandler noembed = new NoEmbedHandler();
 
         private PlaylistObject currentItemPlaying = null;
+
+        private ILogger logger;
+
+        public PlaylistManager()
+        {
+            logger = LoggingHandler.CreateLogger<PlaylistManager>();
+        }
 
         public bool RemoveFromPlaylist(string itemId)
         {
@@ -69,7 +77,7 @@ namespace Video_Syncer.Models.Playlist
                     }
                     else
                     {
-                        LoggingHandler.TraceWarning("noembed.GetYoutubeData returned null for video with youtube id " + youtubeId);
+                        logger.LogWarning("noembed.GetYoutubeData returned null for video with youtube id " + youtubeId);
                     }
                 });
             });
