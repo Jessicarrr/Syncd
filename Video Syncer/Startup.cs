@@ -89,7 +89,7 @@ namespace Video_Syncer
             {
                 var logger = loggerFactory2.CreateLogger("Startup");
                 logger.LogError("[VSY] Logger configured!");
-                CTrace.logger = logger;
+                LoggingHandler.logger = logger;
             }
 
             /*var logger = loggerFactory.CreateLogger("Startup");

@@ -45,7 +45,7 @@ namespace Video_Syncer.api.receiver
             }
             catch(ApiException e)
             {
-                CTrace.TraceError("ApiException in NoEmbedHandler.GetYoutubeData, statusCode =  " + e.statusCode + " with message " + e.Message);
+                LoggingHandler.TraceError("ApiException in NoEmbedHandler.GetYoutubeData, statusCode =  " + e.statusCode + " with message " + e.Message);
                 return null;
             }
         }

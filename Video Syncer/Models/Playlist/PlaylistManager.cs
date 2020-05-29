@@ -69,7 +69,7 @@ namespace Video_Syncer.Models.Playlist
                     }
                     else
                     {
-                        CTrace.TraceWarning("noembed.GetYoutubeData returned null for video with youtube id " + youtubeId);
+                        LoggingHandler.TraceWarning("noembed.GetYoutubeData returned null for video with youtube id " + youtubeId);
                     }
                 });
             });

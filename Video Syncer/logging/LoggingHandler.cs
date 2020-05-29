@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Video_Syncer.logging
 {
-    public class CTrace
+    public class LoggingHandler
     {
         protected static readonly string tag = "[VSY]";
         public static ILogger logger { get; set; }

@@ -80,7 +80,7 @@ namespace Video_Syncer.Models.Users
         {
             if (UserIdExists(user.id))
             {
-                CTrace.TraceInformation("User removed! \"" + user.name + "\" (id: " + user.id + ") from room " + roomId);
+                LoggingHandler.TraceInformation("User removed! \"" + user.name + "\" (id: " + user.id + ") from room " + roomId);
                 userList.Remove(user);
             }
         }
@@ -106,7 +106,7 @@ namespace Video_Syncer.Models.Users
             {
                 if (user.SecondsSinceLastConnection() >= disconnectedUserThresholdSeconds)
                 {
-                    CTrace.TraceInformation("User \"" + user.name + "\" (id: " + user.id + ") timed out from room " + roomId);
+                    LoggingHandler.TraceInformation("User \"" + user.name + "\" (id: " + user.id + ") timed out from room " + roomId);
                     RemoveFromUserList(user);
                 }
             }

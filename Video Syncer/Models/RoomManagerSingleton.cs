@@ -31,7 +31,7 @@ namespace Video_Syncer.Models
             Room room = new Room(new PlaylistManager(), new UserManager(), roomId, roomName);
             //room.userList = GetTestUsers();
 
-            CTrace.TraceInformation("New room created with name " + room.name + " and id " + room.id);
+            LoggingHandler.TraceInformation("New room created with name " + room.name + " and id " + room.id);
             roomList.Add(room);
             return room;
         }
@@ -131,7 +131,7 @@ namespace Video_Syncer.Models
 
         private void CancelPeriodicTasks()
         {
-            CTrace.TraceInformation("CancelPeriodicTasks() ran on room Manager");
+            LoggingHandler.TraceInformation("CancelPeriodicTasks() ran on room Manager");
             source.Cancel();
         }
 
@@ -151,7 +151,7 @@ namespace Video_Syncer.Models
 
         public void DestroyRoom(Room room)
         {
-            CTrace.TraceInformation("Destroying room " + room.id);
+            LoggingHandler.TraceInformation("Destroying room " + room.id);
             room.Dispose();
             roomList.Remove(room);
         }
@@ -168,7 +168,7 @@ namespace Video_Syncer.Models
                 {
                     if (roomAgeInMinutes < 1)
                     {
-                        CTrace.WriteLine("Will not destroy room " + room.id + " because it is only "
+                        LoggingHandler.WriteLine("Will not destroy room " + room.id + " because it is only "
                             + roomAgeInMinutes + " minute(s) old. (Room must be more than 1 minute old to destroy)");
                         return;
                     }
@@ -198,7 +198,7 @@ namespace Video_Syncer.Models
             {
                 handle.Dispose();
                 CancelPeriodicTasks();
-                CTrace.TraceInformation("Room Manager disposed.");
+                LoggingHandler.TraceInformation("Room Manager disposed.");
             }
 
             disposed = true;
