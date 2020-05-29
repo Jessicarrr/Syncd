@@ -49,7 +49,7 @@ namespace Video_Syncer.api.receiver
             }
             catch(ApiException e)
             {
-                logger.LogError("ApiException in NoEmbedHandler.GetYoutubeData, statusCode =  " + e.statusCode + " with message " + e.Message + ", e = " + e);
+                logger.LogError("[VSY] ApiException in NoEmbedHandler.GetYoutubeData, statusCode =  " + e.statusCode + " with message " + e.Message + ", e = " + e);
                 return null;
             }
         }
