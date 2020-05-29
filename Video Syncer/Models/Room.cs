@@ -22,7 +22,7 @@ namespace Video_Syncer.Models
         public string currentYoutubeVideoId { get; set; }
 
         public string currentYoutubeVideoTitle { get; set; }
-        public PlaylistManager playlistManager { get; set; }
+        public IPlaylistManager PlaylistManager { get; set; }
         public Models.Users.IUserManager UserManager { get; set; }
 
         public double videoTimeSeconds { get; set; }
@@ -53,7 +53,7 @@ namespace Video_Syncer.Models
             StartPeriodicTasks();
         }
 
-        public Room(IUserManager userManager, string id, string name = "")
+        public Room(IPlaylistManager playlistManager, IUserManager userManager, string id, string name = "")
         {
             this.id = id;
             this.name = name;
@@ -62,11 +62,10 @@ namespace Video_Syncer.Models
             currentYoutubeVideoTitle = "";
             videoTimeSeconds = 0;
 
-            playlistManager = new PlaylistManager();
-            userManager = new Models.Users.UserManager(id);
             roomCreationTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
             this.UserManager = userManager;
+            this.PlaylistManager = playlistManager;
 
             StartPeriodicTasks();
         }
