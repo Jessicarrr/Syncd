@@ -23,6 +23,9 @@ namespace Video_Syncer.Models
         {
             string roomId = CreateUniqueRoomId();
             string roomName = CreateRandomRoomName();
+
+            // Room room = ActivatorUtilities.CreateInstance<Room>(serviceProvider);
+            // https://stackoverflow.com/questions/37189984/dependency-injection-with-classes-other-than-a-controller-class/44252662
             Room room = new Room(roomId, roomName);
             //room.userList = GetTestUsers();
 
