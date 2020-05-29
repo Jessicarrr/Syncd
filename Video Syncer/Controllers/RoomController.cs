@@ -173,8 +173,6 @@ namespace Video_Syncer.Controllers
                 return Json(callback2);
             }
 
-            logger.LogWarning("[VSY]************** VIDEO PLAYED ******************");
-
             room.NewVideoState(request.userId, VideoState.Playing);
             VideoStateChangeCallback callback = new VideoStateChangeCallback()
             {
