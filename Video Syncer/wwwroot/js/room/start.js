@@ -4,6 +4,7 @@
 
     startLoadingYoutubePlayer();
     var playerHTMLObject = document.getElementById("player");
+    console.log("Attempting to make custom video player...");
     createPlayerOverObject(playerHTMLObject, youtubeWidth, youtubeHeight);
 
     setupHidePlayerCheckbox();

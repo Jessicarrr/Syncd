@@ -99,6 +99,8 @@ function getVideoTotalDuration() {
 
 // 4. The API will call this function when the video player is ready.
 function onPlayerReady(event) {
+    console.log("youtube player is ready");
+
     setToggleVideoPlayingCallback(toggleVideoPlaying);
     setVolumeChangeCallback(adjustVolume);
     setClickTimeSliderCallback(adjustTime);

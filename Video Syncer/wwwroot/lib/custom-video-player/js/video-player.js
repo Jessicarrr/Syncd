@@ -95,12 +95,11 @@ function videoPlayerTick() {
             fixVideoPlayerSize();
         }
         trackTime();
-        
     }
     catch(err) {
-        console.log("videoPlayerTick - Error with in video-player.js videoPlayerTick() caught");
+        console.log("videoPlayerTick - Error with in video-player.js videoPlayerTick() caught. message = "
+            + err.message + ", error: " + err);
     }
-    
 }
 
 function trackTime() {
