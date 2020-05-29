@@ -6,7 +6,7 @@ using Video_Syncer.Models.Playlist;
 
 namespace Video_Syncer.Models.Network
 {
-    public class UpdateRequest
+    public class UpdateRequest : IRequest
     {
         public string roomId { get; set; }
         public int userId { get; set; }
@@ -16,7 +16,7 @@ namespace Video_Syncer.Models.Network
 
     }
 
-    public class UpdateRequestCallback
+    public class UpdateRequestCallback : ICallback
     {
         public string name { get; set; }
 
@@ -28,6 +28,6 @@ namespace Video_Syncer.Models.Network
         public double videoTimeSeconds { get; set; }
 
         public List<User> userList { get; set; }
-
+        public bool success { get; set; }
     }
 }

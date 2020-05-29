@@ -523,7 +523,8 @@ namespace Video_Syncer.Controllers
                 name = room.name,
                 currentVideoState = room.UserManager.GetStateForUser(request.userId),
                 videoTimeSeconds = room.videoTimeSeconds,
-                playlist = room.playlistManager.playlist
+                playlist = room.PlaylistManager.playlist,
+                success = true
             };
             return Json(callback);
 

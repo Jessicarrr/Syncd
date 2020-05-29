@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace Video_Syncer.Models.Network
 {
-    public class LeaveRequest
+    public class LeaveRequest : IRequest
     {
         public int userId { get; set; }
         public string roomId { get; set; }
     }
 
-    public class LeaveRequestCallback
+    public class LeaveRequestCallback : ICallback
     {
         public Boolean success { get; set; }
     }
