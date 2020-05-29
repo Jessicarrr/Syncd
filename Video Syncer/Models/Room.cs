@@ -22,8 +22,8 @@ namespace Video_Syncer.Models
         public string currentYoutubeVideoId { get; set; }
 
         public string currentYoutubeVideoTitle { get; set; }
-        public PlaylistManager playlistManager { get; set; }
-        public Models.Users.UserManager userManager { get; }
+        public IPlaylistManager PlaylistManager { get; set; }
+        public Models.Users.IUserManager UserManager { get; set; }
 
         public double videoTimeSeconds { get; set; }
 
@@ -36,7 +36,24 @@ namespace Video_Syncer.Models
 
         public long roomCreationTime;
 
+
         public Room(string id, string name = "")
+        {
+            this.id = id;
+            this.name = name;
+
+            currentYoutubeVideoId = "LXb3EKWsInQ";
+            currentYoutubeVideoTitle = "";
+            videoTimeSeconds = 0;
+
+            PlaylistManager = new PlaylistManager();
+            UserManager = new Models.Users.UserManager(id);
+            roomCreationTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+
+            StartPeriodicTasks();
+        }
+
+        public Room(IPlaylistManager playlistManager, IUserManager userManager, string id, string name = "")
         {
             this.id = id;
             this.name = name;
@@ -45,9 +62,10 @@ namespace Video_Syncer.Models
             currentYoutubeVideoTitle = "";
             videoTimeSeconds = 0;
 
-            playlistManager = new PlaylistManager();
-            userManager = new Models.Users.UserManager(id);
             roomCreationTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+
+            this.UserManager = userManager;
+            this.PlaylistManager = playlistManager;
 
             StartPeriodicTasks();
         }
@@ -78,7 +96,7 @@ namespace Video_Syncer.Models
                     break;
                 }
 
-                new Task(() => userManager.ForceLeaveAllTimedOutUsers()).Start();
+                new Task(() => UserManager.ForceLeaveAllTimedOutUsers()).Start();
                 await Task.Delay(periodicTaskMilliseconds);
             }
         }
@@ -87,13 +105,13 @@ namespace Video_Syncer.Models
         {
             currentYoutubeVideoId = youtubeId;
             currentYoutubeVideoTitle = "";
-            userManager.SetStateForAll(VideoState.Playing);
+            UserManager.SetStateForAll(VideoState.Playing);
             videoTimeSeconds = 0;
         }
 
         public bool PlayPlaylistVideo(string playlistId)
         {
-            PlaylistObject obj = playlistManager.PlayPlaylistObject(playlistId);
+            PlaylistObject obj = PlaylistManager.PlayPlaylistObject(playlistId);
 
             if(obj != null)
             {
@@ -111,19 +129,19 @@ namespace Video_Syncer.Models
             }
             currentYoutubeVideoId = obj.videoId;
             currentYoutubeVideoTitle = obj.title;
-            userManager.SetStateForAll(VideoState.Playing);
+            UserManager.SetStateForAll(VideoState.Playing);
             videoTimeSeconds = 0;
         }
 
         public VideoState GetSuggestedVideoState()
         {
-            if (userManager.userList.Count == 0)
+            if (UserManager.GetNumUsers() == 0)
             {
                 return VideoState.Unstarted;
             }
             else
             {
-                return userManager.userList.First().videoState;
+                return UserManager.GetUserList().First().videoState;
             }
         }
 
@@ -131,7 +149,7 @@ namespace Video_Syncer.Models
         {
             if (newState == VideoState.Paused)
             {
-                userManager.SetStateForAll(VideoState.Paused);
+                UserManager.SetStateForAll(VideoState.Paused);
             }
             else if (newState == VideoState.Playing)
             {
@@ -139,25 +157,25 @@ namespace Video_Syncer.Models
                 {
                     videoTimeSeconds = 0;
                 }
-                userManager.SetStateForAll(newState);
+                UserManager.SetStateForAll(newState);
                 
             }
             else if(newState == VideoState.Ended)
             {
-                userManager.SetStateForUser(userId, VideoState.Ended);
+                UserManager.SetStateForUser(userId, VideoState.Ended);
 
-                if(userManager.AllHasState(VideoState.Ended))
+                if(UserManager.AllHasState(VideoState.Ended))
                 {
                     UpdateTime();
 
                     //TODO: Playlist support, play next video.
-                    PlaylistObject obj = playlistManager.GoToNextVideo();
+                    PlaylistObject obj = PlaylistManager.GoToNextVideo();
                     NewVideo(obj);
                 }
             }
             UpdateVideoStatistics(videoTimeSeconds, currentYoutubeVideoId);
 
-            userManager.UpdateLastConnectionTime(userId);
+            UserManager.UpdateLastConnectionTime(userId);
             
             /*
             else if (newState == VideoState.Unstarted)
@@ -219,7 +237,7 @@ namespace Video_Syncer.Models
 
                 if (GetSuggestedVideoState() == VideoState.Ended)
                 {
-                    userManager.SetStateForAll(VideoState.Playing);
+                    UserManager.SetStateForAll(VideoState.Playing);
                 }
 
                 return;
@@ -230,7 +248,7 @@ namespace Video_Syncer.Models
 
         public User Join(string name, string sessionID)
         {
-            User user = userManager.CreateNewUser(name, sessionID);
+            User user = UserManager.CreateNewUser(name, sessionID);
             CTrace.TraceInformation("Joining user \"" + user.name + "\"");
             Join(user);
             return user;
@@ -239,20 +257,20 @@ namespace Video_Syncer.Models
         public void Leave(int userId)
         {
             CTrace.TraceInformation("User with user id " + userId + " has left.");
-            userManager.RemoveFromUserList(userId);
+            UserManager.RemoveFromUserList(userId);
         }
 
         private void Join(User user)
         {
-            if(userManager.AddToUserList(user))
+            if(UserManager.AddToUserList(user))
             {
-                if (userManager.userList.Count == 1)
+                if (UserManager.GetNumUsers() == 1)
                 {
-                    userManager.SetStateForUser(user.id, VideoState.Paused);
+                    UserManager.SetStateForUser(user.id, VideoState.Paused);
                 }
                 else
                 {
-                    userManager.SetStateForUser(user.id, GetSuggestedVideoState());
+                    UserManager.SetStateForUser(user.id, GetSuggestedVideoState());
                 }
             }
         }
@@ -268,7 +286,7 @@ namespace Video_Syncer.Models
 
         public void Leave(User user)
         {
-            userManager.RemoveFromUserList(user);
+            UserManager.RemoveFromUserList(user);
         }
 
         public void Dispose()

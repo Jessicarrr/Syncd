@@ -11,11 +11,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Video_Syncer.Middleware;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using Microsoft.ApplicationInsights.TraceListener;
 using Video_Syncer.logging;
 using Microsoft.Extensions.Logging.AzureAppServices;
+using Video_Syncer.Models.Users;
+using Video_Syncer.Models;
 
 namespace Video_Syncer
 {
@@ -57,6 +58,8 @@ namespace Video_Syncer
             });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IRoomManagerSingleton, RoomManagerSingleton>();
+            services.AddScoped<IUserManager, UserManager>();
             services.AddControllersWithViews();
             services.AddApplicationInsightsTelemetry();
             services.Configure<AzureFileLoggerOptions>(Configuration.GetSection("AzureLogging"));

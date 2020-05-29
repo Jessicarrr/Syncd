@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace Video_Syncer.Models.Network
 {
-    public class ChangeUsernameRequest
+    public class ChangeUsernameRequest : IRequest
     {
         public int userId { get; set; }
         public string roomId { get; set; }
         public string newName { get; set; }
     }
 
-    public class ChangeUsernameCallback
+    public class ChangeUsernameCallback : ICallback
     {
         public Boolean success { get; set; }
     }

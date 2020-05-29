@@ -7,7 +7,7 @@ using Video_Syncer.logging;
 
 namespace Video_Syncer.Models.Users
 {
-    public class UserManager
+    public class UserManager : IUserManager
     {
         public List<User> userList = new List<User>();
         private int maxUsers = 500;
@@ -21,6 +21,25 @@ namespace Video_Syncer.Models.Users
         public UserManager(string roomId)
         {
             this.roomId = roomId;
+        }
+
+        public UserManager()
+        {
+        }
+
+        public int GetNumUsers()
+        {
+            return userList.Count;
+        }
+
+        public List<User> GetUserList()
+        {
+            return userList;
+        }
+
+        public List<string> GetSessionIdList()
+        {
+            return allowedSessionIds;
         }
 
         public bool ChangeName(int userId, string newName)
@@ -141,7 +160,7 @@ namespace Video_Syncer.Models.Users
             return VideoState.Unstarted;
         }
 
-        public Boolean UserIsBuffering()
+        public bool UserIsBuffering()
         {
             foreach (User user in userList)
             {
@@ -193,7 +212,7 @@ namespace Video_Syncer.Models.Users
 
         public User CreateNewUser(string name, string sessionID)
         {
-            int userId = CreateUniqueUserId();
+            int userId = this.CreateUniqueUserId();
 
             if (name.Length > usernameCharacterLimit)
             {
@@ -203,28 +222,7 @@ namespace Video_Syncer.Models.Users
             return user;
         }
 
-        public bool IsFull()
-        {
-            if (userList.Count >= maxUsers)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private Boolean UserIdExists(int id)
-        {
-            foreach (User user in userList)
-            {
-                if (user.id == id)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private int CreateUniqueUserId()
+        public int CreateUniqueUserId()
         {
             Random random = new Random();
             int id = -1;
@@ -236,7 +234,28 @@ namespace Video_Syncer.Models.Users
 
             return id;
         }
-        private User GetUserById(int id)
+
+        public bool IsFull()
+        {
+            if (userList.Count >= maxUsers)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool UserIdExists(int id)
+        {
+            foreach (User user in userList)
+            {
+                if (user.id == id)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public User GetUserById(int id)
         {
             foreach (User user in userList)
             {

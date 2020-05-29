@@ -11,7 +11,7 @@ using Video_Syncer.logging;
 
 namespace Video_Syncer.Models.Playlist
 {
-    public class PlaylistManager
+    public class PlaylistManager : IPlaylistManager
     {
         public List<PlaylistObject> playlist = new List<PlaylistObject>();
 
@@ -75,6 +75,11 @@ namespace Video_Syncer.Models.Playlist
             });
         }
 
+        public List<PlaylistObject> GetPlaylist()
+        {
+            return playlist;
+        }
+
         private string GenerateUniqueId()
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -122,11 +127,6 @@ namespace Video_Syncer.Models.Playlist
             PlaylistObject requestedObject = list.First();
             currentItemPlaying = requestedObject;
             return requestedObject;
-        }
-
-        public bool DeleteVideo(string id)
-        {
-            return false;
         }
 
         public void ChangeItemPlaying(PlaylistObject obj)

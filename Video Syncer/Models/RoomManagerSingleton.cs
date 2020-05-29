@@ -7,13 +7,13 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Video_Syncer.logging;
+using Video_Syncer.Models.Playlist;
+using Video_Syncer.Models.Users;
 
 namespace Video_Syncer.Models
 {
-    public class RoomManager : IDisposable
+    public class RoomManagerSingleton : IDisposable, IRoomManagerSingleton
     {
-        private static readonly RoomManager roomManager = new RoomManager();
-
         public List<Room> roomList = new List<Room>();
         private CancellationTokenSource source;
         private int periodicTaskMilliseconds = 10000;
@@ -21,13 +21,14 @@ namespace Video_Syncer.Models
         private bool disposed = false;
         private SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
 
-
-
         public Room CreateNewRoom()
         {
             string roomId = CreateUniqueRoomId();
-            string roomName = CreateRandomName();
-            Room room = new Room(roomId, roomName);
+            string roomName = CreateRandomRoomName();
+
+            // Room room = ActivatorUtilities.CreateInstance<Room>(serviceProvider);
+            // https://stackoverflow.com/questions/37189984/dependency-injection-with-classes-other-than-a-controller-class/44252662
+            Room room = new Room(new PlaylistManager(), new UserManager(), roomId, roomName);
             //room.userList = GetTestUsers();
 
             CTrace.TraceInformation("New room created with name " + room.name + " and id " + room.id);
@@ -35,17 +36,12 @@ namespace Video_Syncer.Models
             return room;
         }
 
-        public static RoomManager GetSingletonInstance()
-        {
-            return roomManager;
-        }
-
-        private RoomManager()
+        public RoomManagerSingleton()
         {
             StartPeriodicTasks();
         }
 
-        private string CreateRandomName()
+        private string CreateRandomRoomName()
         {
             string[] adjectives = new string[] { "Western","Concern","Familiar",
                                                 "Fly","Official","Broad",
@@ -93,7 +89,7 @@ namespace Video_Syncer.Models
                 {
                     randomString += validRoomCharacters[random.Next(validRoomCharacters.Length)];
                 }
-            } 
+            }
             while (RoomIdTaken(randomString));
 
             return randomString;
@@ -111,7 +107,7 @@ namespace Video_Syncer.Models
             return null;
         }
 
-        private Boolean RoomIdTaken(String roomId)
+        public Boolean RoomIdTaken(String roomId)
         {
             foreach(Room room in roomList)
             {
@@ -139,7 +135,7 @@ namespace Video_Syncer.Models
             source.Cancel();
         }
 
-        public async Task PeriodicDestroyEmptyRooms(CancellationToken token)
+        private async Task PeriodicDestroyEmptyRooms(CancellationToken token)
         {
             while (true)
             {
@@ -153,6 +149,13 @@ namespace Video_Syncer.Models
             }
         }
 
+        public void DestroyRoom(Room room)
+        {
+            CTrace.TraceInformation("Destroying room " + room.id);
+            room.Dispose();
+            roomList.Remove(room);
+        }
+
         private void DestroyEmptyRooms()
         {
             //CTrace.WriteLine("Called DestroyEmptyRooms()");
@@ -161,7 +164,7 @@ namespace Video_Syncer.Models
             {
                 int roomAgeInMinutes = room.GetMinutesSinceRoomCreation();
 
-                if(room.userManager.userList.Count <= 0)
+                if(room.UserManager.GetNumUsers() <= 0)
                 {
                     if (roomAgeInMinutes < 1)
                     {
@@ -169,9 +172,7 @@ namespace Video_Syncer.Models
                             + roomAgeInMinutes + " minute(s) old. (Room must be more than 1 minute old to destroy)");
                         return;
                     }
-                    CTrace.TraceInformation("Destroying room " + room.id);
-                    room.Dispose();
-                    roomList.Remove(room);
+                    DestroyRoom(room);
                 }
 
                 /*if(roomList.Count <= 0)
