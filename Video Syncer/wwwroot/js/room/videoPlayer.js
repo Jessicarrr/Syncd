@@ -107,6 +107,8 @@ function onPlayerReady(event) {
     givePlayerAbilityToTrackTime(getVideoTime, getVideoTotalDuration);
     setChangeVideoSizeCallback(setYoutubePlayerSize);
 
+    setVolumeSliderPosition(0);
+
     sendJoinRequest();
 }
 

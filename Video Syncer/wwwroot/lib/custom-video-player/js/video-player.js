@@ -512,7 +512,9 @@ function createPlayButton() {
     bottomButtonDiv.appendChild(playButton);
 }
 
-
+function setVolumeSliderPosition(positionNumber) {
+    volumeSlider.setAttribute("value", "0");
+}
 
 function createVolumeSlider() {
     var mouseInVolumeSlider = false;
