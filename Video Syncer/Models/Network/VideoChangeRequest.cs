@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Video_Syncer.Models.Network
 {
-    public class VideoChangeRequest
+    public class VideoChangeRequest : IRequest
     {
         public int userId { get; set; }
         public string roomId { get; set; }

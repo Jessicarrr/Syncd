@@ -1,4 +1,5 @@
-﻿using Microsoft.Security.Application;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Security.Application;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using Video_Syncer.logging;
 
 namespace Video_Syncer.Models.Playlist
 {
-    public class PlaylistManager
+    public class PlaylistManager : IPlaylistManager
     {
         public List<PlaylistObject> playlist = new List<PlaylistObject>();
 
@@ -19,6 +20,13 @@ namespace Video_Syncer.Models.Playlist
         private NoEmbedHandler noembed = new NoEmbedHandler();
 
         private PlaylistObject currentItemPlaying = null;
+
+        private ILogger logger;
+
+        public PlaylistManager()
+        {
+            logger = LoggingHandler.CreateLogger<PlaylistManager>();
+        }
 
         public bool RemoveFromPlaylist(string itemId)
         {
@@ -69,10 +77,15 @@ namespace Video_Syncer.Models.Playlist
                     }
                     else
                     {
-                        CTrace.TraceWarning("noembed.GetYoutubeData returned null for video with youtube id " + youtubeId);
+                        logger.LogWarning("[VSY] noembed.GetYoutubeData returned null for video with youtube id " + youtubeId);
                     }
                 });
             });
+        }
+
+        public List<PlaylistObject> GetPlaylist()
+        {
+            return playlist;
         }
 
         private string GenerateUniqueId()
@@ -122,11 +135,6 @@ namespace Video_Syncer.Models.Playlist
             PlaylistObject requestedObject = list.First();
             currentItemPlaying = requestedObject;
             return requestedObject;
-        }
-
-        public bool DeleteVideo(string id)
-        {
-            return false;
         }
 
         public void ChangeItemPlaying(PlaylistObject obj)

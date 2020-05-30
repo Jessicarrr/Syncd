@@ -11,11 +11,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Video_Syncer.Middleware;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using Microsoft.ApplicationInsights.TraceListener;
 using Video_Syncer.logging;
 using Microsoft.Extensions.Logging.AzureAppServices;
+using Video_Syncer.Models.Users;
+using Video_Syncer.Models;
 
 namespace Video_Syncer
 {
@@ -57,6 +58,8 @@ namespace Video_Syncer
             });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IRoomManagerSingleton, RoomManagerSingleton>();
+            services.AddScoped<IUserManager, UserManager>();
             services.AddControllersWithViews();
             services.AddApplicationInsightsTelemetry();
             services.Configure<AzureFileLoggerOptions>(Configuration.GetSection("AzureLogging"));
@@ -75,18 +78,6 @@ namespace Video_Syncer
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
-            }
-            using (var loggerFactory2 = LoggerFactory.Create(builder => {
-                builder.AddConsole();
-                builder.AddDebug();
-                builder.AddConfiguration(Configuration.GetSection("Logging"));
-                builder.AddAzureWebAppDiagnostics();
-                builder.AddApplicationInsights("ikey");
-            }))
-            {
-                var logger = loggerFactory2.CreateLogger("Startup");
-                logger.LogError("[VSY] Logger configured!");
-                CTrace.logger = logger;
             }
 
             /*var logger = loggerFactory.CreateLogger("Startup");

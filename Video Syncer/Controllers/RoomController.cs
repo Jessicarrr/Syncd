@@ -15,10 +15,13 @@ namespace Video_Syncer.Controllers
     public class RoomController : Controller
     {
         public ILogger logger;
+        public IRoomManagerSingleton roomManager;
 
-        public RoomController(ILogger<RoomController> logger)
+
+        public RoomController(ILogger<RoomController> logger, IRoomManagerSingleton roomManager)
         {
             this.logger = logger;
+            this.roomManager = roomManager;
         }
 
         [Route("room/{id}")]
@@ -32,20 +35,20 @@ namespace Video_Syncer.Controllers
             }
             else
             {
-                if(room.userManager.IsFull())
+                if(room.UserManager.IsFull())
                 {
                     return View("RoomFull");
                 }
                 else
                 {
                     string sessionID = HttpContext.Session.Id;
-                    room.userManager.allowedSessionIds.Add(sessionID);
+                    room.UserManager.GetSessionIdList().Add(sessionID);
 
                     RoomModel model = new RoomModel()
                     {
                         id = room.id,
                         name = room.name,
-                        userList = room.userManager.userList
+                        userList = room.UserManager.GetUserList()
                     };
                     return View("Room", model);
                 }
@@ -59,7 +62,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                logger.LogError("request was null in RoomController.ChangeName");
+                logger.LogError("[VSY] request was null in RoomController.ChangeName");
                 return null;
             }
 
@@ -67,16 +70,16 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                logger.LogWarning("Room was null in RoomController.ChangeName. user id = " + request.userId
+                logger.LogWarning("[VSY] Room was null in RoomController.ChangeName. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
 
             string sessionID = HttpContext.Session.Id;
 
-            if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
+            if (!room.UserManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                logger.LogWarning("End Video Request - session ID did not match in room \""
+                logger.LogWarning("[VSY] End Video Request - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 ChangeUsernameCallback callback2 = new ChangeUsernameCallback()
                 {
@@ -84,12 +87,12 @@ namespace Video_Syncer.Controllers
                 };
                 return Json(callback2);
             }
-            bool wasSuccessful = room.userManager.ChangeName(request.userId, request.newName);
+            bool wasSuccessful = room.UserManager.ChangeName(request.userId, request.newName);
 
             if(!wasSuccessful)
             {
-                logger.LogWarning("RoomManager.ChangeName was not successful (wasSuccessful == " + wasSuccessful + ") with userId " 
-                    + request.userId + " and new name = " + request.newName);
+                logger.LogWarning("[VSY] RoomManager.ChangeName was not successful (wasSuccessful == " + wasSuccessful + ") with userId " 
+					+ request.userId + " and new name = " + request.newName);
             }
 
             ChangeUsernameCallback callback = new ChangeUsernameCallback()
@@ -104,7 +107,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                logger.LogError("request was null in RoomController.EndVideo");
+                logger.LogError("[VSY] request was null in RoomController.EndVideo");
                 return null;
             }
 
@@ -112,16 +115,16 @@ namespace Video_Syncer.Controllers
             
             if (room == null)
             {
-                logger.LogWarning("Room was null in RoomController.EndVideo. user id = " + request.userId
+                logger.LogWarning("[VSY] Room was null in RoomController.EndVideo. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
 
             string sessionID = HttpContext.Session.Id;
 
-            if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
+            if (!room.UserManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                logger.LogWarning("RoomController.EndVideo - session ID did not match in room \""
+                logger.LogWarning("[VSY] RoomController.EndVideo - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 VideoStateChangeCallback callback2 = new VideoStateChangeCallback()
                 {
@@ -144,7 +147,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                logger.LogError("request was null in RoomController.PlayVideo");
+                logger.LogError("[VSY] request was null in RoomController.PlayVideo");
                 return null;
             }
 
@@ -152,16 +155,16 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                logger.LogWarning("Room was null in RoomController.PlayVideo. user id = " + request.userId
+                logger.LogWarning("[VSY] Room was null in RoomController.PlayVideo. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
 
             string sessionID = HttpContext.Session.Id;
 
-            if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
+            if (!room.UserManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                logger.LogWarning("RoomController.PlayVideo - session ID did not match in room \""
+                logger.LogWarning("[VSY] RoomController.PlayVideo - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 VideoStateChangeCallback callback2 = new VideoStateChangeCallback()
                 {
@@ -169,8 +172,6 @@ namespace Video_Syncer.Controllers
                 };
                 return Json(callback2);
             }
-
-            logger.LogWarning("[VSY]************** VIDEO PLAYED ******************");
 
             room.NewVideoState(request.userId, VideoState.Playing);
             VideoStateChangeCallback callback = new VideoStateChangeCallback()
@@ -187,7 +188,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                logger.LogWarning("request was null in RoomController.PauseVideo");
+                logger.LogWarning("[VSY] request was null in RoomController.PauseVideo");
                 return null;
             }
 
@@ -195,16 +196,16 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                logger.LogWarning("Room was null in RoomController.PauseVideo. user id = " + request.userId
+                logger.LogWarning("[VSY] Room was null in RoomController.PauseVideo. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
 
             string sessionID = HttpContext.Session.Id;
 
-            if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
+            if (!room.UserManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                logger.LogWarning("RoomController.PauseVideo - session ID did not match in room \""
+                logger.LogWarning("[VSY] RoomController.PauseVideo - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 VideoStateChangeCallback callback2 = new VideoStateChangeCallback()
                 {
@@ -225,7 +226,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                logger.LogError("request was null in RoomController.PlayPlaylistVideo");
+                logger.LogError("[VSY] request was null in RoomController.PlayPlaylistVideo");
                 return null;
             }
 
@@ -233,16 +234,16 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                logger.LogWarning("Room was null in RoomController.PlayPlaylistVideo. user id = " + request.userId
+                logger.LogWarning("[VSY] Room was null in RoomController.PlayPlaylistVideo. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
 
             string sessionID = HttpContext.Session.Id;
 
-            if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
+            if (!room.UserManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                logger.LogWarning("RoomController.PlayPlaylistVideo - session ID did not match in room \""
+                logger.LogWarning("[VSY] RoomController.PlayPlaylistVideo - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 RemoveFromPlaylistCallback callback2 = new RemoveFromPlaylistCallback()
                 {
@@ -255,7 +256,7 @@ namespace Video_Syncer.Controllers
 
             if (!wasSuccessful)
             {
-                logger.LogWarning("RoomManager.PlayPlaylistVideo was not successful (wasSuccessful == " + wasSuccessful + ") with userId "
+                logger.LogWarning("[VSY] RoomManager.PlayPlaylistVideo was not successful (wasSuccessful == " + wasSuccessful + ") with userId "
                     + request.userId + " and new item to play playlist id = " + request.playlistItemId);
             }
 
@@ -271,7 +272,7 @@ namespace Video_Syncer.Controllers
         {
             if(request == null)
             {
-                logger.LogError("request was null in RoomController.RemoveFromPlaylist");
+                logger.LogError("[VSY] request was null in RoomController.RemoveFromPlaylist");
                 return null;
             }
 
@@ -279,16 +280,16 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                logger.LogWarning("Room was null in RoomController.RemoveFromPlaylist. user id = " + request.userId
+                logger.LogWarning("[VSY] Room was null in RoomController.RemoveFromPlaylist. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
 
             string sessionID = HttpContext.Session.Id;
 
-            if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
+            if (!room.UserManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                logger.LogWarning("RoomController.RemoveFromPlaylist - session ID did not match in room \""
+                logger.LogWarning("[VSY] RoomController.RemoveFromPlaylist - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 RemoveFromPlaylistCallback callback2 = new RemoveFromPlaylistCallback()
                 {
@@ -297,7 +298,7 @@ namespace Video_Syncer.Controllers
                 return Json(callback2);
             }
 
-            room.playlistManager.RemoveFromPlaylist(request.playlistItemId);
+            room.PlaylistManager.RemoveFromPlaylist(request.playlistItemId);
             RemoveFromPlaylistCallback callback = new RemoveFromPlaylistCallback()
             {
                 success = true
@@ -310,7 +311,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                logger.LogError("request was null in RoomController.AddToPlaylist");
+                logger.LogError("[VSY] request was null in RoomController.AddToPlaylist");
                 return null;
             }
 
@@ -318,16 +319,16 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                logger.LogWarning("Room was null in RoomController.AddToPlaylist. user id = " + request.userId
+                logger.LogWarning("[VSY] Room was null in RoomController.AddToPlaylist. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
 
             string sessionID = HttpContext.Session.Id;
 
-            if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
+            if (!room.UserManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                logger.LogWarning("RoomController.AddToPlaylist - session ID did not match in room \""
+                logger.LogWarning("[VSY] RoomController.AddToPlaylist - session ID did not match in room \""
                      + room.id + "\"! Session ID of the request was " + sessionID);
                 VideoStateChangeCallback callback2 = new VideoStateChangeCallback()
                 {
@@ -336,7 +337,7 @@ namespace Video_Syncer.Controllers
                 return Json(callback2);
             }
 
-            room.playlistManager.AddToPlaylist(request.youtubeVideoId);
+            room.PlaylistManager.AddToPlaylist(request.youtubeVideoId);
             VideoStateChangeCallback callback = new VideoStateChangeCallback()
             {
                 success = true
@@ -349,7 +350,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                logger.LogError("request was null in RoomController.ChangeVideo");
+                logger.LogError("[VSY] request was null in RoomController.ChangeVideo");
                 return null;
             }
 
@@ -357,16 +358,16 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                logger.LogWarning("Room was null in RoomController.ChangeVideo. user id = " + request.userId
+                logger.LogWarning("[VSY] Room was null in RoomController.ChangeVideo. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
 
             string sessionID = HttpContext.Session.Id;
 
-            if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
+            if (!room.UserManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                logger.LogWarning("RoomController.ChangeVideo - session ID did not match in room \""
+                logger.LogWarning("[VSY] RoomController.ChangeVideo - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 VideoStateChangeCallback callback2 = new VideoStateChangeCallback()
                 {
@@ -388,7 +389,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                logger.LogError("request was null in RoomController.BufferVideo");
+                logger.LogError("[VSY] request was null in RoomController.BufferVideo");
                 return null;
             }
 
@@ -396,16 +397,16 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                logger.LogWarning("Room was null in RoomController.BufferVideo. user id = " + request.userId
+                logger.LogWarning("[VSY] Room was null in RoomController.BufferVideo. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
 
             string sessionID = HttpContext.Session.Id;
 
-            if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
+            if (!room.UserManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                logger.LogWarning("RoomController.BufferVideo - session ID did not match in room \""
+                logger.LogWarning("[VSY] RoomController.BufferVideo - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 VideoStateChangeCallback callback2 = new VideoStateChangeCallback()
                 {
@@ -427,7 +428,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                logger.LogError("request was null in RoomController.TimeUpdate");
+                logger.LogError("[VSY] request was null in RoomController.TimeUpdate");
                 return null;
             }
 
@@ -436,16 +437,16 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                logger.LogWarning("Room was null in RoomController.TimeUpdate. user id = " + request.userId
+                logger.LogWarning("[VSY] Room was null in RoomController.TimeUpdate. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
 
             string sessionID = HttpContext.Session.Id;
 
-            if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
+            if (!room.UserManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                logger.LogWarning("RoomController.TimeUpdate - session ID did not match in room \""
+                logger.LogWarning("[VSY] RoomController.TimeUpdate - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 LeaveRequestCallback callback2 = new LeaveRequestCallback()
                 {
@@ -467,7 +468,6 @@ namespace Video_Syncer.Controllers
         {
             try
             {
-                RoomManager roomManager = RoomManager.GetSingletonInstance();
                 Room room = roomManager.GetRoom(roomId);
                 return room;
             }
@@ -482,7 +482,7 @@ namespace Video_Syncer.Controllers
         {
             if(request == null)
             {
-                logger.LogError("request was null in RoomController.Update");
+                logger.LogError("[VSY] request was null in RoomController.Update");
                 return null;
             }
 
@@ -490,16 +490,16 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                logger.LogWarning("Room was null in RoomController.Update. user id = " + request.userId
+                logger.LogWarning("[VSY] Room was null in RoomController.Update. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 return null;
             }
 
             string sessionID = HttpContext.Session.Id;
 
-            if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
+            if (!room.UserManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                logger.LogWarning("RoomController.Update - session ID did not match in room \""
+                logger.LogWarning("[VSY] RoomController.Update - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 return null;
             }
@@ -510,18 +510,19 @@ namespace Video_Syncer.Controllers
                 request.currentYoutubeVideoId);
 
             // update user
-            room.userManager.UpdateUser(request.userId, request.videoTimeSeconds);
+            room.UserManager.UpdateUser(request.userId, request.videoTimeSeconds);
 
             // send users back
             UpdateRequestCallback callback = new UpdateRequestCallback()
             {
-                userList = room.userManager.userList,
+                userList = room.UserManager.GetUserList(),
                 currentYoutubeVideoId = room.currentYoutubeVideoId,
                 currentYoutubeVideoTitle = room.currentYoutubeVideoTitle,
                 name = room.name,
-                currentVideoState = room.userManager.GetStateForUser(request.userId),
+                currentVideoState = room.UserManager.GetStateForUser(request.userId),
                 videoTimeSeconds = room.videoTimeSeconds,
-                playlist = room.playlistManager.playlist
+                playlist = room.PlaylistManager.GetPlaylist(),
+                success = true
             };
             return Json(callback);
 
@@ -533,7 +534,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                logger.LogError("request was null in RoomController.Join");
+                logger.LogError("[VSY] request was null in RoomController.Join");
                 return null;
             }
 
@@ -541,7 +542,7 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                logger.LogWarning("Room was null in RoomController.Join. user name = " + request.name
+                logger.LogWarning("[VSY] Room was null in RoomController.Join. user name = " + request.name
                     + ", room id was " + request.roomId);
                 return Json(new { success = false });
             }
@@ -549,7 +550,7 @@ namespace Video_Syncer.Controllers
             {
                 string sessionID = HttpContext.Session.Id;
 
-                if (!room.userManager.allowedSessionIds.Contains(sessionID))
+                if (!room.UserManager.GetSessionIdList().Contains(sessionID))
                 {
                     return Json(new { success = false });
                 }
@@ -558,10 +559,10 @@ namespace Video_Syncer.Controllers
                 JoinRequestCallback callback = new JoinRequestCallback()
                 {
                     userId = user.id,
-                    userList = room.userManager.userList,
+                    userList = room.UserManager.GetUserList(),
                     currentYoutubeVideoId = room.currentYoutubeVideoId,
                     currentYoutubeVideoTitle = room.currentYoutubeVideoTitle,
-                    currentVideoState = room.userManager.GetStateForUser(user.id),
+                    currentVideoState = room.UserManager.GetStateForUser(user.id),
                     videoTimeSeconds = room.videoTimeSeconds
                 };
                 return Json(callback);
@@ -576,7 +577,7 @@ namespace Video_Syncer.Controllers
         {
             if (request == null)
             {
-                logger.LogError("request was null in RoomController.Leave");
+                logger.LogError("[VSY] request was null in RoomController.Leave");
                 return null;
             }
 
@@ -584,7 +585,7 @@ namespace Video_Syncer.Controllers
 
             if (room == null)
             {
-                logger.LogWarning("Room was null in RoomController.Leave. user id = " + request.userId
+                logger.LogWarning("[VSY] Room was null in RoomController.Leave. user id = " + request.userId
                     + ", room id was " + request.roomId);
                 LeaveRequestCallback callback2 = new LeaveRequestCallback()
                 {
@@ -595,9 +596,9 @@ namespace Video_Syncer.Controllers
 
             string sessionID = HttpContext.Session.Id;
 
-            if (!room.userManager.IsUserSessionIDMatching(request.userId, sessionID))
+            if (!room.UserManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
-                logger.LogWarning("RoomController.Leave - session ID did not match in room \""
+                logger.LogWarning("[VSY] RoomController.Leave - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
                 LeaveRequestCallback callback2 = new LeaveRequestCallback()
                 {
@@ -620,7 +621,6 @@ namespace Video_Syncer.Controllers
         [Route("new")]
         public IActionResult Index()
         {
-            RoomManager roomManager = RoomManager.GetSingletonInstance();
             Room room = roomManager.CreateNewRoom();
 
             return RedirectToAction(room.id, "room");

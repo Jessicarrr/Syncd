@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace Video_Syncer.Models.Network
 {
-    public class TimeChangeRequest
+    public class TimeChangeRequest : IRequest
     {
         public string roomId { get; set; }
         public int userId { get; set; }
         public double videoTimeSeconds { get; set; }
     }
 
-    public class TimeChangeRequestCallback
+    public class TimeChangeRequestCallback : ICallback
     {
         public Boolean success { get; set; }
     }

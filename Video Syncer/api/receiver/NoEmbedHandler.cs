@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace Video_Syncer.api.receiver
         protected readonly string apiName = "noembed";
         protected readonly string baseAddress = "https://noembed.com/";
         protected readonly string resourceAddressStart = "embed?url=http://www.youtube.com/watch?v=";
+        private ILogger logger;
 
         private ApiManager apiManager;
 
@@ -27,6 +29,8 @@ namespace Video_Syncer.api.receiver
             {
                 apiManager.RegisterNewApi(apiName, baseAddress);
             }
+
+            logger = LoggingHandler.CreateLogger<NoEmbedHandler>();
         }
 
         public async Task<JObject> GetYoutubeData(string videoId, CancellationTokenSource source)
@@ -45,7 +49,7 @@ namespace Video_Syncer.api.receiver
             }
             catch(ApiException e)
             {
-                CTrace.TraceError("ApiException in NoEmbedHandler.GetYoutubeData, statusCode =  " + e.statusCode + " with message " + e.Message);
+                logger.LogError("[VSY] ApiException in NoEmbedHandler.GetYoutubeData, statusCode =  " + e.statusCode + " with message " + e.Message + ", e = " + e);
                 return null;
             }
         }
