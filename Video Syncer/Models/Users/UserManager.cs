@@ -276,6 +276,11 @@ namespace Video_Syncer.Models.Users
         {
             User user = GetUserById(userId);
 
+            if(user == null)
+            {
+                return false;
+            }
+
             if (String.Equals(user.sessionID, sessionID))
             {
                 return true;
