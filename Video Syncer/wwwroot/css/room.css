@@ -9,6 +9,7 @@
     margin-bottom: 15%;
     min-width: 40%;
     max-width: 50%;
+    border: 1px solid;
 }
 
 .playlist-div {
@@ -107,10 +108,10 @@
     height: 35%;
     margin-bottom: 10px;
     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .3), 1px 1px 1px 1px rgba(0, 0, 0, .3);
-    white-space: nowrap;
     margin-right: 1%;
-    min-width: 16%;
-    max-width: 25%;
+    min-width: 20%;
+    max-width: 45%;
+    border: 1px solid;
 }
 
 .userDiv {
@@ -122,6 +123,7 @@
 p[id$="userName"] {
     font-weight: bold;
     font-size: 16px;
+    word-break: break-all;
 }
 
 p[id$="userId"] {
