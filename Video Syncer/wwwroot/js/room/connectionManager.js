@@ -380,6 +380,7 @@ function onUpdateSuccess(response) {
     if (playlist != null) {
         compareAndRemovePlaylistItems(playlist);
         compareAndAddPlaylistItems(playlist);
+        updateTitlesAndAuthors(playlist);
 
 
         /*removeAllPlaylistVideos();

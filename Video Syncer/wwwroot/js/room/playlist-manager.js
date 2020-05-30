@@ -59,6 +59,36 @@ function addDataToPlaylist(id, title, videoId, author) {
     return true;
 }
 
+function updateTitlesAndAuthors(paramPlaylist) {
+    for (var key in paramPlaylist) {
+        var videoObject = paramPlaylist[key];
+        var videoObjectUniqueId = videoObject["id"];
+        var videoObjectTitle = videoObject["title"];
+        var videoObjectAuthor = videoObject["author"];
+
+        playlistItems.forEach(function (element) {
+            if (element[objectPlaylistIdKey] === videoObjectUniqueId) {
+                var div = element[objectDivKey];
+                var titleElement = div.querySelector(".playlist-title");
+                var authorElement = div.querySelector(".playlist-author");
+
+                var currentTitleText = titleElement.innerHTML;
+                var currentAuthorText = authorElement.innerHTML;
+
+                if (currentTitleText !== videoObjectTitle) {
+                    console.log("Updated title of video " + currentTitleText);
+                    titleElement.innerHTML = videoObjectTitle;
+                }
+
+                if (currentAuthorText != videoObjectAuthor) {
+                    console.log("Updated author of video " + currentAuthorText);
+                    authorElement.innerHTML = videoObjectAuthor;
+                }
+            }
+        });
+    }
+}
+
 function compareAndRemovePlaylistItems(paramPlaylist) {
     var itemsToRemove = new Array();
     var newItems = new Array();
