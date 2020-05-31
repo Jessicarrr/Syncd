@@ -34,6 +34,11 @@ var getCurrentVideoTimeCallback;
 var getTotalVideoDurationCallback;
 var changeVideoSizeCallback;
 
+var volumeButtonMutedFontSize = "10px";
+var volumeButtonUnmutedFontSize = "16px";
+var volumeButtonMutedText = "Muted";
+var volumeButtonUnmutedText = "V";
+
 var shouldTrackTime = false;
 
 /**
@@ -515,7 +520,18 @@ function createPlayButton() {
 }
 
 function setVolumeSliderPosition(positionNumber) {
-    volumeSlider.setAttribute("value", "0");
+    volumeSlider.setAttribute("value", positionNumber);
+
+    var volumeButtonCurrentText = volumeHoverButton.innerHTML;
+
+    if (positionNumber <= 0 && volumeButtonCurrentText !== volumeButtonMutedText) {
+        volumeHoverButton.innerHTML = volumeButtonMutedText;
+        volumeHoverButton.style.fontSize = volumeButtonMutedFontSize;
+    }
+    else if (positionNumber > 0 && volumeButtonCurrentText != volumeButtonUnmutedText) {
+        volumeHoverButton.innerHTML = volumeButtonUnmutedText;
+        volumeHoverButton.style.fontSize = volumeButtonUnmutedFontSize;
+    }
 }
 
 function createVolumeSlider() {
@@ -568,7 +584,19 @@ function createVolumeSlider() {
 
     volumeSlider.oninput = function () {
         if (isFunction(volumeChangeCallback)) {
-            volumeChangeCallback(volumeSlider.value);
+            var volumeValue = volumeSlider.value;
+            var volumeButtonCurrentText = volumeHoverButton.innerHTML;
+
+            volumeChangeCallback(volumeValue);
+
+            if (volumeValue <= 0 && volumeButtonCurrentText !== volumeButtonMutedText) {
+                volumeHoverButton.innerHTML = volumeButtonMutedText;
+                volumeHoverButton.style.fontSize = volumeButtonMutedFontSize;
+            }
+            else if (volumeValue > 0 && volumeButtonCurrentText != volumeButtonUnmutedText) {
+                volumeHoverButton.innerHTML = volumeButtonUnmutedText;
+                volumeHoverButton.style.fontSize = volumeButtonUnmutedFontSize;
+            }
         }
     };
 
