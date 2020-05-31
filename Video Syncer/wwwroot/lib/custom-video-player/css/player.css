@@ -19,7 +19,7 @@
     top: 0;
 }
 
-#cvpl-customPlayButton, #cvpl-customVolumeButton, #cvpl-fullscreenButton {
+#cvpl-playButton, #cvpl-customVolumeButton, #cvpl-fullscreenButton {
     height: 100%;
     width: 40px;
     vertical-align: top;
@@ -29,12 +29,22 @@
     float: right;
 }
 
+#cvpl-playButton {
+    float: left;
+}
+
+#cvpl-customVolumeButton {
+    float: left;
+}
+
 #cvpl-volumeSlider {
     color: coral;
     width: 100px;
     height: 100%;
     vertical-align: top;
     cursor: pointer;
+    float: left;
+    display: none;
 }
 
 #cvpl-bottomButtonDiv {
@@ -52,13 +62,11 @@
     height: 33px;
     width: 140px;
     vertical-align: middle;
+    margin-left: 7px;
     color: white;
     float: left;
-    margin-left: 4px;
     margin-right: 4px;
-    padding-top: 0.4%;
-    padding-bottom: 0px;
-    text-align: center;
+    line-height: 33px;
 }
 /* The slider itself */
 #cpvl-timeSlider {

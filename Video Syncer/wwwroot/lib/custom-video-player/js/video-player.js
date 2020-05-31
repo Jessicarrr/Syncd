@@ -6,6 +6,7 @@ var bottomButtonDivId = "cvpl-bottomButtonDiv";
 var timeSliderId = "cpvl-timeSlider";
 var timeDisplayId = "cvpl-timeDisplay";
 var fullscreenButtonId = "cvpl-fullscreenButton";
+var playButtonId = "cvpl-playButton";
 
 var playerAdded = false;
 var userDraggingTimeSlider = false;
@@ -438,8 +439,9 @@ function fixVideoPlayerSize() {
 
 function createHTML(playerControlsDiv) {
     createButtonDiv(playerControlsDiv);
-    createTimeDisplay(playerControlsDiv);
     createButtons(playerControlsDiv);
+    createTimeDisplay(playerControlsDiv);
+    
     createTimeSlider(playerControlsDiv);
     createFullscreenButton();
 }
@@ -500,7 +502,7 @@ function createButtons(playerControlsDiv) {
 
 function createPlayButton() {
     playButton = document.createElement("button");
-    playButton.setAttribute("id", "cvpl-customPlayButton");
+    playButton.setAttribute("id", playButtonId);
     playButton.innerHTML = "P";
 
     playButton.onclick = function () {
@@ -526,8 +528,6 @@ function createVolumeSlider() {
     volumeSlider.setAttribute("min", "0");
     volumeSlider.setAttribute("max", "100");
     volumeSlider.setAttribute("value", "50");
-    volumeSlider.style.visibility = "hidden";
-
 
     volumeHoverButton = document.createElement("button");
     volumeHoverButton.setAttribute("id", volumeButtonHoverId);
@@ -536,27 +536,33 @@ function createVolumeSlider() {
     volumeHoverButton.addEventListener("mouseenter", function (event) {
         mouseInVolumeButton = true;
 
-        volumeSlider.style.visibility = "visible";
+        // volumeSlider.style.visibility = "visible";
+        volumeSlider.style.display = "block";
     });
 
     volumeHoverButton.addEventListener("mouseleave", function (event) {
         mouseInVolumeButton = false;
 
         if (!mouseInVolumeSlider && !mouseInVolumeButton) {
-            volumeSlider.style.visibility = "hidden";
+            // volumeSlider.style.visibility = "hidden";
+            volumeSlider.style.display = "none";
         }
+
+        
     });
 
     volumeSlider.addEventListener("mouseenter", function (event) {
         mouseInVolumeSlider = true;
-        volumeSlider.style.visibility = "visible";
+        // volumeSlider.style.visibility = "visible";
+        volumeSlider.style.display = "block";
     });
 
     volumeSlider.addEventListener("mouseleave", function (event) {
         mouseInVolumeSlider = false;
 
         if (!mouseInVolumeButton && !mouseInVolumeSlider) {
-            volumeSlider.style.visibility = "hidden";
+            // volumeSlider.style.visibility = "hidden";
+            volumeSlider.style.display = "none";
         }
     });
 
