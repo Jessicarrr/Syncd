@@ -204,8 +204,9 @@ function createUIForPlaylistVideo(idParam, titleParam, urlParam, authorParam) {
     playlistInfoDiv.appendChild(urlElement);
     playlistInfoDiv.appendChild(idElement);
 
-    playlistDiv.appendChild(playlistInfoDiv);
     playlistDiv.appendChild(buttonElement);
+    playlistDiv.appendChild(playlistInfoDiv);
+    
     
     playlistInfoDiv.setAttribute("onclick", "clickPlaylistItem(\"" + idParam + "\");");
     
