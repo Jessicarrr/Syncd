@@ -231,12 +231,12 @@ function createDropdownButtonForItem(playlistItemId, playlistVideoId) {
     deleteButton.innerHTML = "Delete";
     dropdownButton.innerHTML = "...";
 
-        copyLinkButton.classList.add("playlist-dropdown-button");
-        openInBrowserButton.classList.add("playlist-dropdown-button");
-        deleteButton.classList.add("playlist-dropdown-button");
-        dropdownDiv.classList.add("dropdown-content");
-        dropdownButton.classList.add("playlist-options-button");
-        wholeAreaDiv.classList.add("dropdown");
+    copyLinkButton.classList.add("playlist-dropdown-button");
+    openInBrowserButton.classList.add("playlist-dropdown-button");
+    deleteButton.classList.add("playlist-dropdown-button");
+    dropdownDiv.classList.add("dropdown-content");
+    dropdownButton.classList.add("playlist-options-button");
+    wholeAreaDiv.classList.add("dropdown");
     
     dropdownDiv.id = playlistItemId + "-dropdown";
 
