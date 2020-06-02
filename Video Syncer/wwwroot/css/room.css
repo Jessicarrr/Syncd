@@ -3,11 +3,13 @@
 /* Playlist */
 #playlist-area-parent {
     overflow: auto;
-    min-width: 15%;
+    min-width: 30%;
     max-width: 50%;
-    max-height: 30vh;
-    border: 1px solid;
-    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .3), 1px 1px 1px 1px rgba(0, 0, 0, .3);
+    max-height: 40vh;
+    border: 1px solid #6b6b6b;
+    box-shadow: 1px 1px 3px black, 1px 1px 3px black;
+    float: left;
+    margin-right: 8%;
 }
 
 #playlist-area {
@@ -20,23 +22,22 @@
 }
 
 .playlist-div {
-    border-bottom: 1px solid gray;
+    border-bottom: 1px solid #6b6b6b;
     margin-bottom: 2px;
     width: 100%;
 }
 
 .playlist-info-div {
-    min-width: 2%;
-    max-width: 90%;
+    width: 85%;
     height: 100%;
     cursor: pointer;
     display: inline-block;
+    margin-left: 10px;
 }
 
 .playlist-title {
     font-size: 16px;
     width: 99%;
-    
 }
 
 .playlist-author {
@@ -51,8 +52,9 @@
     left: 0;
     cursor: pointer;
     text-align: center;
-    line-height: 10px;
+    line-height: 12px;
     margin-top: 3px;
+    padding: 2px 2px 2px 2px;
 }
 
 .playlist-dropdown-button {
@@ -64,13 +66,14 @@
 }
 
 .dropdown {
-    position: relative;
     display: inline-block;
     float: left;
     margin-left: 5px;
     margin-right: 10px;
     margin-top: 5px;
-    height: 20px;
+    margin-bottom: 10px;
+    height: 25px;
+    width: 20px;
     top: 0;
     padding: 0px 3px 0px 3px;
     -moz-box-shadow: 0 0 3px black;
@@ -85,7 +88,7 @@
     min-width: 110px;
     z-index: 1;
     top: 0px;
-    left: 15px;
+    left: 20px;
     font-size: 16px;
     line-height: 15px;
 }
@@ -129,8 +132,9 @@
     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .3), 1px 1px 1px 1px rgba(0, 0, 0, .3);
     margin-right: 1%;
     min-width: 20%;
-    max-width: 40%;
+    max-width: 35%;
     border: 1px solid;
+    float: right;
 }
 
 .userDiv {
