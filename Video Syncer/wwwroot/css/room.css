@@ -3,7 +3,7 @@
 /* Playlist */
 #playlist-area-parent {
     overflow: auto;
-    min-width: 30%;
+    min-width: 40%;
     max-width: 50%;
     max-height: 40vh;
     border: 1px solid #6b6b6b;
@@ -21,20 +21,7 @@
     width: 100%;
 }
 
-.playlist-div {
-    border-bottom: 1px solid #6b6b6b;
-    margin-bottom: 2px;
-    width: 100%;
-}
 
-.playlist-info-div {
-    width: 85%;
-    height: 100%;
-    cursor: pointer;
-    display: inline-block;
-    margin-left: 10px;
-    right: 0;
-}
 
 .playlist-title {
     font-size: 16px;
@@ -66,6 +53,24 @@
     background-color: #454545;
 }
 
+.playlist-div {
+    margin-bottom: 2px;
+    width: 100%;
+    display: flex;
+    border-bottom: 1px solid #6b6b6b;
+}
+
+.playlist-info-div {
+    width: 90%;
+    height: 100%;
+    cursor: pointer;
+    float: right;
+    margin-left: 20px;
+    border-left: 1px solid #6b6b6b;
+    padding-left: 6px;
+    padding-bottom: 6px;
+}
+
 .dropdown {
     display: inline-block;
     float: left;
@@ -75,11 +80,11 @@
     margin-bottom: 10px;
     height: 25px;
     width: 20px;
-    top: 0;
     padding: 0px 3px 0px 3px;
     -moz-box-shadow: 0 0 3px black;
     -webkit-box-shadow: 0 0 3px black;
     box-shadow: 0 0 3px black;
+    float: left;
 }
 
 .dropdown-content {
