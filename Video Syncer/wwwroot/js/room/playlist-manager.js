@@ -183,6 +183,8 @@ function createUIForPlaylistVideo(idParam, titleParam, urlParam, authorParam) {
     playlistDiv.classList.add("playlist-div");
     playlistInfoDiv.classList.add("playlist-info-div");
 
+    playlistDiv.id = idParam;
+
     titleElement.classList.add("playlist-div-element", "playlist-title");
 
     authorElement.classList.add("playlist-div-element", "playlist-author");
@@ -210,12 +212,111 @@ function createUIForPlaylistVideo(idParam, titleParam, urlParam, authorParam) {
     
     playlistInfoDiv.setAttribute("onclick", "clickPlaylistItem(\"" + idParam + "\");");
 
-    playlistDiv.ondragover = function (e) {
-        console.log("DRAGGED : " + e);
-    };
+    setupPlaylistDragging(playlistDiv);
     
 
     return playlistDiv;
+}
+
+function setupPlaylistDragging(playlistDiv) {
+    var lastPlaylistItemLeft = null;
+    var lastPlaylistItemEntered = null;
+
+    playlistDiv.ondragstart = function (e) {
+        e.dataTransfer.setData("DraggedItem", e.target.id);
+    }
+
+    playlistDiv.ondragover = function (e) {
+        e.preventDefault();
+    }
+
+    playlistDiv.ondragend = function (e) {
+        //console.log("dropped onto " + lastThingDraggedOnto);
+        e.preventDefault();
+    };
+
+    playlistDiv.ondragleave = function (e) {
+        var relevantDiv = getPlaylistItemParentElement(e.target);
+
+        if (relevantDiv == null) {
+            return;
+        }
+
+        if (lastPlaylistItemLeft == null) {
+            console.log('null');
+            lastPlaylistItemLeft = relevantDiv;
+            return;
+        }
+
+        if (lastPlaylistItemLeft.getAttribute('id') !== relevantDiv.getAttribute('id')) {
+            console.log("removed border");
+            lastPlaylistItemLeft.style.borderTop = "";
+        }
+        else {
+            console.log("border should stay");
+        }
+        
+        lastPlaylistItemLeft = relevantDiv;
+        //console.log("set last item left to " + lastPlaylistItemLeft.getAttribute('id'));
+
+        
+        
+    }
+
+    playlistDiv.ondragenter = function (e) {
+
+        var relevantDiv = getPlaylistItemParentElement(e.target);
+        lastRelevantDiv = relevantDiv;
+
+        if (relevantDiv == null) {
+            return;
+        }
+
+        lastPlaylistItemEntered = relevantDiv;
+
+        lastPlaylistItemEntered.style.borderTop = "3px solid red";
+    };
+
+    
+
+    playlistDiv.addEventListener("drop", function (event) {
+        var draggedItemId = event.dataTransfer.getData("DraggedItem");
+        var droppedOntoItem = getPlaylistItemParentElement(event.target);
+
+        if (droppedOntoItem == null) {
+            return;
+        }
+
+        droppedOntoItem.style.borderTop = "";
+        var droppedOntoItemId = droppedOntoItem.getAttribute('id');
+
+        console.log('dragged ' + draggedItemId + ' on top of ' + droppedOntoItemId);
+
+        //console.log("calculated id of \"" + event.target.className + "\" to be " + id);
+    });
+}
+
+/**
+ * Finds the parent with the class "playlist-div" from an item that had another playlist item dragged onto it.
+ * @param {any} draggedOntoElement The element that had an item dragged onto it.
+ * @returns {any} The parent element with class "playlist div"
+ */
+function getPlaylistItemParentElement(childElement) {
+    var className = childElement.className;
+
+    if (className === "playlist-div") {
+        // no need to search for the id.
+        return childElement;
+    }
+    else if (className === "playlist-div-element playlist-title" || className === "playlist-options-button" || className === "playlist-div-element playlist-author") {
+        return childElement.parentNode.parentNode;
+    }
+    else if (className === "playlist-info-div" || className === "dropdown") {
+        return childElement.parentNode;
+    }
+    else {
+        return null;
+    }
 }
 
 function clickPlaylistItem(idParam) {
