@@ -76,12 +76,10 @@ function updateTitlesAndAuthors(paramPlaylist) {
                 var currentAuthorText = authorElement.innerHTML;
 
                 if (currentTitleText !== videoObjectTitle) {
-                    console.log("Updated title of video " + currentTitleText);
                     titleElement.innerHTML = videoObjectTitle;
                 }
 
                 if (currentAuthorText != videoObjectAuthor) {
-                    console.log("Updated author of video " + currentAuthorText);
                     authorElement.innerHTML = videoObjectAuthor;
                 }
             }
@@ -197,6 +195,8 @@ function createUIForPlaylistVideo(idParam, titleParam, urlParam, authorParam) {
     urlElement.innerHTML = urlParam;
     idElement.innerHTML = idParam;
 
+    playlistDiv.setAttribute('draggable', true);
+
     playlistInfoDiv.appendChild(titleElement);
     
     playlistInfoDiv.appendChild(authorElement);
@@ -209,6 +209,10 @@ function createUIForPlaylistVideo(idParam, titleParam, urlParam, authorParam) {
     
     
     playlistInfoDiv.setAttribute("onclick", "clickPlaylistItem(\"" + idParam + "\");");
+
+    playlistDiv.ondragover = function (e) {
+        console.log("DRAGGED : " + e);
+    };
     
 
     return playlistDiv;
@@ -272,7 +276,6 @@ function createDropdownButtonForItem(playlistItemId, playlistVideoId) {
         else {
             dropdownDiv.style.display = "none";
         }
-        console.log("clicked on " + dropdownDiv + ", id is " + dropdownDiv.id);
         //alert("clicked on video " + urlParam);
     };
 
