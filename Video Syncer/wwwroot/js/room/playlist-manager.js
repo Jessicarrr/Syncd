@@ -219,8 +219,7 @@ function createUIForPlaylistVideo(idParam, titleParam, urlParam, authorParam) {
 }
 
 function setupPlaylistDragging(playlistDiv) {
-    var lastPlaylistItemLeft = null;
-    var lastPlaylistItemEntered = null;
+    var dragCounter = 0;
 
     playlistDiv.ondragstart = function (e) {
         e.dataTransfer.setData("DraggedItem", e.target.id);
@@ -236,27 +235,21 @@ function setupPlaylistDragging(playlistDiv) {
     };
 
     playlistDiv.ondragleave = function (e) {
+        e.preventDefault();
         var relevantDiv = getPlaylistItemParentElement(e.target);
 
         if (relevantDiv == null) {
+            console.log("relevantDiv was null ondragleave");
             return;
         }
 
-        if (lastPlaylistItemLeft == null) {
-            console.log('null');
-            lastPlaylistItemLeft = relevantDiv;
-            return;
-        }
+        dragCounter -= 1;
 
-        if (lastPlaylistItemLeft.getAttribute('id') !== relevantDiv.getAttribute('id')) {
-            console.log("removed border");
-            lastPlaylistItemLeft.style.borderTop = "";
-        }
-        else {
-            console.log("border should stay");
+        if (dragCounter <= 0) {
+            relevantDiv.style.borderTop = "";
+            dragCounter = 0;
         }
         
-        lastPlaylistItemLeft = relevantDiv;
         //console.log("set last item left to " + lastPlaylistItemLeft.getAttribute('id'));
 
         
@@ -264,17 +257,16 @@ function setupPlaylistDragging(playlistDiv) {
     }
 
     playlistDiv.ondragenter = function (e) {
-
+        e.preventDefault();
         var relevantDiv = getPlaylistItemParentElement(e.target);
-        lastRelevantDiv = relevantDiv;
 
         if (relevantDiv == null) {
+            console.log("relevantDiv was null ondragenter");
             return;
         }
 
-        lastPlaylistItemEntered = relevantDiv;
-
-        lastPlaylistItemEntered.style.borderTop = "3px solid red";
+        dragCounter += 1;
+        relevantDiv.style.borderTop = "3px solid red";
     };
 
     
@@ -282,6 +274,8 @@ function setupPlaylistDragging(playlistDiv) {
     playlistDiv.addEventListener("drop", function (event) {
         var draggedItemId = event.dataTransfer.getData("DraggedItem");
         var droppedOntoItem = getPlaylistItemParentElement(event.target);
+
+        dragCounter = 0;
 
         if (droppedOntoItem == null) {
             return;
@@ -291,8 +285,7 @@ function setupPlaylistDragging(playlistDiv) {
         var droppedOntoItemId = droppedOntoItem.getAttribute('id');
 
         console.log('dragged ' + draggedItemId + ' on top of ' + droppedOntoItemId);
-
-        //console.log("calculated id of \"" + event.target.className + "\" to be " + id);
+        sendRearrangePlaylistRequest(draggedItemId, droppedOntoItemId);
     });
 }
 

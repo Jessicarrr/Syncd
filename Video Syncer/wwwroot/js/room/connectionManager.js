@@ -100,6 +100,25 @@ function sendChangeNameRequest(newName) {
     });
 }
 
+function sendRearrangePlaylistRequest(onTopId, onBottomId) {
+    $.ajax({
+        url: '/room/RearrangePlaylist',
+        method: 'POST',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(
+            {
+                userId: userId,
+                roomId: roomId,
+                onTopId: onTopId,
+                onBottomId: onBottomId
+            }
+        )/*,
+        success: onJoinSuccess,
+        error: onJoinError*/
+    });
+}
+
 /**
  * Send a request to the server to play the video. This is normally executed
  * when the user presses play on the YouTube video player.
