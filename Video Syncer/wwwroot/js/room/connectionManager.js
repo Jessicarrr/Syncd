@@ -113,10 +113,26 @@ function sendRearrangePlaylistRequest(onTopId, onBottomId) {
                 onTopId: onTopId,
                 onBottomId: onBottomId
             }
-        )/*,
-        success: onJoinSuccess,
-        error: onJoinError*/
+        ),
+        success: onRearrangeSuccess,
+        error: onRearrangeError
     });
+}
+
+function onRearrangeError(response) {
+
+}
+
+function onRearrangeSuccess(response) {
+    var success = response["success"];
+    var playlist = response["playlist"];
+
+    if (success && playlist != null) {
+        removeAllPlaylistVideos();
+        compareAndRemovePlaylistItems(playlist);
+        compareAndAddPlaylistItems(playlist);
+        updateTitlesAndAuthors(playlist);
+    }
 }
 
 /**
