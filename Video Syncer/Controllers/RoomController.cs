@@ -103,6 +103,47 @@ namespace Video_Syncer.Controllers
         }
 
         [HttpPost]
+        public JsonResult RearrangePlaylist([FromBody] RearrangePlaylistRequest request)
+        {
+            if (request == null)
+            {
+                logger.LogError("[VSY] request was null in RoomController.RearrangePlaylist");
+                return null;
+            }
+
+            Room room = TryGetRoom(request.roomId);
+
+            if (room == null)
+            {
+                logger.LogWarning("[VSY] Room was null in RoomController.RearrangePlaylist. user id = " + request.userId
+                    + ", room id was " + request.roomId);
+                return null;
+            }
+
+            string sessionID = HttpContext.Session.Id;
+
+            if (!room.UserManager.IsUserSessionIDMatching(request.userId, sessionID))
+            {
+                logger.LogWarning("[VSY] RoomController.RearrangePlaylist - session ID did not match in room \""
+                    + room.id + "\"! Session ID of the request was " + sessionID);
+                RearrangePlaylistCallback callback2 = new RearrangePlaylistCallback()
+                {
+                    success = false
+                };
+                return Json(callback2);
+            }
+
+            bool wasSuccessful = room.PlaylistManager.RearrangePlaylist(request.onTopId, request.onBottomId);
+
+            RearrangePlaylistCallback callback = new RearrangePlaylistCallback()
+            {
+                success = wasSuccessful,
+                newPlaylist = room.PlaylistManager.GetPlaylist()
+            };
+            return Json(callback);
+        }
+
+        [HttpPost]
         public JsonResult EndVideo([FromBody]VideoStateChangeRequest request)
         {
             if (request == null)

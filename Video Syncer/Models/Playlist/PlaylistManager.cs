@@ -83,6 +83,71 @@ namespace Video_Syncer.Models.Playlist
             });
         }
 
+        public bool RearrangePlaylist(string onTopId, string onBottomId)
+        {
+            PlaylistObject onTop = GetPlaylistObject(onTopId);
+            PlaylistObject onBottom = GetPlaylistObject(onBottomId);
+
+            if(onTop == null || onBottom == null)
+            {
+                return false;
+            }
+
+            int onTopOldIndex = GetPositionOf(onTop);
+            int onBottomOldIndex = GetPositionOf(onBottom);
+            
+
+            if(onTopOldIndex == -1 || onBottomOldIndex == -1)
+            {
+                return false;
+            }
+
+            int newIndex = onBottomOldIndex - 1;
+
+            if(newIndex == -1)
+            {
+                playlist.RemoveAt(onTopOldIndex);
+                playlist.Insert(0, onTop);
+                return true;
+            }
+            else
+            {
+                playlist.RemoveAt(onTopOldIndex);
+
+                if (newIndex > onTopOldIndex)
+                {
+                    newIndex--;
+                }
+
+                playlist.Insert(newIndex, onTop);
+                return true;
+            }
+        }
+
+        public int GetPositionOf(PlaylistObject obj)
+        {
+            for(int i = 0; i < playlist.Count; i++)
+            {
+                if(playlist[i].id == obj.id)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public PlaylistObject GetPlaylistObject(string playlistObjectId)
+        {
+            IEnumerable<PlaylistObject> n = playlist.Where(obj => obj.id == playlistObjectId);
+
+            if(n.Count() > 1 || n.Count() <= 0)
+            {
+                return null;
+            }
+
+            return n.First();
+        }
+
         public List<PlaylistObject> GetPlaylist()
         {
             return playlist;

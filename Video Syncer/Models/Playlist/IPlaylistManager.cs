@@ -14,6 +14,8 @@ namespace Video_Syncer.Models.Playlist
         public void ChangeItemPlaying(PlaylistObject obj);
         public PlaylistObject GoToNextVideo();
 
+        public bool RearrangePlaylist(string onTopId, string onBottomId);
+
         public List<PlaylistObject> GetPlaylist();
     }
 }
