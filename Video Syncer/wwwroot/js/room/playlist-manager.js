@@ -406,4 +406,6 @@ function removeAllPlaylistVideos() {
     while (elements.length > 0) {
         elements[0].parentNode.removeChild(elements[0]);
     }
+
+    playlistItems.length = 0;
 }

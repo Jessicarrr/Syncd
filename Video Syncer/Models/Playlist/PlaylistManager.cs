@@ -102,9 +102,14 @@ namespace Video_Syncer.Models.Playlist
                 return false;
             }
 
-            int newIndex = onBottomOldIndex - 1;
+            int newIndex = onBottomOldIndex;
 
-            if(newIndex == -1)
+            if(onTopOldIndex < onBottomOldIndex)
+            {
+                newIndex--;
+            }
+
+            if (newIndex <= -1)
             {
                 playlist.RemoveAt(onTopOldIndex);
                 playlist.Insert(0, onTop);
@@ -114,7 +119,7 @@ namespace Video_Syncer.Models.Playlist
             {
                 playlist.RemoveAt(onTopOldIndex);
 
-                if (newIndex > onTopOldIndex)
+                if (newIndex > onBottomOldIndex)
                 {
                     newIndex--;
                 }

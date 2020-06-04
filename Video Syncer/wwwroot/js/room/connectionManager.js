@@ -125,11 +125,10 @@ function onRearrangeError(response) {
 
 function onRearrangeSuccess(response) {
     var success = response["success"];
-    var playlist = response["playlist"];
+    var playlist = response["newPlaylist"];
 
-    if (success && playlist != null) {
+    if (success == true && playlist != null) {
         removeAllPlaylistVideos();
-        compareAndRemovePlaylistItems(playlist);
         compareAndAddPlaylistItems(playlist);
         updateTitlesAndAuthors(playlist);
     }
