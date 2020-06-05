@@ -397,6 +397,62 @@ function createDropdownButtonForItem(playlistItemId, playlistVideoId) {
     return wholeAreaDiv;
 }
 
+function fixPlaylistArrangement(paramPlaylist) {
+    for (var i = 0; i < paramPlaylist.length; i++) {
+        var paramPlaylistObject = paramPlaylist[i];
+
+        var paramPlaylistTitle = paramPlaylistObject["title"];
+        var paramPlaylistAuthor = paramPlaylistObject["author"];
+        var paramPlaylistVideoId = paramPlaylistObject["videoId"];
+        var paramPlaylistUniqueId = paramPlaylistObject["id"];
+
+        var currentlySavedPlaylistObject = playlistItems[i];
+
+        var currentlySavedPlaylistUniqueId = currentlySavedPlaylistObject[objectPlaylistIdKey];
+        var currentlySavedPlaylistVideoId = currentlySavedPlaylistObject[objectVideoIdKey];
+        var div = currentlySavedPlaylistObject[objectDivKey];
+
+        var titleElement = div.querySelector(".playlist-title");
+        var authorElement = div.querySelector(".playlist-author");
+        var infoDivElement = div.querySelector(".playlist-info-div");
+
+        var currentTitleText = titleElement.innerHTML;
+        var currentAuthorText = authorElement.innerHTML;
+
+        if (paramPlaylistTitle !== currentTitleText) {
+            titleElement.innerHTML = paramPlaylistTitle;
+        }
+
+        if (paramPlaylistAuthor !== currentAuthorText) {
+            authorElement.innerHTML = paramPlaylistAuthor;
+        }
+
+        if (paramPlaylistVideoId !== currentlySavedPlaylistVideoId) {
+            currentlySavedPlaylistObject[objectVideoIdKey] = paramPlaylistVideoId;
+        }
+
+        if (paramPlaylistUniqueId !== currentlySavedPlaylistUniqueId) {
+            currentlySavedPlaylistObject[objectPlaylistIdKey] = paramPlaylistUniqueId;
+        }
+
+        if (div.getAttribute('id') !== paramPlaylistUniqueId) {
+            div.id = paramPlaylistUniqueId;
+            infoDivElement.setAttribute("onclick", "clickPlaylistItem(\"" + paramPlaylistUniqueId + "\");")
+        }
+
+        //playlistInfoDiv.setAttribute("onclick", "clickPlaylistItem(\"" + idParam + "\");");
+    }
+
+    /*for (var key in paramPlaylist) {
+        var videoObject = paramPlaylist[key];
+
+        var videoObjectTitle = videoObject["title"];
+        var videoObjectAuthor = videoObject["author"];
+        var videoObjectVideoId = videoObject["videoId"];
+        var videoObjectUniqueId = videoObject["id"];
+    }*/
+}
+
 /**
  * Remove all videos from the playlist UI
  */

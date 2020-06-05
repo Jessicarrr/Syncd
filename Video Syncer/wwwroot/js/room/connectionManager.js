@@ -415,6 +415,7 @@ function onUpdateSuccess(response) {
         compareAndRemovePlaylistItems(playlist);
         compareAndAddPlaylistItems(playlist);
         updateTitlesAndAuthors(playlist);
+        fixPlaylistArrangement(playlist);
 
 
         /*removeAllPlaylistVideos();
