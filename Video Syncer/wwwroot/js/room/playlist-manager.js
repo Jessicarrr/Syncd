@@ -4,6 +4,18 @@ var objectPlaylistIdKey = "playlistId";
 var objectVideoIdKey = "videoId";
 var objectDivKey = "playlistItemDiv";
 
+var classPlaylistAreaDiv = "playlist-div";
+var classPlaylistInfoDiv = "playlist-info-div";
+var classPlaylistDivElement = "playlist-div-element";
+var classPlaylistTitle = "playlist-title";
+var classPlaylistAuthor = "playlist-author";
+var classPlaylistUrlHidden = "playlist-url-hidden";
+var classPlaylistItemIdHidden = "playlist-item-id-hidden";
+var classDropdown = "dropdown";
+var classPlaylistOptionsButton = "playlist-options-button";
+var classPlaylistDropdownButton = "playlist-dropdown-button";
+var classDropdownContent = "dropdown-content";
+
 /**
  * Gets the video ID from the youtube video URL in the search bar, and
  * calls the function to change the video.
@@ -69,8 +81,8 @@ function updateTitlesAndAuthors(paramPlaylist) {
         playlistItems.forEach(function (element) {
             if (element[objectPlaylistIdKey] === videoObjectUniqueId) {
                 var div = element[objectDivKey];
-                var titleElement = div.querySelector(".playlist-title");
-                var authorElement = div.querySelector(".playlist-author");
+                var titleElement = div.querySelector("." + classPlaylistTitle);
+                var authorElement = div.querySelector("." + classPlaylistAuthor);
 
                 var currentTitleText = titleElement.innerHTML;
                 var currentAuthorText = authorElement.innerHTML;
@@ -180,17 +192,17 @@ function createUIForPlaylistVideo(idParam, titleParam, urlParam, authorParam) {
     urlElement.hidden = true;
     idElement.hidden = true;
 
-    playlistDiv.classList.add("playlist-div");
-    playlistInfoDiv.classList.add("playlist-info-div");
+    playlistDiv.classList.add(classPlaylistAreaDiv);
+    playlistInfoDiv.classList.add(classPlaylistInfoDiv);
 
     playlistDiv.id = idParam;
 
-    titleElement.classList.add("playlist-div-element", "playlist-title");
+    titleElement.classList.add(classPlaylistDivElement, classPlaylistTitle);
 
-    authorElement.classList.add("playlist-div-element", "playlist-author");
+    authorElement.classList.add(classPlaylistDivElement, classPlaylistAuthor);
 
-    urlElement.classList.add = "playlist-url-hidden";
-    idElement.classList.add = "playlist-item-id-hidden";
+    urlElement.classList.add = classPlaylistUrlHidden;
+    idElement.classList.add = classPlaylistItemIdHidden;
 
     titleElement.innerHTML = titleParam;
     authorElement.innerHTML = authorParam;
@@ -239,7 +251,6 @@ function setupPlaylistDragging(playlistDiv) {
         var relevantDiv = getPlaylistItemParentElement(e.target);
 
         if (relevantDiv == null) {
-            console.log("relevantDiv was null ondragleave");
             return;
         }
 
@@ -261,7 +272,6 @@ function setupPlaylistDragging(playlistDiv) {
         var relevantDiv = getPlaylistItemParentElement(e.target);
 
         if (relevantDiv == null) {
-            console.log("relevantDiv was null ondragenter");
             return;
         }
 
@@ -297,14 +307,14 @@ function setupPlaylistDragging(playlistDiv) {
 function getPlaylistItemParentElement(childElement) {
     var className = childElement.className;
 
-    if (className === "playlist-div") {
+    if (className === classPlaylistAreaDiv) {
         // no need to search for the id.
         return childElement;
     }
-    else if (className === "playlist-div-element playlist-title" || className === "playlist-options-button" || className === "playlist-div-element playlist-author") {
+    else if (className === classPlaylistDivElement + " " + classPlaylistTitle || className === classPlaylistOptionsButton || className === classPlaylistDivElement + " " + classPlaylistAuthor) {
         return childElement.parentNode.parentNode;
     }
-    else if (className === "playlist-info-div" || className === "dropdown") {
+    else if (className === classPlaylistInfoDiv || className === classDropdown) {
         return childElement.parentNode;
     }
     else {
@@ -330,12 +340,12 @@ function createDropdownButtonForItem(playlistItemId, playlistVideoId) {
     deleteButton.innerHTML = "Delete";
     dropdownButton.innerHTML = "...";
 
-    copyLinkButton.classList.add("playlist-dropdown-button");
-    openInBrowserButton.classList.add("playlist-dropdown-button");
-    deleteButton.classList.add("playlist-dropdown-button");
-    dropdownDiv.classList.add("dropdown-content");
-    dropdownButton.classList.add("playlist-options-button");
-    wholeAreaDiv.classList.add("dropdown");
+    copyLinkButton.classList.add(classPlaylistDropdownButton);
+    openInBrowserButton.classList.add(classPlaylistDropdownButton);
+    deleteButton.classList.add(classPlaylistDropdownButton);
+    dropdownDiv.classList.add(classDropdownContent);
+    dropdownButton.classList.add(classPlaylistOptionsButton);
+    wholeAreaDiv.classList.add(classDropdown);
     
     dropdownDiv.id = playlistItemId + "-dropdown";
 
@@ -355,10 +365,10 @@ function createDropdownButtonForItem(playlistItemId, playlistVideoId) {
             dropdownDiv.style.display = "block";
 
             if (isNightMode) {
-                copyLinkButton.classList.add("playlist-dropdown-button", "night-mode");
-                openInBrowserButton.classList.add("playlist-dropdown-button", "night-mode");
-                deleteButton.classList.add("playlist-dropdown-button", "night-mode");
-                dropdownDiv.classList.add("dropdown-content", "night-mode");
+                copyLinkButton.classList.add(classPlaylistDropdownButton, "night-mode");
+                openInBrowserButton.classList.add(classPlaylistDropdownButton, "night-mode");
+                deleteButton.classList.add(classPlaylistDropdownButton, "night-mode");
+                dropdownDiv.classList.add(classDropdownContent, "night-mode");
             }
             else {
                 copyLinkButton.classList.remove("night-mode");
@@ -412,9 +422,9 @@ function fixPlaylistArrangement(paramPlaylist) {
         var currentlySavedPlaylistVideoId = currentlySavedPlaylistObject[objectVideoIdKey];
         var div = currentlySavedPlaylistObject[objectDivKey];
 
-        var titleElement = div.querySelector(".playlist-title");
-        var authorElement = div.querySelector(".playlist-author");
-        var infoDivElement = div.querySelector(".playlist-info-div");
+        var titleElement = div.querySelector("." + classPlaylistTitle);
+        var authorElement = div.querySelector("." + classPlaylistAuthor);
+        var infoDivElement = div.querySelector("." + classPlaylistInfoDiv);
 
         var currentTitleText = titleElement.innerHTML;
         var currentAuthorText = authorElement.innerHTML;
@@ -457,7 +467,7 @@ function fixPlaylistArrangement(paramPlaylist) {
  * Remove all videos from the playlist UI
  */
 function removeAllPlaylistVideos() {
-    var elements = document.getElementsByClassName("playlist-div");
+    var elements = document.getElementsByClassName(classPlaylistAreaDiv);
 
     while (elements.length > 0) {
         elements[0].parentNode.removeChild(elements[0]);
