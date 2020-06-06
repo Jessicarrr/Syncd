@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Video_Syncer.logging;
 using Video_Syncer.Models.Playlist;
 using Video_Syncer.Models.Users;
+using Video_Syncer.Models.Users.Admin;
 
 namespace Video_Syncer.Models
 {
@@ -269,9 +270,11 @@ namespace Video_Syncer.Models
         {
             if(UserManager.AddToUserList(user))
             {
-                if (UserManager.GetNumUsers() == 1)
+                if (UserManager.HasFirstUserJoined == false)
                 {
                     UserManager.SetStateForUser(user.id, VideoState.Paused);
+                    user.rights = UserRights.Admin;
+                    UserManager.HasFirstUserJoined = true;
                 }
                 else
                 {

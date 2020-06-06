@@ -21,6 +21,8 @@ namespace Video_Syncer.Models.Users
 
         private ILogger logger;
 
+        public bool HasFirstUserJoined { get; set; }
+
         public UserManager(string roomId)
         {
             this.roomId = roomId;
