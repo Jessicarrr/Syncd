@@ -159,7 +159,7 @@ p[id$="userName"] {
     word-break: break-all;
 }
 
-p[id$="userRights"] {
+p[id$="userRights"], p[id$="userId"], p[id$="userState"] {
     float: left;
     margin-right: 3px;
     padding-right: 3px;
@@ -176,22 +176,6 @@ p[id$="userKick"], p[id$="userBan"], p[id$="userMakeAdmin"] {
     color: #3973fc;
     text-decoration: underline;
     cursor: pointer;
-}
-
-p[id$="userId"] {
-    float: left;
-    margin-right: 3px;
-    padding-right: 3px;
-    border-right: 1px solid Gainsboro;
-    font-size: 12px;
-}
-
-p[id$="userState"] {
-    float: left;
-    margin-right: 3px;
-    padding-right: 3px;
-    border-right: 1px solid Gainsboro;
-    font-size: 12px;
 }
 
 p[id$="userTime"] {
