@@ -7,12 +7,7 @@ namespace Video_Syncer.Models.Users
 {
     public interface IUserManager
     {
-        public bool HasFirstUserJoined
-        {
-            get;
-            set;
-        }
-
+        public User Join(string name, string sessionID);
         public bool ChangeName(int userId, string newName);
         public bool AddToUserList(User user);
         public void RemoveFromUserList(User user);

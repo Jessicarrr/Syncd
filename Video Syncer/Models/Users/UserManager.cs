@@ -5,13 +5,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Video_Syncer.logging;
+using Video_Syncer.Models.Users.Admin;
 
 namespace Video_Syncer.Models.Users
 {
     public class UserManager : IUserManager
     {
         public List<User> userList = new List<User>();
-        private int maxUsers = 500;
+        private readonly int maxUsers = 500;
         public int disconnectedUserThresholdSeconds = 20;
         private string roomId;
 
@@ -21,7 +22,9 @@ namespace Video_Syncer.Models.Users
 
         private ILogger logger;
 
-        public bool HasFirstUserJoined { get; set; }
+        protected bool HasFirstUserJoined { get; set; }
+
+        protected List<string> adminSessionIDs { get; set; } = new List<string>();
 
         public UserManager(string roomId)
         {
@@ -47,6 +50,70 @@ namespace Video_Syncer.Models.Users
         public List<string> GetSessionIdList()
         {
             return allowedSessionIds;
+        }
+
+        public bool CreateNewAdmin(User user)
+        {
+            user.rights = UserRights.Admin;
+
+            if(user.sessionID == null)
+            {
+                return false;
+            }
+
+            adminSessionIDs.Add(user.sessionID);
+            return true;
+        }
+
+        public bool RemoveAdmin(User user)
+        {
+            user.rights = UserRights.User;
+
+            string admin = adminSessionIDs.Where(session => session == user.sessionID).FirstOrDefault();
+
+            if(admin == null)
+            {
+                return false;
+            }
+            else
+            {
+                adminSessionIDs.Remove(admin);
+                return true;
+            }
+        }
+
+        public bool IsSessionIdRegisteredAsAdmin(string sessionID)
+        {
+            IEnumerable<string> sessionIdList = adminSessionIDs.Where(id => id == sessionID);
+
+            if (sessionIdList.Count() > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+
+        public User Join(string name, string sessionID)
+        {
+            User user = CreateNewUser(name, sessionID);
+            logger.LogInformation("[VSY]Joining user \"" + user.name + "\"");
+            AddToUserList(user);
+
+            if(!HasFirstUserJoined)
+            {
+                CreateNewAdmin(user);
+                HasFirstUserJoined = true;
+            }
+            else
+            {
+                if(IsSessionIdRegisteredAsAdmin(sessionID))
+                {
+                    user.rights = UserRights.Admin;
+                }
+            }
+
+            return user;
         }
 
         public bool ChangeName(int userId, string newName)

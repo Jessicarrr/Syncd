@@ -254,9 +254,8 @@ namespace Video_Syncer.Models
 
         public User Join(string name, string sessionID)
         {
-            User user = UserManager.CreateNewUser(name, sessionID);
-            logger.LogInformation("[VSY]Joining user \"" + user.name + "\"");
-            Join(user);
+            User user = UserManager.Join(name, sessionID);
+            HandleJoiningUser(user);
             return user;
         }
 
@@ -266,15 +265,14 @@ namespace Video_Syncer.Models
             UserManager.RemoveFromUserList(userId);
         }
 
-        private void Join(User user)
+        private void HandleJoiningUser(User user)
         {
             if(UserManager.AddToUserList(user))
             {
-                if (UserManager.HasFirstUserJoined == false)
+                if (UserManager.GetNumUsers() == 0)
                 {
                     UserManager.SetStateForUser(user.id, VideoState.Paused);
-                    user.rights = UserRights.Admin;
-                    UserManager.HasFirstUserJoined = true;
+                    
                 }
                 else
                 {
