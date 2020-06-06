@@ -157,6 +157,14 @@ p[id$="userName"] {
     word-break: break-all;
 }
 
+p[id$="userRights"] {
+    float: left;
+    margin-right: 3px;
+    padding-right: 3px;
+    border-right: 1px solid Gainsboro;
+    font-size: 12px;
+}
+
 p[id$="userId"] {
     float: left;
     margin-right: 3px;
@@ -176,6 +184,8 @@ p[id$="userState"] {
 p[id$="userTime"] {
     font-size: 12px;
 }
+
+
 
 /* playlist & userlist */
 

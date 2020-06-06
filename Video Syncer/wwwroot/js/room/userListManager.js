@@ -32,8 +32,7 @@ function updateUIForUser(userId, userState, userTime, userRights) {
         if (userId == entry["id"]) {
             var state = document.getElementById(userId + "userState");
             var time = document.getElementById(userId + "userTime")
-            var nameElement = document.getElementById(userId + "userName");
-            var currentName = nameElement.innerHTML;
+            var rights = document.getElementById(userId + "userRights");
 
             if (state == null || time == null) {
                 console.log("No state or time?");
@@ -44,7 +43,7 @@ function updateUIForUser(userId, userState, userTime, userRights) {
             time.innerHTML = userTime;
 
             if (userRights === 1) {
-                nameElement.innerHTML = "[👑] " + currentName;
+                rights.style.display = "block";
             }
 
             updatedUser = true;
@@ -66,6 +65,7 @@ function createUIForUser(name, id) {
     var userId = document.createElement("p");
     var userState = document.createElement("p");
     var userTime = document.createElement("p");
+    var userRights = document.createElement("p");
 
     userDiv.classList.add("userDiv");
 
@@ -81,12 +81,19 @@ function createUIForUser(name, id) {
     userTime.classList.add("userDivElement");
     userTime.id = id + "userTime";
 
+    userRights.classList.add("userDivElement");
+    userRights.id = id + "userRights";
+
     userName.innerHTML = name;
     userId.innerHTML = id;
     userState.innerHTML = "[Video State]";
     userTime.innerHTML = "[Video Time]";
+    userRights.innerHTML = "👑";
+
+    userRights.style.display = "none";
 
     userDiv.appendChild(userName);
+    userDiv.appendChild(userRights);
     userDiv.appendChild(userId);
     userDiv.appendChild(userState);
     userDiv.appendChild(userTime);
