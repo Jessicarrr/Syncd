@@ -67,6 +67,10 @@ function createUIForUser(name, id) {
     var userTime = document.createElement("p");
     var userRights = document.createElement("p");
 
+    var userKick = document.createElement("p");
+    var userBan = document.createElement("p");
+    var userMakeAdmin = document.createElement("p");
+
     userDiv.classList.add("userDiv");
 
     userName.classList.add("userDivElement");
@@ -84,19 +88,45 @@ function createUIForUser(name, id) {
     userRights.classList.add("userDivElement");
     userRights.id = id + "userRights";
 
+    userKick.classList.add("userDivElement");
+    userKick.id = id + "userKick";
+
+    userBan.classList.add("userDivElement");
+    userBan.id = id + "userBan";
+
+    userMakeAdmin.classList.add("userDivElement");
+    userMakeAdmin.id = id + "userMakeAdmin";
+
     userName.innerHTML = name;
     userId.innerHTML = id;
     userState.innerHTML = "[Video State]";
     userTime.innerHTML = "[Video Time]";
     userRights.innerHTML = "👑";
+    userKick.innerHTML = "Kick";
+    userBan.innerHTML = "Ban";
+    userMakeAdmin.innerHTML = "Make Admin";
 
     userRights.style.display = "none";
+
+    if (myRights == 1) {
+        userKick.style.display = "block";
+        userBan.style.display = "block";
+        userMakeAdmin.style.display = "block";
+    }
+    else {
+        userKick.style.display = "none";
+        userBan.style.display = "none";
+        userMakeAdmin.style.display = "none";
+    }
 
     userDiv.appendChild(userName);
     userDiv.appendChild(userRights);
     userDiv.appendChild(userId);
     userDiv.appendChild(userState);
     userDiv.appendChild(userTime);
+    userDiv.appendChild(userKick);
+    userDiv.appendChild(userBan);
+    userDiv.appendChild(userMakeAdmin);
 
     return userDiv;
 }

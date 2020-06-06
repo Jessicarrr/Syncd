@@ -149,6 +149,8 @@
     border-bottom: 1px solid gray;
     margin-bottom: 2px;
     padding: 0px 5px 5px 5px;
+    display: inline-block;
+    width: 100%;
 }
 
 p[id$="userName"] {
@@ -163,6 +165,17 @@ p[id$="userRights"] {
     padding-right: 3px;
     border-right: 1px solid Gainsboro;
     font-size: 12px;
+}
+
+p[id$="userKick"], p[id$="userBan"], p[id$="userMakeAdmin"] {
+    float: left;
+    margin-right: 3px;
+    padding-right: 3px;
+    border-right: 1px solid Gainsboro;
+    font-size: 12px;
+    color: #3973fc;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 p[id$="userId"] {
