@@ -44,7 +44,7 @@ function updateUIForUser(userId, userState, userTime, userRights) {
             time.innerHTML = userTime;
 
             if (userRights === 1) {
-                nameElement.innerHTML = "[A] " + currentName;
+                nameElement.innerHTML = "[👑] " + currentName;
             }
 
             updatedUser = true;
