@@ -25,13 +25,15 @@ function addUserUI(userDiv) {
  * @param {any} userState The user's YouTube player state.
  * @param {any} userTime The time the user is at in the video.
  */
-function updateUIForUser(userId, userState, userTime) {
+function updateUIForUser(userId, userState, userTime, userRights) {
     var updatedUser = false;
 
     userList.forEach(function (entry) {
         if (userId == entry["id"]) {
             var state = document.getElementById(userId + "userState");
             var time = document.getElementById(userId + "userTime")
+            var nameElement = document.getElementById(userId + "userName");
+            var currentName = nameElement.innerHTML;
 
             if (state == null || time == null) {
                 console.log("No state or time?");
@@ -40,6 +42,11 @@ function updateUIForUser(userId, userState, userTime) {
 
             state.innerHTML = userState;
             time.innerHTML = userTime;
+
+            if (userRights === 1) {
+                nameElement.innerHTML = "[A] " + currentName;
+            }
+
             updatedUser = true;
         }
 

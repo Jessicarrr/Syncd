@@ -446,8 +446,16 @@ function onUpdateSuccess(response) {
             var currentUserName = user["name"];
             var currentUserState = user["videoState"];
             var currentUserVideoTime = user["videoTimeSeconds"];
+            var currentUserRights = user["rights"];
+            var test = user["sessionID"];
+
+            if (test != undefined) {
+                console.log("session is not undefined?? it's " + test);
+            }
+
             addUser(currentUserId, currentUserName);
-            updateUIForUser(currentUserId, stateIntToString(currentUserState), formatVideoTime(currentUserVideoTime));
+            updateUIForUser(currentUserId, stateIntToString(currentUserState),
+                formatVideoTime(currentUserVideoTime), currentUserRights);
 
             //console.log("Updated user" + currentUserName + "(" + currentUserId + ") with " + currentUserState + " and " + currentUserVideoTime);
         }
