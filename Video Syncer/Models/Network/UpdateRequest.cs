@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Video_Syncer.Models.Playlist;
+using Video_Syncer.Models.Users.Admin;
 
 namespace Video_Syncer.Models.Network
 {
@@ -19,7 +20,7 @@ namespace Video_Syncer.Models.Network
     public class UpdateRequestCallback : ICallback
     {
         public string name { get; set; }
-
+        public UserRights myRights { get; set; }
         public string currentYoutubeVideoId { get; set; }
 
         public string currentYoutubeVideoTitle { get; set; }

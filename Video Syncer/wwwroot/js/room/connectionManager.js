@@ -1,4 +1,5 @@
 ﻿var userId = -1;
+var myRights = -1;
 var failedUpdatesInARow = 0;
 var failedJoinRequests = 0; // represents how many times we tried to reconnect the disconnected user in a row
 
@@ -44,6 +45,7 @@ function sendJoinRequest() {
  */
 function onJoinSuccess(response) {
     userId = response["userId"];
+    myRights = response["myRights"];
     var newUserList = response["userList"];
 
     var newVideo = response["currentYoutubeVideoId"]; // the YouTube video the room says we should play
@@ -399,6 +401,7 @@ function sendDeletePlaylistItemRequest(playlistItemId) {
  * @param {any} response Data sent from the server.
  */
 function onUpdateSuccess(response) {
+    myRights = response["myRights"];
     var newUserList = response["userList"];
     var newVideo = response["currentYoutubeVideoId"];
     var newVideoTitle = response["currentYoutubeVideoTitle"]; // the video title

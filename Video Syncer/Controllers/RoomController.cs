@@ -556,6 +556,7 @@ namespace Video_Syncer.Controllers
             // send users back
             UpdateRequestCallback callback = new UpdateRequestCallback()
             {
+                myRights = room.UserManager.GetUserById(request.userId).rights,
                 userList = room.UserManager.GetUserList(),
                 currentYoutubeVideoId = room.currentYoutubeVideoId,
                 currentYoutubeVideoTitle = room.currentYoutubeVideoTitle,
@@ -600,6 +601,7 @@ namespace Video_Syncer.Controllers
                 JoinRequestCallback callback = new JoinRequestCallback()
                 {
                     userId = user.id,
+                    myRights = user.rights,
                     userList = room.UserManager.GetUserList(),
                     currentYoutubeVideoId = room.currentYoutubeVideoId,
                     currentYoutubeVideoTitle = room.currentYoutubeVideoTitle,
