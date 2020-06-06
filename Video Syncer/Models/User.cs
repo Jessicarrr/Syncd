@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Video_Syncer.Models.Users.Admin;
 
@@ -12,9 +13,11 @@ namespace Video_Syncer.Models
         public VideoState videoState { get; set; }
         public int id { get; set; }
         public string name { get; set; }
-        public string sessionID { get; set; }
-        public long lastConnectionTime { get; set; }
         public UserRights rights { get; set; } = UserRights.User;
+        [JsonIgnore]
+        public string sessionID { get; set; }
+        [JsonIgnore]
+        public long lastConnectionTime { get; set; }
 
         public User(int Id, string Name, string sessionID)
         {
