@@ -62,7 +62,7 @@ function updateUIForUser(userId, userState, userTime, userRights) {
 function createUIForUser(name, id) {
     var userDiv = document.createElement("div");
     var userName = document.createElement("p");
-    var userId = document.createElement("p");
+    var userIdElement = document.createElement("p");
     var userState = document.createElement("p");
     var userTime = document.createElement("p");
     var userRights = document.createElement("p");
@@ -76,8 +76,8 @@ function createUIForUser(name, id) {
     userName.classList.add("userDivElement");
     userName.id = id + "userName";
 
-    userId.classList.add("userDivElement");
-    userId.id = id + "userId";
+    userIdElement.classList.add("userDivElement");
+    userIdElement.id = id + "userId";
 
     userState.classList.add("userDivElement");
     userState.id = id + "userState";
@@ -98,7 +98,7 @@ function createUIForUser(name, id) {
     userMakeAdmin.id = id + "userMakeAdmin";
 
     userName.innerHTML = name;
-    userId.innerHTML = id;
+    userIdElement.innerHTML = id;
     userState.innerHTML = "[Video State]";
     userTime.innerHTML = "[Video Time]";
     userRights.innerHTML = "👑";
@@ -108,7 +108,9 @@ function createUIForUser(name, id) {
 
     userRights.style.display = "none";
 
-    if (myRights == 1) {
+    console.log("id == " + id + " and userId == " + userId);
+
+    if (myRights == 1 && id != userId) {
         userKick.style.display = "block";
         userBan.style.display = "block";
         userMakeAdmin.style.display = "block";
@@ -121,7 +123,7 @@ function createUIForUser(name, id) {
 
     userDiv.appendChild(userName);
     userDiv.appendChild(userRights);
-    userDiv.appendChild(userId);
+    userDiv.appendChild(userIdElement);
     userDiv.appendChild(userState);
     userDiv.appendChild(userTime);
     userDiv.appendChild(userKick);
