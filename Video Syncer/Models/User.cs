@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Video_Syncer.Models.Users.Admin;
 
 namespace Video_Syncer.Models
 {
@@ -13,6 +14,7 @@ namespace Video_Syncer.Models
         public string name { get; set; }
         public string sessionID { get; set; }
         public long lastConnectionTime { get; set; }
+        public UserRights rights { get; set; } = UserRights.User;
 
         public User(int Id, string Name, string sessionID)
         {
