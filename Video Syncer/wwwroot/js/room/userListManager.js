@@ -108,7 +108,10 @@ function createUIForUser(name, id) {
 
     userRights.style.display = "none";
 
-    console.log("id == " + id + " and userId == " + userId);
+    if (id == userId) {
+        userDiv.style.backgroundImage =
+            "radial-gradient(farthest-corner, white, white, lightgray)";
+    }
 
     if (myRights == 1 && id != userId) {
         userKick.style.display = "block";
