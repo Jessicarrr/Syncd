@@ -267,17 +267,14 @@ namespace Video_Syncer.Models
 
         private void HandleJoiningUser(User user)
         {
-            if(UserManager.AddToUserList(user))
+            if (UserManager.GetNumUsers() == 1)
             {
-                if (UserManager.GetNumUsers() == 0)
-                {
-                    UserManager.SetStateForUser(user.id, VideoState.Paused);
+                UserManager.SetStateForUser(user.id, VideoState.Paused);
                     
-                }
-                else
-                {
-                    UserManager.SetStateForUser(user.id, GetSuggestedVideoState());
-                }
+            }
+            else
+            {
+                UserManager.SetStateForUser(user.id, GetSuggestedVideoState());
             }
         }
 
