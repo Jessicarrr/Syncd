@@ -52,6 +52,11 @@ namespace Video_Syncer.Models.Users
             return allowedSessionIds;
         }
 
+        public bool IsAdmin(User user)
+        {
+            return user.rights == UserRights.Admin;
+        }
+
         public bool CreateNewAdmin(User user)
         {
             user.rights = UserRights.Admin;

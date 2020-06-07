@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Video_Syncer.logging;
 using Video_Syncer.Models;
 using Video_Syncer.Models.Network;
+using Video_Syncer.Models.Users.Admin;
 using Video_Syncer.Views.Room;
 
 namespace Video_Syncer.Controllers
@@ -96,6 +97,145 @@ namespace Video_Syncer.Controllers
             }
 
             ChangeUsernameCallback callback = new ChangeUsernameCallback()
+            {
+                success = wasSuccessful
+            };
+            return Json(callback);
+        }
+
+        [HttpPost]
+        public JsonResult Kick([FromBody] KickRequest request)
+        {
+            if (request == null)
+            {
+                logger.LogError("[VSY] request was null in RoomController.Kick");
+                return null;
+            }
+
+            Room room = TryGetRoom(request.roomId);
+
+            if (room == null)
+            {
+                logger.LogWarning("[VSY] Room was null in RoomController.Kick. user id = " + request.userId
+                    + ", room id was " + request.roomId);
+                return null;
+            }
+
+            string sessionID = HttpContext.Session.Id;
+
+            if (!room.UserManager.IsUserSessionIDMatching(request.userId, sessionID))
+            {
+                logger.LogWarning("[VSY] Kick Request - session ID did not match in room \""
+                    + room.id + "\"! Session ID of the request was " + sessionID);
+                KickCallback callback2 = new KickCallback()
+                {
+                    success = false
+                };
+                return Json(callback2);
+            }
+
+            KickCallback callback = new KickCallback()
+            {
+                success = true
+            };
+            return Json(callback);
+        }
+
+        [HttpPost]
+        public JsonResult Ban([FromBody] BanRequest request)
+        {
+            if (request == null)
+            {
+                logger.LogError("[VSY] request was null in RoomController.Ban");
+                return null;
+            }
+
+            Room room = TryGetRoom(request.roomId);
+
+            if (room == null)
+            {
+                logger.LogWarning("[VSY] Room was null in RoomController.Ban. user id = " + request.userId
+                    + ", room id was " + request.roomId);
+                return null;
+            }
+
+            string sessionID = HttpContext.Session.Id;
+
+            if (!room.UserManager.IsUserSessionIDMatching(request.userId, sessionID))
+            {
+                logger.LogWarning("[VSY] Ban Request - session ID did not match in room \""
+                    + room.id + "\"! Session ID of the request was " + sessionID);
+                BanCallback callback2 = new BanCallback()
+                {
+                    success = false
+                };
+                return Json(callback2);
+            }
+
+            BanCallback callback = new BanCallback()
+            {
+                success = true
+            };
+            return Json(callback);
+        }
+
+        [HttpPost]
+        public JsonResult MakeAdmin([FromBody] MakeAdminRequest request)
+        {
+            if (request == null)
+            {
+                logger.LogError("[VSY] request was null in RoomController.MakeAdmin");
+                return null;
+            }
+
+            Room room = TryGetRoom(request.roomId);
+
+            if (room == null)
+            {
+                logger.LogWarning("[VSY] Room was null in RoomController.MakeAdmin. user id = " + request.userId
+                    + ", room id was " + request.roomId);
+                return null;
+            }
+
+            User user = room.UserManager.GetUserById(request.userId);
+            User recipient = room.UserManager.GetUserById(request.userIdToMakeAdmin);
+
+            MakeAdminCallback callback2 = new MakeAdminCallback()
+            {
+                success = false
+            };
+
+            if (user == null || recipient == null)
+            {
+                return Json(callback2);
+            }
+
+            string sessionID = HttpContext.Session.Id;
+
+            if (!room.UserManager.IsUserSessionIDMatching(request.userId, sessionID))
+            {
+                logger.LogWarning("[VSY] Make Admin Request - session ID did not match in room \""
+                    + room.id + "\"! Session ID of the request was " + sessionID);
+                
+                return Json(callback2);
+            }
+
+            if(room.UserManager.IsAdmin(user))
+            {
+                logger.LogWarning("[VSY] Make Admin Request - User tried to make another user an admin, but the user making" +
+                    " the request wasn't an admin themselves? user = " + user.id + ", named " + user.name);
+                return Json(callback2);
+            }
+
+            bool wasSuccessful = room.UserManager.CreateNewAdmin(recipient);
+
+            if(!wasSuccessful)
+            {
+                logger.LogWarning("[VSY] Make Admin Request - wasSuccessful was " + wasSuccessful +
+                    ", could not make user admin. recipient = " + recipient.name + " with id " + recipient.id);
+            }
+
+            MakeAdminCallback callback = new MakeAdminCallback()
             {
                 success = wasSuccessful
             };

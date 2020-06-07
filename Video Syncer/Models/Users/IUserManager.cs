@@ -7,6 +7,9 @@ namespace Video_Syncer.Models.Users
 {
     public interface IUserManager
     {
+        public bool IsAdmin(User user);
+        public bool CreateNewAdmin(User user);
+        public bool RemoveAdmin(User user);
         public User Join(string name, string sessionID);
         public bool ChangeName(int userId, string newName);
         public bool AddToUserList(User user);
