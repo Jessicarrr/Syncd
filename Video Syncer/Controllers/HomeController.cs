@@ -33,5 +33,17 @@ namespace Video_Syncer.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [Route("kicked")]
+        public IActionResult Kicked()
+        {
+            return View("~/Views/Room/RoomKicked.cshtml");
+        }
+
+        [Route("banned")]
+        public IActionResult Banned()
+        {
+            return View("~/Views/Room/RoomBanned.cshtml");
+        }
     }
 }

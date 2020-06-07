@@ -129,7 +129,7 @@ function createUIForUser(name, id) {
     };
 
     userKick.onclick = function (e) {
-
+        sendKickRequest(id);
     };
 
     userBan.onclick = function (e) {

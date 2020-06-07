@@ -104,6 +104,26 @@ function sendMakeAdminRequest(recipientId) {
     });
 }
 
+function sendKickRequest(recipientId) {
+    if (myRights == 0) {
+        return;
+    }
+
+    $.ajax({
+        url: '/room/Kick',
+        method: 'POST',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(
+            {
+                userId: userId,
+                roomId: roomId,
+                userIdToKick: recipientId
+            }
+        )
+    });
+}
+
 function sendChangeNameRequest(newName) {
     $.ajax({
         url: '/room/ChangeName',
@@ -422,12 +442,17 @@ function sendDeletePlaylistItemRequest(playlistItemId) {
  */
 function onUpdateSuccess(response) {
     myRights = response["myRights"];
+    var shouldKick = response["shouldKick"];
     var newUserList = response["userList"];
     var newVideo = response["currentYoutubeVideoId"];
     var newVideoTitle = response["currentYoutubeVideoTitle"]; // the video title
     var newVideoState = response["currentVideoState"];
     var newVideoTimeSeconds = response["videoTimeSeconds"];
     var playlist = response["playlist"];
+
+    if (shouldKick === true) {
+        window.location.replace("/Kicked");
+    }
 
     //console.log("onUpdateSuccess - Received from server video " + newVideo + " with state " + newVideoState + " and time " + newVideoTimeSeconds);
 

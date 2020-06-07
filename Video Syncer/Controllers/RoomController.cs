@@ -677,6 +677,7 @@ namespace Video_Syncer.Controllers
             }
             catch (Exception e)
             {
+                logger.LogError(e.ToString());
                 return null;
             }
         }
@@ -716,10 +717,15 @@ namespace Video_Syncer.Controllers
             // update user
             room.UserManager.UpdateUser(request.userId, request.videoTimeSeconds);
 
+            User user = room.UserManager.GetUserById(request.userId);
+            bool userShouldKick = user.ShouldKick;
+            UserRights userRights = user.rights;
+
             // send users back
             UpdateRequestCallback callback = new UpdateRequestCallback()
             {
-                myRights = room.UserManager.GetUserById(request.userId).rights,
+                myRights = userRights,
+                ShouldKick = userShouldKick,
                 userList = room.UserManager.GetUserList(),
                 currentYoutubeVideoId = room.currentYoutubeVideoId,
                 currentYoutubeVideoTitle = room.currentYoutubeVideoTitle,
@@ -729,6 +735,9 @@ namespace Video_Syncer.Controllers
                 playlist = room.PlaylistManager.GetPlaylist(),
                 success = true
             };
+
+            logger.LogInformation("[VSY] userShouldKick == " + callback.ShouldKick);
+
             return Json(callback);
 
             //return Json("Server says thank you! Data received was " + request.name + " and " + request.roomId);
@@ -830,18 +839,6 @@ namespace Video_Syncer.Controllers
             Room room = roomManager.CreateNewRoom();
 
             return RedirectToAction(room.id, "room");
-        }
-
-        [Route("kicked")]
-        public IActionResult Kicked()
-        {
-            return View("RoomKicked.cshtml");
-        }
-
-        [Route("banned")]
-        public IActionResult Banned()
-        {
-            return View("RoomBanned.cshtml");
         }
     }
 }
