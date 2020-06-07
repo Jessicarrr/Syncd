@@ -84,6 +84,26 @@ function onJoinError(response) {
     failedJoinRequests++;
 }
 
+function sendMakeAdminRequest(recipientId) {
+    if (myRights == 0) {
+        return;
+    }
+
+    $.ajax({
+        url: '/room/MakeAdmin',
+        method: 'POST',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(
+            {
+                userId: userId,
+                roomId: roomId,
+                userIdToMakeAdmin: recipientId
+            }
+        )
+    });
+}
+
 function sendChangeNameRequest(newName) {
     $.ajax({
         url: '/room/ChangeName',

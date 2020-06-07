@@ -124,6 +124,18 @@ function createUIForUser(name, id) {
         userMakeAdmin.style.display = "none";
     }
 
+    userMakeAdmin.onclick = function (e) {
+        sendMakeAdminRequest(id);
+    };
+
+    userKick.onclick = function (e) {
+
+    };
+
+    userBan.onclick = function (e) {
+
+    };
+
     userDiv.appendChild(userName);
     userDiv.appendChild(userRights);
     userDiv.appendChild(userIdElement);
