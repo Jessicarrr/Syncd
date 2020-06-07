@@ -7,6 +7,8 @@ namespace Video_Syncer.Models.Users
 {
     public interface IUserManager
     {
+        public bool Kick(User user, User recipient);
+        public bool Ban(User user, User recipient);
         public bool IsAdmin(User user);
         public bool CreateNewAdmin(User user);
         public bool RemoveAdmin(User user);

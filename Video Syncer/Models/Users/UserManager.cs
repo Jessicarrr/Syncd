@@ -57,6 +57,29 @@ namespace Video_Syncer.Models.Users
             return user.rights == UserRights.Admin;
         }
 
+        public bool Kick(User user, User recipient)
+        {
+            if(!userList.Contains(recipient))
+            {
+                return false;
+            }
+            recipient.ShouldKick = true;
+            Task.Run(async () => await ExecuteKick(user, recipient));
+            return true;
+        }
+
+        protected async Task ExecuteKick(User user, User recipient)
+        {
+            await Task.Delay(5000);
+            logger.LogInformation("[VSY] User \"" + recipient.name + "\" (id: " + recipient.id + ") was forcibly kicked out of the room " + roomId + " by " + user.name + "\" (id: " + user.id + ")");
+            RemoveFromUserList(recipient);
+        }
+
+        public bool Ban(User user, User recipient)
+        {
+            return false;
+        }
+
         public bool CreateNewAdmin(User user)
         {
             user.rights = UserRights.Admin;
@@ -189,6 +212,7 @@ namespace Video_Syncer.Models.Users
                     RemoveFromUserList(user);
                 }
             }
+
         }
 
         public void SetStateForUser(int userId, VideoState state)

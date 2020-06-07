@@ -121,22 +121,47 @@ namespace Video_Syncer.Controllers
                 return null;
             }
 
+            User user = room.UserManager.GetUserById(request.userId);
+            User recipient = room.UserManager.GetUserById(request.userIdToKick);
+
+            KickCallback callback2 = new KickCallback()
+            {
+                success = false
+            };
+
+            if (user == null || recipient == null)
+            {
+                return Json(callback2);
+            }
+
             string sessionID = HttpContext.Session.Id;
 
             if (!room.UserManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
                 logger.LogWarning("[VSY] Kick Request - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
-                KickCallback callback2 = new KickCallback()
-                {
-                    success = false
-                };
+
                 return Json(callback2);
+            }
+
+            if (!room.UserManager.IsAdmin(user))
+            {
+                logger.LogWarning("[VSY] Kick Request - User tried to kick another user, but the user making" +
+                    " the request wasn't an admin? user = " + user.id + ", named " + user.name);
+                return Json(callback2);
+            }
+
+            bool wasSuccessful = room.UserManager.Kick(user, recipient);
+
+            if (!wasSuccessful)
+            {
+                logger.LogWarning("[VSY] Kick Request - wasSuccessful was " + wasSuccessful +
+                    ", could not kick user. recipient = " + recipient.name + " with id " + recipient.id);
             }
 
             KickCallback callback = new KickCallback()
             {
-                success = true
+                success = wasSuccessful
             };
             return Json(callback);
         }
@@ -361,8 +386,6 @@ namespace Video_Syncer.Controllers
             };
             return Json(callback);
         }
-
-
 
         [HttpPost]
         public JsonResult PauseVideo([FromBody]VideoStateChangeRequest request)
@@ -807,6 +830,18 @@ namespace Video_Syncer.Controllers
             Room room = roomManager.CreateNewRoom();
 
             return RedirectToAction(room.id, "room");
+        }
+
+        [Route("kicked")]
+        public IActionResult Kicked()
+        {
+            return View("RoomKicked.cshtml");
+        }
+
+        [Route("banned")]
+        public IActionResult Banned()
+        {
+            return View("RoomBanned.cshtml");
         }
     }
 }

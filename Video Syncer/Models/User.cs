@@ -14,10 +14,12 @@ namespace Video_Syncer.Models
         public int id { get; set; }
         public string name { get; set; }
         public UserRights rights { get; set; } = UserRights.User;
+        public bool ShouldKick { get; set; } = false;
         [JsonIgnore]
         public string sessionID { get; set; }
         [JsonIgnore]
         public long lastConnectionTime { get; set; }
+
 
         public User(int Id, string Name, string sessionID)
         {
