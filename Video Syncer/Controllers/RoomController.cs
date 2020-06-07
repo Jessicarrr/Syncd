@@ -220,7 +220,7 @@ namespace Video_Syncer.Controllers
                 return Json(callback2);
             }
 
-            if(room.UserManager.IsAdmin(user))
+            if(!room.UserManager.IsAdmin(user))
             {
                 logger.LogWarning("[VSY] Make Admin Request - User tried to make another user an admin, but the user making" +
                     " the request wasn't an admin themselves? user = " + user.id + ", named " + user.name);
