@@ -124,6 +124,26 @@ function sendKickRequest(recipientId) {
     });
 }
 
+function sendBanRequest(recipientId) {
+    if (myRights == 0) {
+        return;
+    }
+
+    $.ajax({
+        url: '/room/Ban',
+        method: 'POST',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(
+            {
+                userId: userId,
+                roomId: roomId,
+                userIdToBan: recipientId
+            }
+        )
+    });
+}
+
 function sendChangeNameRequest(newName) {
     $.ajax({
         url: '/room/ChangeName',
@@ -443,6 +463,7 @@ function sendDeletePlaylistItemRequest(playlistItemId) {
 function onUpdateSuccess(response) {
     myRights = response["myRights"];
     var shouldKick = response["shouldKick"];
+    var shouldBan = response["shouldBan"];
     var newUserList = response["userList"];
     var newVideo = response["currentYoutubeVideoId"];
     var newVideoTitle = response["currentYoutubeVideoTitle"]; // the video title
@@ -452,6 +473,9 @@ function onUpdateSuccess(response) {
 
     if (shouldKick === true) {
         window.location.replace("/Kicked");
+    }
+    else if (shouldBan === true) {
+        window.location.replace("/Banned");
     }
 
     //console.log("onUpdateSuccess - Received from server video " + newVideo + " with state " + newVideoState + " and time " + newVideoTimeSeconds);

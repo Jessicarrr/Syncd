@@ -43,6 +43,12 @@ namespace Video_Syncer.Controllers
                 else
                 {
                     string sessionID = HttpContext.Session.Id;
+
+                    if(room.UserManager.IsSessionIdBanned(sessionID))
+                    {
+                        return RedirectToAction("Banned", "Home");
+                    }
+
                     room.UserManager.GetSessionIdList().Add(sessionID);
 
                     RoomModel model = new RoomModel()
@@ -184,22 +190,48 @@ namespace Video_Syncer.Controllers
                 return null;
             }
 
+            User user = room.UserManager.GetUserById(request.userId);
+            User recipient = room.UserManager.GetUserById(request.userIdToBan);
+
+            BanCallback callback2 = new BanCallback()
+            {
+                success = false
+            };
+
+            if (user == null || recipient == null)
+            {
+                logger.LogWarning("user or recipient was null in ban request");
+                return Json(callback2);
+            }
+
             string sessionID = HttpContext.Session.Id;
 
             if (!room.UserManager.IsUserSessionIDMatching(request.userId, sessionID))
             {
                 logger.LogWarning("[VSY] Ban Request - session ID did not match in room \""
                     + room.id + "\"! Session ID of the request was " + sessionID);
-                BanCallback callback2 = new BanCallback()
-                {
-                    success = false
-                };
+
                 return Json(callback2);
+            }
+
+            if (!room.UserManager.IsAdmin(user))
+            {
+                logger.LogWarning("[VSY] Ban Request - User tried to ban another user, but the user making" +
+                    " the request wasn't an admin? user = " + user.id + ", named " + user.name);
+                return Json(callback2);
+            }
+
+            bool wasSuccessful = room.UserManager.Ban(user, recipient);
+
+            if (!wasSuccessful)
+            {
+                logger.LogWarning("[VSY] Ban Request - wasSuccessful was " + wasSuccessful +
+                    ", could not kick user. recipient = " + recipient.name + " with id " + recipient.id);
             }
 
             BanCallback callback = new BanCallback()
             {
-                success = true
+                success = wasSuccessful
             };
             return Json(callback);
         }
@@ -719,6 +751,7 @@ namespace Video_Syncer.Controllers
 
             User user = room.UserManager.GetUserById(request.userId);
             bool userShouldKick = user.ShouldKick;
+            bool userShouldBeBanned = user.ShouldBan;
             UserRights userRights = user.rights;
 
             // send users back
@@ -726,6 +759,7 @@ namespace Video_Syncer.Controllers
             {
                 myRights = userRights,
                 ShouldKick = userShouldKick,
+                ShouldBan = userShouldBeBanned,
                 userList = room.UserManager.GetUserList(),
                 currentYoutubeVideoId = room.currentYoutubeVideoId,
                 currentYoutubeVideoTitle = room.currentYoutubeVideoTitle,

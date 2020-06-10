@@ -133,7 +133,7 @@ function createUIForUser(name, id) {
     };
 
     userBan.onclick = function (e) {
-
+        sendBanRequest(id);
     };
 
     userDiv.appendChild(userName);

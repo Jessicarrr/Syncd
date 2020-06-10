@@ -31,5 +31,6 @@ namespace Video_Syncer.Models.Network
         public List<User> userList { get; set; }
         public bool success { get; set; }
         public bool ShouldKick { get; set; } = false;
+        public bool ShouldBan { get; set; } = false;
     }
 }

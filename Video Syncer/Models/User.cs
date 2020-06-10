@@ -15,6 +15,7 @@ namespace Video_Syncer.Models
         public string name { get; set; }
         public UserRights rights { get; set; } = UserRights.User;
         public bool ShouldKick { get; set; } = false;
+        public bool ShouldBan { get; set; } = false;
         [JsonIgnore]
         public string sessionID { get; set; }
         [JsonIgnore]

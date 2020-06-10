@@ -25,6 +25,7 @@ namespace Video_Syncer.Models.Users
         protected bool HasFirstUserJoined { get; set; }
 
         protected List<string> adminSessionIDs { get; set; } = new List<string>();
+        protected List<string> bannedSessionIDs { get; set; } = new List<string>();
 
         public UserManager(string roomId)
         {
@@ -57,13 +58,21 @@ namespace Video_Syncer.Models.Users
             return user.rights == UserRights.Admin;
         }
 
-        public bool Kick(User user, User recipient)
+        public bool Kick(User user, User recipient, bool banned = false)
         {
             if(!userList.Contains(recipient))
             {
                 return false;
             }
-            recipient.ShouldKick = true;
+            if(!banned)
+            {
+                recipient.ShouldKick = true;
+            }
+            else
+            {
+                recipient.ShouldBan = true;
+            }
+            
             Task.Run(async () => await ExecuteKick(user, recipient));
             return true;
         }
@@ -77,7 +86,24 @@ namespace Video_Syncer.Models.Users
 
         public bool Ban(User user, User recipient)
         {
-            return false;
+            if(user.rights != UserRights.Admin)
+            {
+                return false;
+            }
+
+            CreateNewBannedUser(recipient);
+            Kick(user, recipient, true);
+            return true;
+        }
+
+        public void CreateNewBannedUser(User user)
+        {
+            string userSessionID = user.sessionID;
+
+            if(!bannedSessionIDs.Contains(userSessionID))
+            {
+                bannedSessionIDs.Add(userSessionID);
+            }
         }
 
         public bool CreateNewAdmin(User user)
@@ -121,9 +147,24 @@ namespace Video_Syncer.Models.Users
             return false;
         }
 
+        public bool IsSessionIdBanned(string sessionID)
+        {
+            IEnumerable<string> matchingBannedIds = bannedSessionIDs.Where(id => id == sessionID);
+
+            if(matchingBannedIds.Count() > 0)
+            {
+                return true;
+            }
+            return false;
+        }
 
         public User Join(string name, string sessionID)
         {
+            if(IsSessionIdBanned(sessionID))
+            {
+                return null;
+            }
+
             User user = CreateNewUser(name, sessionID);
             logger.LogInformation("[VSY]Joining user \"" + user.name + "\"");
             AddToUserList(user);
