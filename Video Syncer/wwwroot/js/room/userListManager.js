@@ -108,11 +108,6 @@ function createUIForUser(name, id) {
 
     userRights.style.display = "none";
 
-    if (id == userId) {
-        userDiv.style.backgroundImage =
-            "radial-gradient(farthest-corner, white, white, lightgray)";
-    }
-
     if (myRights == 1 && id != userId) {
         userKick.style.display = "block";
         userBan.style.display = "block";
