@@ -115,6 +115,11 @@ namespace Video_Syncer.Models.Users
                 return false;
             }
 
+            if(adminSessionIDs.Contains(user.sessionID))
+            {
+                return true;
+            }
+
             adminSessionIDs.Add(user.sessionID);
             return true;
         }
