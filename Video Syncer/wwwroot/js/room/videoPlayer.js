@@ -30,7 +30,8 @@ function onYouTubeIframeAPIReady() {
             'wmode': 'opaque',
             'disablekb': 1,
             'modestbranding': 1,
-            'mute' : 1
+            'mute': 1,
+            'autoplay' : 0
             
         }
     });
