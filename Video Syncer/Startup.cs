@@ -88,7 +88,13 @@ namespace Video_Syncer
 
             app.UseSession();
             app.UseMiddleware<CustomMiddleware>();
-            
+
+            var webSocketOptions = new WebSocketOptions()
+            {
+                KeepAliveInterval = TimeSpan.FromSeconds(30)
+            };
+            app.UseWebSockets(webSocketOptions);
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
