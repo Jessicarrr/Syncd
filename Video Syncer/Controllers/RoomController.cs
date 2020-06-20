@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Net.WebSockets;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Video_Syncer.Models;
 using Video_Syncer.Views.Room;
 
@@ -88,8 +91,35 @@ namespace Video_Syncer.Controllers
         {
             if(HttpContext.WebSockets.IsWebSocketRequest)
             {
-                WebSocket webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
+                WebSocket socket = await HttpContext.WebSockets.AcceptWebSocketAsync();
+                await HandleWebSocketConnection(HttpContext, socket);
             }
+        }
+
+        private async Task HandleWebSocketConnection(HttpContext context, WebSocket socket)
+        {
+            var sessionID = context.Session.Id;
+
+            var receivedBytes = new Byte[1024];
+            var sentBytes = new Byte[1024];
+
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            CancellationToken cancellationToken = cancellationTokenSource.Token;
+
+            WebSocketReceiveResult receivedResult = await socket.ReceiveAsync(
+                new ArraySegment<byte>(receivedBytes), cancellationToken);
+
+            while(receivedResult.CloseStatus.HasValue)
+            {
+                string receivedText = System.Text.Encoding.UTF8.GetString(receivedBytes).Replace("\u0000", "");
+                dynamic unknownObject = JsonConvert.DeserializeObject<dynamic>(receivedText);
+                string requestType = unknownObject.GetType().GetProperty("something").GetValue(unknownObject, null);
+            }
+
+            logger.LogInformation("Connection closed. Status code = " + receivedResult.CloseStatus 
+                + ", '" + receivedResult.CloseStatusDescription + "'");
+            await socket.CloseAsync(receivedResult.CloseStatus.Value, 
+                receivedResult.CloseStatusDescription, CancellationToken.None);
         }
     }
 }
