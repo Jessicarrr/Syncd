@@ -17,7 +17,25 @@ window.onbeforeunload = function (event) {
  * AJAX function for asking the server to join the room.
  */
 function sendJoinRequest() {
+    var name = getUsername();
     
+
+    $.ajax({
+        url: '/room/Join',
+        method: 'POST',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(
+            {
+                name: name,
+                roomId: roomId
+            }
+        ),
+        success: onJoinSuccess,
+        error: onJoinError
+    });
+
+
 }
 
 /**
@@ -26,7 +44,7 @@ function sendJoinRequest() {
  * YouTube video and its attributes should be.
  */
 function onJoinSuccess(response) {
-    /*userId = response["userId"];
+    userId = response["userId"];
     myRights = response["myRights"];
     var newUserList = response["userList"];
 
@@ -45,7 +63,7 @@ function onJoinSuccess(response) {
      * For loop to populate the user list with all users in the room
      * (including yourself).
      */
-    /*for (var key in newUserList) {
+    for (var key in newUserList) {
         var user = newUserList[key];
 
         var currentUserId = user["id"];
@@ -55,7 +73,7 @@ function onJoinSuccess(response) {
     failedUpdatesInARow = 0;
     failedJoinRequests = 0;
     console.log("successfully joined room");
-    tick();*/
+    tick();
 }
 
 /**
@@ -67,7 +85,7 @@ function onJoinError(response) {
 }
 
 function sendMakeAdminRequest(recipientId) {
-    /*if (myRights == 0) {
+    if (myRights == 0) {
         return;
     }
 
@@ -83,11 +101,11 @@ function sendMakeAdminRequest(recipientId) {
                 userIdToMakeAdmin: recipientId
             }
         )
-    });*/
+    });
 }
 
 function sendKickRequest(recipientId) {
-    /*if (myRights == 0) {
+    if (myRights == 0) {
         return;
     }
 
@@ -103,11 +121,11 @@ function sendKickRequest(recipientId) {
                 userIdToKick: recipientId
             }
         )
-    });*/
+    });
 }
 
 function sendBanRequest(recipientId) {
-    /*if (myRights == 0) {
+    if (myRights == 0) {
         return;
     }
 
@@ -123,11 +141,11 @@ function sendBanRequest(recipientId) {
                 userIdToBan: recipientId
             }
         )
-    });*/
+    });
 }
 
 function sendChangeNameRequest(newName) {
-    /*$.ajax({
+    $.ajax({
         url: '/room/ChangeName',
         method: 'POST',
         contentType: 'application/json',
@@ -138,12 +156,14 @@ function sendChangeNameRequest(newName) {
                 roomId: roomId,
                 newName: newName
             }
-        )
-    });*/
+        )/*,
+        success: onJoinSuccess,
+        error: onJoinError*/
+    });
 }
 
 function sendRearrangePlaylistRequest(onTopId, onBottomId) {
-    /*$.ajax({
+    $.ajax({
         url: '/room/RearrangePlaylist',
         method: 'POST',
         contentType: 'application/json',
@@ -158,7 +178,7 @@ function sendRearrangePlaylistRequest(onTopId, onBottomId) {
         ),
         success: onRearrangeSuccess,
         error: onRearrangeError
-    });*/
+    });
 }
 
 function onRearrangeError(response) {
@@ -166,14 +186,14 @@ function onRearrangeError(response) {
 }
 
 function onRearrangeSuccess(response) {
-    /*var success = response["success"];
+    var success = response["success"];
     var playlist = response["newPlaylist"];
 
     if (success == true && playlist != null) {
         removeAllPlaylistVideos();
         compareAndAddPlaylistItems(playlist);
         updateTitlesAndAuthors(playlist);
-    }*/
+    }
 }
 
 /**
@@ -181,7 +201,7 @@ function onRearrangeSuccess(response) {
  * when the user presses play on the YouTube video player.
  */
 function sendPlayRequest() {
-    /*$.ajax({
+    $.ajax({
         url: '/room/PlayVideo',
         method: 'POST',
         contentType: 'application/json',
@@ -191,8 +211,10 @@ function sendPlayRequest() {
                 userId: userId,
                 roomId: roomId
             }
-        )
-    });*/
+        )/*,
+        success: onJoinSuccess,
+        error: onJoinError*/
+    });
 }
 
 /**
@@ -200,7 +222,7 @@ function sendPlayRequest() {
  * when the user presses pause on the YouTube video player.
  */
 function sendPauseRequest() {
-    /*$.ajax({
+    $.ajax({
         url: '/room/PauseVideo',
         method: 'POST',
         contentType: 'application/json',
@@ -210,15 +232,17 @@ function sendPauseRequest() {
                 userId: userId,
                 roomId: roomId
             }
-        )
-    });*/
+        )/*,
+        success: onJoinSuccess,
+        error: onJoinError*/
+    });
 }
 
 /**
  * Send information to the server telling it that the user is buffering.
  */
 function sendBufferingRequest() {
-    /*$.ajax({
+    $.ajax({
         url: '/room/BufferVideo',
         method: 'POST',
         contentType: 'application/json',
@@ -229,14 +253,14 @@ function sendBufferingRequest() {
                 roomId: roomId
             }
         )
-    });*/
+    });
 }
 
 /**
  * Send information to the server telling it that the user video has ended.
  */
 function sendVideoEndedRequest() {
-    /*$.ajax({
+    $.ajax({
         url: '/room/EndVideo',
         method: 'POST',
         contentType: 'application/json',
@@ -246,8 +270,10 @@ function sendVideoEndedRequest() {
                 userId: userId,
                 roomId: roomId
             }
-        )
-    });*/
+        )/*,
+        success: onJoinSuccess,
+        error: onJoinError*/
+    });
 }
 
 /**
@@ -255,7 +281,7 @@ function sendVideoEndedRequest() {
  * @param {any} videoIdParam The YouTube video ID. Usually after the "v=" part of a youtube video URL.
  */
 function sendAddToPlaylistRequest(videoIdParam) {
-    /*$.ajax({
+    $.ajax({
         url: '/room/AddToPlaylist',
         method: 'POST',
         contentType: 'application/json',
@@ -267,7 +293,7 @@ function sendAddToPlaylistRequest(videoIdParam) {
                 youtubeVideoId: videoIdParam
             }
         )
-    });*/
+    });
 }
 
 /**
@@ -275,7 +301,7 @@ function sendAddToPlaylistRequest(videoIdParam) {
  * @param {any} videoIdParam The YouTube video ID. Usually after the "v=" part of a youtube video URL.
  */
 function sendVideoChangeRequest(videoIdParam) {
-    /*$.ajax({
+    $.ajax({
         url: '/room/ChangeVideo',
         method: 'POST',
         contentType: 'application/json',
@@ -287,14 +313,14 @@ function sendVideoChangeRequest(videoIdParam) {
                 youtubeVideoId : videoIdParam
             }
         )
-    });*/
+    });
 }
 
 /**
  * Send information to the server saying the video has not started yet.
  */
 function sendVideoUnstartedRequest() {
-    /*$.ajax({
+    $.ajax({
         url: '/room/UnstartedVideo',
         method: 'POST',
         contentType: 'application/json',
@@ -304,8 +330,10 @@ function sendVideoUnstartedRequest() {
                 userId: userId,
                 roomId: roomId
             }
-        )
-    });*/
+        )/*,
+        success: onJoinSuccess,
+        error: onJoinError*/
+    });
 }
 
 /**
@@ -313,7 +341,7 @@ function sendVideoUnstartedRequest() {
  * navigates away from the page.
  */
 function sendLeaveRequest() {
-    /*$.ajax({
+    $.ajax({
         url: '/room/Leave',
         method: 'POST',
         contentType: 'application/json',
@@ -323,8 +351,10 @@ function sendLeaveRequest() {
                 userId: userId,
                 roomId: roomId
             }
-        )
-    });*/
+        )/*,
+        success: onLeaveSuccess,
+        error: onLeaveError*/
+    });
 }
 
 function onLeaveSuccess() {
@@ -339,7 +369,7 @@ function onLeaveError() {
  * Send information to the server about the user's Youtube player.
  */
 function sendUpdateRequest() {
-    /*var videoTime = getVideoTime();
+    var videoTime = getVideoTime();
     //console.log("sendUpdateRequest - Sending roomId " + roomId + " and userId " + userId + " youtube : " + currentVideoId + ", state: " + stateNumber + ", videoTimeSeconds: " + videoTime);
 
     $.ajax({
@@ -358,14 +388,14 @@ function sendUpdateRequest() {
         ),
         success: onUpdateSuccess,
         error: onUpdateError
-    });*/
+    });
 }
 
 /**
  * Update the server about what time the user is at in their YouTube video.
  */
 function sendTimeUpdate(newVideoTime) {
-    /*var timeTest = getVideoTime();
+    var timeTest = getVideoTime();
 
     console.log("Test: timeTest = " + timeTest + ", newVideoTime = " + newVideoTime + ". timeTest type is " + typeof(timeTest) + " where as type of newVideoTime is " + typeof(newVideoTime));
 
@@ -383,14 +413,14 @@ function sendTimeUpdate(newVideoTime) {
                 videoTimeSeconds: newVideoTime
             }
         )
-    });*/
+    });
 }
 
 /**
  * Update the server about what time the user is at in their YouTube video.
  */
 function sendPlayPlaylistItemRequest(playlistItemId) {
-    /*$.ajax({
+    $.ajax({
         url: '/room/PlayPlaylistVideo',
         method: 'POST',
         contentType: 'application/json',
@@ -402,14 +432,14 @@ function sendPlayPlaylistItemRequest(playlistItemId) {
                 playlistItemId: playlistItemId
             }
         )
-    });*/
+    });
 }
 
 /**
  * Send the server a request to delete a playlist item
  */
 function sendDeletePlaylistItemRequest(playlistItemId) {
-    /*$.ajax({
+    $.ajax({
         url: '/room/RemoveFromPlaylist',
         method: 'POST',
         contentType: 'application/json',
@@ -421,7 +451,7 @@ function sendDeletePlaylistItemRequest(playlistItemId) {
                 playlistItemId: playlistItemId
             }
         )
-    });*/
+    });
 }
 
 /**
@@ -431,7 +461,7 @@ function sendDeletePlaylistItemRequest(playlistItemId) {
  * @param {any} response Data sent from the server.
  */
 function onUpdateSuccess(response) {
-    /*myRights = response["myRights"];
+    myRights = response["myRights"];
     var shouldKick = response["shouldKick"];
     var shouldBan = response["shouldBan"];
     var newUserList = response["userList"];
@@ -472,7 +502,7 @@ function onUpdateSuccess(response) {
 
             addDataToPlaylist(videoObjectUniqueId, videoObjectTitle, videoObjectVideoId, videoObjectAuthor);
         }*/
-    /*}
+    }
     else {
         console.log("playlist is null");
     }
@@ -502,10 +532,10 @@ function onUpdateSuccess(response) {
             //console.log("Updated user" + currentUserName + "(" + currentUserId + ") with " + currentUserState + " and " + currentUserVideoTime);
         }
     }    
-    failedUpdatesInARow = 0;*/
+    failedUpdatesInARow = 0;
 }
 
 function onUpdateError(response) {
-    /*failedUpdatesInARow += 1;
-    console.log("Update failure.");*/
+    failedUpdatesInARow += 1;
+    console.log("Update failure.");
 }
