@@ -92,6 +92,9 @@ namespace Video_Syncer.Controllers
         {
             if(HttpContext.WebSockets.IsWebSocketRequest)
             {
+                logger.LogInformation("[VSY] new web socket connected");
+                Trace.TraceInformation("[VSY] new web socket connected");
+
                 WebSocket socket = await HttpContext.WebSockets.AcceptWebSocketAsync();
                 await HandleWebSocketConnection(HttpContext, socket);
             }
@@ -116,11 +119,11 @@ namespace Video_Syncer.Controllers
                 dynamic unknownObject = JsonConvert.DeserializeObject<dynamic>(receivedText);
                 string requestType = unknownObject.GetType().GetProperty("requestType").GetValue(unknownObject, null);
 
-                logger.LogInformation("receivedText = " + receivedText);
-                Trace.TraceInformation("receivedText = " + receivedText);
+                logger.LogInformation("[VSY] receivedText = " + receivedText);
+                Trace.TraceInformation("[VSY] receivedText = " + receivedText);
 
-                logger.LogInformation("requestType = " + requestType);
-                Trace.TraceInformation("requestType = " + requestType);
+                logger.LogInformation("[VSY] requestType = " + requestType);
+                Trace.TraceInformation("[VSY] requestType = " + requestType);
 
                 sentBytes = System.Text.Encoding.UTF8.GetBytes(requestType);
                 await socket.SendAsync(new ArraySegment<byte>(sentBytes, 0, requestType.Length),
@@ -130,9 +133,9 @@ namespace Video_Syncer.Controllers
                     new ArraySegment<byte>(receivedBytes), cancellationToken);
             }
 
-            logger.LogInformation("Connection closed. Status code = " + receivedResult.CloseStatus 
+            logger.LogInformation("[VSY] Connection closed. Status code = " + receivedResult.CloseStatus 
                 + ", '" + receivedResult.CloseStatusDescription + "'");
-            Trace.TraceInformation("Connection closed. Status code = " + receivedResult.CloseStatus
+            Trace.TraceInformation("[VSY] Connection closed. Status code = " + receivedResult.CloseStatus
                 + ", '" + receivedResult.CloseStatusDescription + "'");
 
             await socket.CloseAsync(receivedResult.CloseStatus.Value, 
