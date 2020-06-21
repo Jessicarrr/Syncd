@@ -13,7 +13,7 @@ using Video_Syncer.Views.Room;
 
 namespace Video_Syncer.OldNetworkingCode
 {
-    public class RoomController : Controller
+    public class OldRoomController : Controller
     {
         public ILogger logger;
         public IRoomManagerSingleton roomManager;
