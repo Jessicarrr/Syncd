@@ -110,7 +110,7 @@ function onPlayerReady(event) {
 
     setVolumeSliderPosition(0);
 
-    sendJoinRequest();
+    setupNetworking();
 }
 
 // 5. The API calls this function when the player's state changes.

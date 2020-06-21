@@ -10,6 +10,17 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="OldNetworkingCode\connectionManager.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="OldNetworkingCode\connectionManager.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="AntiXSS" Version="4.3.0" />
