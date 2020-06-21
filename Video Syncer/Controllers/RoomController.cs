@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -113,11 +114,27 @@ namespace Video_Syncer.Controllers
             {
                 string receivedText = System.Text.Encoding.UTF8.GetString(receivedBytes).Replace("\u0000", "");
                 dynamic unknownObject = JsonConvert.DeserializeObject<dynamic>(receivedText);
-                string requestType = unknownObject.GetType().GetProperty("something").GetValue(unknownObject, null);
+                string requestType = unknownObject.GetType().GetProperty("requestType").GetValue(unknownObject, null);
+
+                logger.LogInformation("receivedText = " + receivedText);
+                Trace.TraceInformation("receivedText = " + receivedText);
+
+                logger.LogInformation("requestType = " + requestType);
+                Trace.TraceInformation("requestType = " + requestType);
+
+                sentBytes = System.Text.Encoding.UTF8.GetBytes(requestType);
+                await socket.SendAsync(new ArraySegment<byte>(sentBytes, 0, requestType.Length),
+                    WebSocketMessageType.Text, receivedResult.EndOfMessage, CancellationToken.None);
+
+                receivedResult = await socket.ReceiveAsync(
+                    new ArraySegment<byte>(receivedBytes), cancellationToken);
             }
 
             logger.LogInformation("Connection closed. Status code = " + receivedResult.CloseStatus 
                 + ", '" + receivedResult.CloseStatusDescription + "'");
+            Trace.TraceInformation("Connection closed. Status code = " + receivedResult.CloseStatus
+                + ", '" + receivedResult.CloseStatusDescription + "'");
+
             await socket.CloseAsync(receivedResult.CloseStatus.Value, 
                 receivedResult.CloseStatusDescription, CancellationToken.None);
         }
