@@ -1,4 +1,5 @@
 ﻿var socket;
+var userId = -1;
 
 const RequestType = Object.freeze(
     {
@@ -8,8 +9,7 @@ const RequestType = Object.freeze(
 
 function setupNetworking() {
     connectToServer();
-    sendJoinRequest();
-    sendVideoStateChangeRequest(1);
+    
 
 }
 
@@ -23,15 +23,17 @@ function connectToServer() {
 
 function setupSocketEvents() {
     socket.onopen = function (event) {
-        console.log("socket.onopen");
+        console.log("socket.onopen: " + event.data);
+        sendJoinRequest();
+        //sendVideoStateChangeRequest(1);
     };
 
     socket.onclose = function (event) {
-        console.log("socket.onclose");
+        console.log("socket.onclose: " + event.data);
     };
 
     socket.onerror = function (event) {
-        console.log("socket.onerror");
+        console.log("socket.onerror: " + event.data);
     };
 
     socket.onmessage = function (event) {

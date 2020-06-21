@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Video_Syncer.Models;
 using Video_Syncer.Views.Room;
 
@@ -77,8 +79,6 @@ namespace Video_Syncer.Controllers
             }
         }
 
-        
-
         [Route("new")]
         public IActionResult Index()
         {
@@ -87,7 +87,6 @@ namespace Video_Syncer.Controllers
             return RedirectToAction(room.id, "room");
         }
 
-        [HttpPost]
         public async Task ConnectToWebSocket()
         {
             if(HttpContext.WebSockets.IsWebSocketRequest)
@@ -113,20 +112,24 @@ namespace Video_Syncer.Controllers
             WebSocketReceiveResult receivedResult = await socket.ReceiveAsync(
                 new ArraySegment<byte>(receivedBytes), cancellationToken);
 
-            while(receivedResult.CloseStatus.HasValue)
+            while(!receivedResult.CloseStatus.HasValue)
             {
                 string receivedText = System.Text.Encoding.UTF8.GetString(receivedBytes).Replace("\u0000", "");
-                dynamic unknownObject = JsonConvert.DeserializeObject<dynamic>(receivedText);
-                string requestType = unknownObject.GetType().GetProperty("requestType").GetValue(unknownObject, null);
 
                 logger.LogInformation("[VSY] receivedText = " + receivedText);
                 Trace.TraceInformation("[VSY] receivedText = " + receivedText);
 
+                dynamic unknownObject = JObject.Parse(receivedText);
+                int requestType = unknownObject.requestType;
+
                 logger.LogInformation("[VSY] requestType = " + requestType);
                 Trace.TraceInformation("[VSY] requestType = " + requestType);
 
-                sentBytes = System.Text.Encoding.UTF8.GetBytes(requestType);
-                await socket.SendAsync(new ArraySegment<byte>(sentBytes, 0, requestType.Length),
+                var newObject = (requestType, message: "hey this is a message, the rqt was " + requestType);
+                var jsonStringToSend = JsonConvert.SerializeObject(newObject);
+
+                sentBytes = System.Text.Encoding.UTF8.GetBytes(jsonStringToSend);
+                await socket.SendAsync(new ArraySegment<byte>(sentBytes, 0, jsonStringToSend.Length),
                     WebSocketMessageType.Text, receivedResult.EndOfMessage, CancellationToken.None);
 
                 receivedResult = await socket.ReceiveAsync(
@@ -138,7 +141,7 @@ namespace Video_Syncer.Controllers
             Trace.TraceInformation("[VSY] Connection closed. Status code = " + receivedResult.CloseStatus
                 + ", '" + receivedResult.CloseStatusDescription + "'");
 
-            await socket.CloseAsync(receivedResult.CloseStatus.Value, 
+            await socket.CloseAsync(receivedResult.CloseStatus.Value,
                 receivedResult.CloseStatusDescription, CancellationToken.None);
         }
     }
