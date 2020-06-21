@@ -11,11 +11,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="OldNetworkingCode\oldConnectionManager.js" />
+    <None Remove="OldNetworkingCode\oldConnectionManager.js.disabled" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="OldNetworkingCode\oldConnectionManager.js">
+    <Content Include="OldNetworkingCode\oldConnectionManager.js.disabled">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>

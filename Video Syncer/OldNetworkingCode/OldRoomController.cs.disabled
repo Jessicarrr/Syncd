@@ -10,6 +10,7 @@ using Video_Syncer.Models;
 using Video_Syncer.Models.Network;
 using Video_Syncer.Models.Users.Admin;
 using Video_Syncer.Views.Room;
+using Video_Syncer.Controllers;
 
 namespace Video_Syncer.OldNetworkingCode
 {
@@ -19,7 +20,7 @@ namespace Video_Syncer.OldNetworkingCode
         public IRoomManagerSingleton roomManager;
 
 
-        public RoomController(ILogger<RoomController> logger, IRoomManagerSingleton roomManager)
+        public OldRoomController(ILogger<RoomController> logger, IRoomManagerSingleton roomManager)
         {
             this.logger = logger;
             this.roomManager = roomManager;
