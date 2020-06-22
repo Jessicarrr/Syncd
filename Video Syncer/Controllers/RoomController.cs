@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Video_Syncer.Models;
+using Video_Syncer.Models.Network;
 using Video_Syncer.Views.Room;
 
 namespace Video_Syncer.Controllers
@@ -120,16 +121,15 @@ namespace Video_Syncer.Controllers
                 Trace.TraceInformation("[VSY] receivedText = " + receivedText);
 
                 dynamic unknownObject = JObject.Parse(receivedText);
-                int requestType = unknownObject.requestType;
+                RequestType requestType = (RequestType) unknownObject.requestType;
 
                 logger.LogInformation("[VSY] requestType = " + requestType);
                 Trace.TraceInformation("[VSY] requestType = " + requestType);
 
-                var newObject = (requestType, message: "hey this is a message, the rqt was " + requestType);
-                var jsonStringToSend = JsonConvert.SerializeObject(newObject);
+                string response = await HandleRequest(requestType, unknownObject).Result;
 
-                sentBytes = System.Text.Encoding.UTF8.GetBytes(jsonStringToSend);
-                await socket.SendAsync(new ArraySegment<byte>(sentBytes, 0, jsonStringToSend.Length),
+                sentBytes = System.Text.Encoding.UTF8.GetBytes(response);
+                await socket.SendAsync(new ArraySegment<byte>(sentBytes, 0, response.Length),
                     WebSocketMessageType.Text, receivedResult.EndOfMessage, CancellationToken.None);
 
                 receivedResult = await socket.ReceiveAsync(
@@ -143,6 +143,41 @@ namespace Video_Syncer.Controllers
 
             await socket.CloseAsync(receivedResult.CloseStatus.Value,
                 receivedResult.CloseStatusDescription, CancellationToken.None);
+        }
+
+        private async Task<string> HandleRequest(RequestType requestType, dynamic unkownObject)
+        {
+            string response = "";
+
+            switch(requestType)
+            {
+                case RequestType.Join:
+                    break;
+                case RequestType.ChangeVideoState:
+                    break;
+                case RequestType.Leave:
+                    break;
+                case RequestType.ChangeName:
+                    break;
+                case RequestType.Kick:
+                    break;
+                case RequestType.Ban:
+                    break;
+                case RequestType.MakeAdmin:
+                    break;
+                case RequestType.RearrangePlaylist:
+                    break;
+                case RequestType.PlayPlaylistVideo:
+                    break;
+                case RequestType.PlayVideo:
+                    break;
+                case RequestType.RemoveFromPlaylist:
+                    break;
+                case RequestType.AddToPlaylist:
+                    break;
+                case RequestType.TimeChange:
+                    break;
+            }
         }
     }
 }
