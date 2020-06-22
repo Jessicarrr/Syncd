@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Video_Syncer.Models.Network
 {
-    public enum RequestTypes
+    public enum RequestType
     {
         Join = 1,
         ChangeVideoState = 2,
