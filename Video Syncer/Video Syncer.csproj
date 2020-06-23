@@ -11,6 +11,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="OldNetworkingCode\Network\AddToPlaylistRequest.cs" />
+    <Compile Remove="OldNetworkingCode\Network\AdminRequests.cs" />
+    <Compile Remove="OldNetworkingCode\Network\ChangeUsernameRequest.cs" />
+    <Compile Remove="OldNetworkingCode\Network\IRequest.cs" />
+    <Compile Remove="OldNetworkingCode\Network\JoinRequest.cs" />
+    <Compile Remove="OldNetworkingCode\Network\LeaveRequest.cs" />
+    <Compile Remove="OldNetworkingCode\Network\PlayPlaylistVideoRequest.cs" />
+    <Compile Remove="OldNetworkingCode\Network\RearrangePlaylistRequest.cs" />
+    <Compile Remove="OldNetworkingCode\Network\RemoveFromPlaylistRequest.cs" />
+    <Compile Remove="OldNetworkingCode\Network\RequestType.cs" />
+    <Compile Remove="OldNetworkingCode\Network\TimeChangeRequest.cs" />
+    <Compile Remove="OldNetworkingCode\Network\UpdateRequest.cs" />
+    <Compile Remove="OldNetworkingCode\Network\VideoChangeRequest.cs" />
+    <Compile Remove="OldNetworkingCode\Network\VideoStateChangeRequest.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="OldNetworkingCode\oldConnectionManager.js.disabled" />
   </ItemGroup>
 
@@ -19,6 +36,23 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="OldNetworkingCode\Network\AddToPlaylistRequest.cs" />
+    <None Include="OldNetworkingCode\Network\AdminRequests.cs" />
+    <None Include="OldNetworkingCode\Network\ChangeUsernameRequest.cs" />
+    <None Include="OldNetworkingCode\Network\IRequest.cs" />
+    <None Include="OldNetworkingCode\Network\JoinRequest.cs" />
+    <None Include="OldNetworkingCode\Network\LeaveRequest.cs" />
+    <None Include="OldNetworkingCode\Network\PlayPlaylistVideoRequest.cs" />
+    <None Include="OldNetworkingCode\Network\RearrangePlaylistRequest.cs" />
+    <None Include="OldNetworkingCode\Network\RemoveFromPlaylistRequest.cs" />
+    <None Include="OldNetworkingCode\Network\RequestType.cs" />
+    <None Include="OldNetworkingCode\Network\TimeChangeRequest.cs" />
+    <None Include="OldNetworkingCode\Network\UpdateRequest.cs" />
+    <None Include="OldNetworkingCode\Network\VideoChangeRequest.cs" />
+    <None Include="OldNetworkingCode\Network\VideoStateChangeRequest.cs" />
   </ItemGroup>
 
 

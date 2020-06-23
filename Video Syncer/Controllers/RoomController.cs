@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Dynamic;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,6 +13,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Video_Syncer.Models;
 using Video_Syncer.Models.Network;
+using Video_Syncer.Models.Network.Payload;
 using Video_Syncer.Views.Room;
 
 namespace Video_Syncer.Controllers
@@ -99,7 +102,6 @@ namespace Video_Syncer.Controllers
                 await HandleWebSocketConnection(HttpContext, socket);
             }
         }
-
         private async Task HandleWebSocketConnection(HttpContext context, WebSocket socket)
         {
             var sessionID = context.Session.Id;
@@ -122,7 +124,7 @@ namespace Video_Syncer.Controllers
 
                 dynamic unknownObject = JObject.Parse(receivedText);
 
-                string response = await ValidateAndHandleRequest(context, unknownObject).Result;
+                string response = await ValidateAndHandleRequest(context, unknownObject);
 
                 sentBytes = System.Text.Encoding.UTF8.GetBytes(response);
                 await socket.SendAsync(new ArraySegment<byte>(sentBytes, 0, response.Length),
@@ -143,9 +145,8 @@ namespace Video_Syncer.Controllers
 
         private async Task<string> ValidateAndHandleRequest(HttpContext context, dynamic unknownObject)
         {
-            string response = "";
+            string response;
             RequestType requestType = (RequestType)unknownObject.requestType;
-            string roomId = unknownObject.roomId;
 
             RequestResponse responseObject = new RequestResponse()
             {
@@ -153,10 +154,9 @@ namespace Video_Syncer.Controllers
                 payload = null
             };
 
-            bool isValidRequest = await ValidateRequest(context, requestType, unknownObject).Result;
-            Room room = TryGetRoom(roomId);
+            bool isValidRequest = await ValidateRequest(context, requestType, unknownObject);
 
-            if(!isValidRequest || room == null)
+            if(!isValidRequest)
             {
                 // request had a problem and is not valid.
                 responseObject.success = false;
@@ -164,27 +164,64 @@ namespace Video_Syncer.Controllers
             }
             else
             {
-                response = HandleRequest(context, requestType, room, unknownObject);
+                string roomId = unknownObject.roomId;
+                int? userId = unknownObject.userId;
+                Room room = TryGetRoom(roomId);
+                response = HandleRequest(context, requestType, userId, room, unknownObject).Result;
             }
             return response;
-            
         }
 
-        private async Task<bool> ValidateRequest(HttpContext context, RequestType requestType, dynamic unknownObject)
+        private Task<bool> ValidateRequest(HttpContext context, RequestType requestType, dynamic unknownObject)
         {
             var currentSessionId = context.Session.Id;
+            
+            string requestTypeHumanReadable = Enum.GetName(typeof(RequestType), requestType);
+
             string roomId = unknownObject.roomId;
-            bool valid = true;
 
-            if(requestType != RequestType.Join)
+            if(roomId == null)
             {
-
+                return Task.FromResult(false);
             }
 
-            return valid;
+            Room room = TryGetRoom(roomId);
+
+            if (room == null)
+            {
+                return Task.FromResult(false);
+            }
+
+            if (requestType != RequestType.Join)
+            {
+                int? userId = unknownObject.userId;
+
+                if(userId == null)
+                {
+                    return Task.FromResult(false);
+                }
+
+                if (!room.UserManager.IsUserSessionIDMatching((int) userId, currentSessionId))
+                {
+                    logger.LogWarning("[VSY] Session ID of request did not match in room \"" + room.id 
+                        + "\"! Session ID of the request was " + currentSessionId + ", and request type was " 
+                        + requestTypeHumanReadable);
+                    return Task.FromResult(false);
+                }
+                
+            }
+
+            if (room.UserManager.IsSessionIdBanned(currentSessionId))
+            {
+                logger.LogWarning("[VSY] A banned session ID tried to make a request (request type was " + requestTypeHumanReadable
+                    + "). Session ID was " + currentSessionId);
+                return Task.FromResult(false);
+            }
+
+            return Task.FromResult(true);
         }
 
-        private async Task<string> HandleRequest(HttpContext context, RequestType requestType,
+        private Task<string> HandleRequest(HttpContext context, RequestType requestType, int? userId,
             Room room, dynamic unknownObject)
         {
             RequestResponse responseObject = new RequestResponse()
@@ -196,9 +233,18 @@ namespace Video_Syncer.Controllers
             switch (requestType)
             {
                 case RequestType.Join:
+                    string name = unknownObject.name;
+
+                    JoinRoomPayload payload = JoinRoom(name, room, context);
+
+                    responseObject.success = payload == null ? false : true;
+                    responseObject.payload = payload;
                     break;
+
                 case RequestType.ChangeVideoState:
+                    responseObject.payload = "change video state called and not implemented yet lol";
                     break;
+
                 case RequestType.Leave:
                     break;
                 case RequestType.ChangeName:
@@ -223,7 +269,30 @@ namespace Video_Syncer.Controllers
                     break;
             }
 
-            return null;
+            return Task.FromResult(JsonConvert.SerializeObject(responseObject));
+        }
+
+        private JoinRoomPayload JoinRoom(string name, Room room, HttpContext context)
+        {
+            User user = room.Join(name, context.Session.Id);
+
+            if(user == null)
+            {
+                return null;
+            }
+
+            JoinRoomPayload payload = new JoinRoomPayload()
+            {
+                userId = user.id,
+                myRights = user.rights,
+                userList = room.UserManager.GetUserList(),
+                currentYoutubeVideoId = room.currentYoutubeVideoId,
+                currentYoutubeVideoTitle = room.currentYoutubeVideoTitle,
+                currentVideoState = room.UserManager.GetStateForUser(user.id),
+                videoTimeSeconds = room.videoTimeSeconds
+            };
+
+            return payload;
         }
     }
 }
