@@ -78,9 +78,4 @@
     <WCFMetadata Include="Connected Services" />
   </ItemGroup>
 
-
-  <ItemGroup>
-    <Folder Include="Models\Network\StateUpdates\Impl\" />
-  </ItemGroup>
-
 </Project>
