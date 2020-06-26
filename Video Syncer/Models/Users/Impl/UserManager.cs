@@ -5,9 +5,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Video_Syncer.logging;
-using Video_Syncer.Models.Users.Admin;
+using Video_Syncer.Models.Users.Interface;
+using Video_Syncer.Models.Users.Enum;
 
-namespace Video_Syncer.Models.Users
+namespace Video_Syncer.Models.Users.Impl
 {
     public class UserManager : IUserManager
     {

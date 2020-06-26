@@ -1,19 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Dynamic;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Video_Syncer.Models;
-using Video_Syncer.Models.Network;
 using Video_Syncer.Models.Network.Payload;
+using Video_Syncer.Models.Network.RequestResponses.Enum;
+using Video_Syncer.Models.Network.RequestResponses.Impl;
 using Video_Syncer.Views.Room;
 
 namespace Video_Syncer.Controllers

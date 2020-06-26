@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Video_Syncer.Models.Network.RequestResponses.Enum;
+using Video_Syncer.Models.Network.RequestResponses.Interface;
 
-namespace Video_Syncer.Models.Network
+namespace Video_Syncer.Models.Network.RequestResponses.Impl
 {
     public class RequestResponse : IRequestResponse
     {

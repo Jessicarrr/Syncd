@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Video_Syncer.logging;
 using Video_Syncer.Models.Playlist;
-using Video_Syncer.Models.Users;
+using Video_Syncer.Models.Users.Impl;
 
 namespace Video_Syncer.Models
 {

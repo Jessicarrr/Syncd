@@ -17,6 +17,8 @@ using Video_Syncer.logging;
 using Microsoft.Extensions.Logging.AzureAppServices;
 using Video_Syncer.Models.Users;
 using Video_Syncer.Models;
+using Video_Syncer.Models.Users.Interface;
+using Video_Syncer.Models.Users.Impl;
 
 namespace Video_Syncer
 {
