@@ -236,20 +236,11 @@ namespace Video_Syncer.Controllers
                 case RequestType.Join:
                     string name = unknownObject.name;
 
-                    JoinRoomPayload payload = JoinRoom(socket, name, room, context);
+                    JoinRoomPayload payload = await JoinRoom(socket, name, room, context);
 
                     responseObject.success = payload == null ? false : true;
                     responseObject.payload = payload;
 
-                    User newUser = room.UserManager.GetUserById(payload.userId);
-                    CancellationTokenSource source = new CancellationTokenSource();
-                    RoomDataUpdate update = new RoomDataUpdate()
-                    {
-                        updateType = UpdateType.UserListUpdate,
-                        payload = room.UserManager.GetUserList()
-                    };
-
-                    await room.ConnectionManager.SendUpdateToAllExcept(room.UserManager.GetUserList(), newUser, update, source.Token);
                     break;
 
                 case RequestType.ChangeVideoState:
@@ -283,7 +274,7 @@ namespace Video_Syncer.Controllers
             return JsonConvert.SerializeObject(responseObject);
         }
 
-        private JoinRoomPayload JoinRoom(WebSocket socket, string name, Room room, HttpContext context)
+        private async Task<JoinRoomPayload> JoinRoom(WebSocket socket, string name, Room room, HttpContext context)
         {
             User user = room.Join(name, context.Session.Id);
 
@@ -304,6 +295,15 @@ namespace Video_Syncer.Controllers
                 currentVideoState = room.UserManager.GetStateForUser(user.id),
                 videoTimeSeconds = room.videoTimeSeconds
             };
+
+            CancellationTokenSource source = new CancellationTokenSource();
+            RoomDataUpdate update = new RoomDataUpdate()
+            {
+                updateType = UpdateType.UserListUpdate,
+                payload = room.UserManager.GetUserList()
+            };
+
+            await room.ConnectionManager.SendUpdateToAllExcept(room.UserManager.GetUserList(), user, update, source.Token);
 
             return payload;
         }
