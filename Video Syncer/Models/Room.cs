@@ -78,7 +78,7 @@ namespace Video_Syncer.Models
             this.ConnectionManager = connectionManager;
             logger = LoggingHandler.CreateLogger<Room>();
 
-            StartPeriodicTasks();
+            //StartPeriodicTasks();
         }
 
         private void StartPeriodicTasks()
