@@ -168,7 +168,7 @@ namespace Video_Syncer.Controllers
                 string roomId = unknownObject.roomId;
                 int? userId = unknownObject.userId;
                 Room room = TryGetRoom(roomId);
-                response = await HandleRequest(context, socket, requestType, userId, room, unknownObject).Result;
+                response = await HandleRequest(context, socket, requestType, userId, room, unknownObject);
             }
             return response;
         }
