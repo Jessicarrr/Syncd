@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Video_Syncer.logging;
+using Video_Syncer.Models.Network.Rooms.Interface;
 using Video_Syncer.Models.Playlist;
 using Video_Syncer.Models.Users;
 using Video_Syncer.Models.Users.Enum;
@@ -27,6 +28,7 @@ namespace Video_Syncer.Models
         public string currentYoutubeVideoTitle { get; set; }
         public IPlaylistManager PlaylistManager { get; set; }
         public Models.Users.Interface.IUserManager UserManager { get; set; }
+        public IConnectionManager ConnectionManager { get; set; }
 
         public double videoTimeSeconds { get; set; }
 
@@ -59,7 +61,8 @@ namespace Video_Syncer.Models
             StartPeriodicTasks();
         }
 
-        public Room(IPlaylistManager playlistManager, IUserManager userManager, string id, string name = "")
+        public Room(IPlaylistManager playlistManager, IUserManager userManager, IConnectionManager connectionManager,
+            string id, string name = "")
         {
             this.id = id;
             this.name = name;
@@ -72,6 +75,7 @@ namespace Video_Syncer.Models
 
             this.UserManager = userManager;
             this.PlaylistManager = playlistManager;
+            this.ConnectionManager = connectionManager;
             logger = LoggingHandler.CreateLogger<Room>();
 
             StartPeriodicTasks();

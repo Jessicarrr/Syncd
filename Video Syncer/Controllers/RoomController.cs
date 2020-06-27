@@ -10,8 +10,11 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Video_Syncer.Models;
 using Video_Syncer.Models.Network.Payload;
+using Video_Syncer.Models.Network.Payload.StateUpdates;
 using Video_Syncer.Models.Network.RequestResponses.Enum;
 using Video_Syncer.Models.Network.RequestResponses.Impl;
+using Video_Syncer.Models.Network.StateUpdates.Enum;
+using Video_Syncer.Models.Network.StateUpdates.Impl;
 using Video_Syncer.Views.Room;
 
 namespace Video_Syncer.Controllers
@@ -122,7 +125,7 @@ namespace Video_Syncer.Controllers
 
                 dynamic unknownObject = JObject.Parse(receivedText);
 
-                string response = await ValidateAndHandleRequest(context, unknownObject);
+                string response = await ValidateAndHandleRequest(context, socket, unknownObject);
 
                 sentBytes = System.Text.Encoding.UTF8.GetBytes(response);
                 await socket.SendAsync(new ArraySegment<byte>(sentBytes, 0, response.Length),
@@ -141,7 +144,7 @@ namespace Video_Syncer.Controllers
                 receivedResult.CloseStatusDescription, CancellationToken.None);
         }
 
-        private async Task<string> ValidateAndHandleRequest(HttpContext context, dynamic unknownObject)
+        private async Task<string> ValidateAndHandleRequest(HttpContext context, WebSocket socket, dynamic unknownObject)
         {
             string response;
             RequestType requestType = (RequestType)unknownObject.requestType;
@@ -165,7 +168,7 @@ namespace Video_Syncer.Controllers
                 string roomId = unknownObject.roomId;
                 int? userId = unknownObject.userId;
                 Room room = TryGetRoom(roomId);
-                response = HandleRequest(context, requestType, userId, room, unknownObject).Result;
+                response = await HandleRequest(context, socket, requestType, userId, room, unknownObject).Result;
             }
             return response;
         }
@@ -219,7 +222,7 @@ namespace Video_Syncer.Controllers
             return Task.FromResult(true);
         }
 
-        private Task<string> HandleRequest(HttpContext context, RequestType requestType, int? userId,
+        private async Task<string> HandleRequest(HttpContext context, WebSocket socket, RequestType requestType, int? userId,
             Room room, dynamic unknownObject)
         {
             RequestResponse responseObject = new RequestResponse()
@@ -233,10 +236,20 @@ namespace Video_Syncer.Controllers
                 case RequestType.Join:
                     string name = unknownObject.name;
 
-                    JoinRoomPayload payload = JoinRoom(name, room, context);
+                    JoinRoomPayload payload = JoinRoom(socket, name, room, context);
 
                     responseObject.success = payload == null ? false : true;
                     responseObject.payload = payload;
+
+                    User newUser = room.UserManager.GetUserById(payload.userId);
+                    CancellationTokenSource source = new CancellationTokenSource();
+                    RoomDataUpdate update = new RoomDataUpdate()
+                    {
+                        updateType = UpdateType.UserListUpdate,
+                        payload = room.UserManager.GetUserList()
+                    };
+
+                    await room.ConnectionManager.SendUpdateToAllExcept(room.UserManager.GetUserList(), newUser, update, source.Token);
                     break;
 
                 case RequestType.ChangeVideoState:
@@ -267,10 +280,10 @@ namespace Video_Syncer.Controllers
                     break;
             }
 
-            return Task.FromResult(JsonConvert.SerializeObject(responseObject));
+            return JsonConvert.SerializeObject(responseObject);
         }
 
-        private JoinRoomPayload JoinRoom(string name, Room room, HttpContext context)
+        private JoinRoomPayload JoinRoom(WebSocket socket, string name, Room room, HttpContext context)
         {
             User user = room.Join(name, context.Session.Id);
 
@@ -278,6 +291,8 @@ namespace Video_Syncer.Controllers
             {
                 return null;
             }
+
+            user.socket = socket;
 
             JoinRoomPayload payload = new JoinRoomPayload()
             {
