@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Video_Syncer.Models.Users.Enum;
@@ -20,6 +21,8 @@ namespace Video_Syncer.Models
         public string sessionID { get; set; }
         [JsonIgnore]
         public long lastConnectionTime { get; set; }
+        [JsonIgnore]
+        public WebSocket socket { get; set; }
 
 
         public User(int Id, string Name, string sessionID)
