@@ -31,7 +31,7 @@ namespace Video_Syncer.Models.Network.Rooms.Impl
             }
         }
 
-        public async Task SendUpdateToAllExcept(List<User> userList, User user, IUpdate update, CancellationToken cancellationToken)
+        public async Task SendUpdateToAllExcept(User user, List<User> userList, IUpdate update, CancellationToken cancellationToken)
         {
             var dataToSend = new Byte[1024];
             var newString = JsonConvert.SerializeObject(update);
