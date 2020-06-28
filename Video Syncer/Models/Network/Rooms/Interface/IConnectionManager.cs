@@ -10,7 +10,7 @@ namespace Video_Syncer.Models.Network.Rooms.Interface
 {
     public interface IConnectionManager
     {
-        public Task SendUpdateToAll(List<User> userList, IUpdate update, CancellationToken cancellationToken);
-        public Task SendUpdateToAllExcept(User user, List<User> userList, IUpdate update, CancellationToken cancellationToken);
+        public Task SendUpdateToAll(Room room, IUpdate update, CancellationToken cancellationToken);
+        public Task SendUpdateToAllExcept(User user, Room room, IUpdate update, CancellationToken cancellationToken);
     }
 }

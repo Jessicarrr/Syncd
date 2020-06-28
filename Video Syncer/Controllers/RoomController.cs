@@ -303,7 +303,7 @@ namespace Video_Syncer.Controllers
                 payload = room.UserManager.GetUserList()
             };
 
-            await room.ConnectionManager.SendUpdateToAllExcept(user, room.UserManager.GetUserList(), update, source.Token);
+            await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, source.Token);
 
             return payload;
         }
