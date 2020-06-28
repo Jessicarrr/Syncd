@@ -136,9 +136,9 @@ namespace Video_Syncer.Controllers
             }
 
             logger.LogInformation("[VSY] Connection closed. Status code = " + receivedResult.CloseStatus 
-                + ", '" + receivedResult.CloseStatusDescription + "'");
+                + ", description = '" + receivedResult.CloseStatusDescription + "'");
             Trace.TraceInformation("[VSY] Connection closed. Status code = " + receivedResult.CloseStatus
-                + ", '" + receivedResult.CloseStatusDescription + "'");
+                + ", description = '" + receivedResult.CloseStatusDescription + "'");
 
             await socket.CloseAsync(receivedResult.CloseStatus.Value,
                 receivedResult.CloseStatusDescription, CancellationToken.None);
