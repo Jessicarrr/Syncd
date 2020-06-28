@@ -84,32 +84,3 @@ function sendVideoStateChangeRequest(videoState) {
     console.log("sending: " + messageToSend);
     socket.send(messageToSend);
 }
-
-function createJsonMessage(requestType, requestData) {
-    var newObj = new Object();
-    newObj.requestType = requestType;
-    newObj.requestData = requestData;
-
-    var jsonString = JSON.stringify(newObj);
-    return jsonString;
-}
-
-function createDataFor(requestType) {
-    var dataObj = new Object();
-
-    switch (requestType) {
-        case RequestType.Join:
-            dataObj.name = name;
-            dataObj.roomId = roomId;
-            return dataObj;
-        case RequestType.Play:
-            dataObj.userId = userId;
-            dataObj.roomId = roomId;
-            return dataObj;
-        default:
-            console.log("Unknown request type sent to connectionManager.createDataFor(requestType)");
-            break;
-    }
-
-    return null;
-}
