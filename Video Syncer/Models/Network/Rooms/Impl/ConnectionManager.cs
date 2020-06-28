@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Video_Syncer.logging;
 using Video_Syncer.Models.Network.Payload.StateUpdates;
 using Video_Syncer.Models.Network.Rooms.Interface;
+using Video_Syncer.Models.Network.StateUpdates.Impl;
 using Video_Syncer.Models.Network.StateUpdates.Interface;
 
 namespace Video_Syncer.Models.Network.Rooms.Impl
@@ -51,9 +52,20 @@ namespace Video_Syncer.Models.Network.Rooms.Impl
                 }
             }
 
-            foreach(User loopUser in disconnectedUsers)
+            if (disconnectedUsers.Count > 0)
             {
-                room.Leave(loopUser);
+                foreach (User loopUser in disconnectedUsers)
+                {
+                    room.Leave(loopUser);
+                }
+
+                RoomDataUpdate newUpdate = new RoomDataUpdate()
+                {
+                    updateType = StateUpdates.Enum.UpdateType.UserListUpdate,
+                    payload = room.UserManager.GetUserList()
+                };
+
+                await SendUpdateToAll(room, newUpdate, cancellationToken);
             }
         }
 
@@ -89,9 +101,21 @@ namespace Video_Syncer.Models.Network.Rooms.Impl
                     disconnectedUsers.Add(loopUser);
                 }
             }
-            foreach (User loopUser in disconnectedUsers)
+
+            if(disconnectedUsers.Count > 0)
             {
-                room.Leave(loopUser);
+                foreach (User loopUser in disconnectedUsers)
+                {
+                    room.Leave(loopUser);
+                }
+
+                RoomDataUpdate newUpdate = new RoomDataUpdate()
+                {
+                    updateType = StateUpdates.Enum.UpdateType.UserListUpdate,
+                    payload = room.UserManager.GetUserList()
+                };
+
+                await SendUpdateToAll(room, newUpdate, cancellationToken);
             }
         }
     }
