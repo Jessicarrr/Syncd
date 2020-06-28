@@ -58,6 +58,7 @@ function setupSocketEvents() {
     };
 
     socket.onmessage = function (event) {
+        console.log("message: " + event.data);
         var obj = JSON.parse(event.data);
 
         if (obj.hasOwnProperty(requestTypeProperty)) {
@@ -67,7 +68,7 @@ function setupSocketEvents() {
             handleServerUpdate(obj);
         }
         
-        console.log("message: " + event.data);
+        
 
         /*updateStateText();
         addMessageToLog("Server message: \"" + event.data + "\"");*/
@@ -118,7 +119,7 @@ function handleRequestResponse(obj) {
 function handleServerUpdate(obj) {
     switch (obj[updateTypeProperty]) {
         case UpdateType.UserListUpdate:
-            console.log("Handle user list update");
+            handleUserListUpdate(obj);
             break;
         case UpdateType.PlaylistUpdate:
             break;
@@ -166,8 +167,44 @@ function handleJoinRequestResponse(response) {
 
         var currentUserId = user["id"];
         var currentUserName = user["name"];
+        var currentUserState = user["videoState"];
+        var currentUserVideoTime = user["videoTimeSeconds"];
+        var currentUserRights = user["rights"];
+
         addUser(currentUserId, currentUserName);
+        updateUIForUser(currentUserId, stateIntToString(currentUserState),
+            formatVideoTime(currentUserVideoTime), currentUserRights);
     }
+}
+
+function handleUserListUpdate(obj) {
+    var userList = obj["payload"];
+
+    if (userList !== null) {
+        console.log("User list in user update is " + userList);
+        removeUsers();
+
+        for (var key in userList) {
+            var user = userList[key];
+
+            var currentUserId = user["id"];
+            var currentUserName = user["name"];
+            var currentUserState = user["videoState"];
+            var currentUserVideoTime = user["videoTimeSeconds"];
+            var currentUserRights = user["rights"];
+
+            addUser(currentUserId, currentUserName);
+            updateUIForUser(currentUserId, stateIntToString(currentUserState),
+                formatVideoTime(currentUserVideoTime), currentUserRights);
+
+            //console.log("Updated user" + currentUserName + "(" + currentUserId + ") with " + currentUserState + " and " + currentUserVideoTime);
+        }
+    }
+    else {
+        console.log("User list in user update was " + userList);
+    }
+
+    
 }
 
 function sendVideoStateChangeRequest(videoState) {
