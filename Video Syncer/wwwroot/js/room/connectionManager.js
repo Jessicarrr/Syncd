@@ -1,6 +1,9 @@
 ﻿var socket;
 var userId = -1;
 
+var requestTypeProperty = "requestType";
+var updateTypeProperty = "updateType";
+
 const RequestType = Object.freeze(
     {
         "Join": 1,
@@ -16,6 +19,13 @@ const RequestType = Object.freeze(
         "RemoveFromPlaylist": 11,
         "AddToPlaylist": 12,
         "TimeChange": 13
+    });
+
+const UpdateType = Object.freeze(
+    {
+        "UserListUpdate": 1,
+        "PlaylistUpdate": 2,
+        "VideoUpdate": 3
     });
 
 function setupNetworking() {
@@ -48,8 +58,17 @@ function setupSocketEvents() {
     };
 
     socket.onmessage = function (event) {
-        console.log("socket.onmessage");
+        var obj = JSON.parse(event.data);
+
+        if (obj.hasOwnProperty(requestTypeProperty)) {
+            handleRequestResponse(obj);
+        }
+        else if (obj.hasOwnProperty(updateTypeProperty)) {
+            handleServerUpdate(obj);
+        }
+        
         console.log("message: " + event.data);
+
         /*updateStateText();
         addMessageToLog("Server message: \"" + event.data + "\"");*/
 
@@ -62,7 +81,55 @@ function setupSocketEvents() {
     };
 }
 
+function handleRequestResponse(obj) {
+    switch (obj[requestTypeProperty]) {
+        case RequestType.Join:
+            handleJoinRequestResponse(obj);
+            break;
+        case RequestType.ChangeVideoState:
+            break;
+        case RequestType.Leave:
+            break;
+        case RequestType.ChangeName:
+            break;
+        case RequestType.Kick:
+            break;
+        case RequestType.Ban:
+            break;
+        case RequestType.MakeAdmin:
+            break;
+        case RequestType.RearrangePlaylist:
+            break;
+        case RequestType.PlayPlaylistVideo:
+            break;
+        case RequestType.PlayVideo:
+            break;
+        case RequestType.RemoveFromPlaylist:
+            break;
+        case RequestType.AddToPlaylist:
+            break;
+        case RequestType.TimeChange:
+            break;
+
+
+    }
+}
+
+function handleServerUpdate(obj) {
+    switch (obj[updateTypeProperty]) {
+        case UpdateType.UserListUpdate:
+            console.log("Handle user list update");
+            break;
+        case UpdateType.PlaylistUpdate:
+            break;
+        case UpdateType.VideoUpdate:
+            break;
+    }
+}
+
 function sendJoinRequest() {
+    var name = getUsername();
+
     var messageToSend = JSON.stringify(
         {
             requestType: RequestType.Join,
@@ -70,6 +137,37 @@ function sendJoinRequest() {
             roomId: roomId
         });
     send(messageToSend);
+}
+
+function handleJoinRequestResponse(response) {
+    var payload = response["payload"];
+
+    userId = payload["userId"];
+    myRights = payload["myRights"];
+    var newUserList = payload["userList"];
+
+    var newVideo = payload["currentYoutubeVideoId"]; // the YouTube video the room says we should play
+    var newVideoTitle = payload["currentYoutubeVideoTitle"]; // the video title
+    var newVideoState = payload["currentVideoState"]; // the state of the YouTube video. Paused/playing/ended/etc
+    var newVideoTimeSeconds = payload["videoTimeSeconds"]; // the time in seconds the video should be at.
+
+    console.log("Join Request Response - Received video " + newVideo + ", with state " + stateIntToString(newVideoState) + ", at time " + newVideoTimeSeconds);
+
+    // set up the YouTube player with the data from the server.
+    serverSetVideoAndState(newVideo, newVideoState, newVideoTimeSeconds);
+    setVideoTitle(newVideoTitle);
+
+    /*
+     * For loop to populate the user list with all users in the room
+     * (including yourself).
+     */
+    for (var key in newUserList) {
+        var user = newUserList[key];
+
+        var currentUserId = user["id"];
+        var currentUserName = user["name"];
+        addUser(currentUserId, currentUserName);
+    }
 }
 
 function sendVideoStateChangeRequest(videoState) {
@@ -84,10 +182,10 @@ function sendVideoStateChangeRequest(videoState) {
 }
 
 function send(str) {
-    console.log("sending: " + messageToSend);
+    console.log("sending: " + str);
     if (socket.readyState === socket.OPEN) {
 
-        socket.send(messageToSend);
+        socket.send(str);
     }
     else {
         console.log("Could not send because socket is not open");
