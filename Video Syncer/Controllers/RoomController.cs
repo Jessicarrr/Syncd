@@ -244,7 +244,11 @@ namespace Video_Syncer.Controllers
                     break;
 
                 case RequestType.ChangeVideoState:
-                    responseObject.payload = "change video state called and not implemented yet lol";
+                    VideoState newVideoState = (VideoState) unknownObject.state;
+                    VideoStatePayload videoStatePayload = await ChangeVideoState(socket, userId, room, context, newVideoState);
+
+                    responseObject.success = videoStatePayload == null ? false : true;
+                    responseObject.payload = videoStatePayload;
                     break;
 
                 case RequestType.Leave:
@@ -304,6 +308,33 @@ namespace Video_Syncer.Controllers
             };
 
             await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, source.Token);
+
+            return payload;
+        }
+
+        private async Task<VideoStatePayload> ChangeVideoState(WebSocket socket, int? userId, Room room, 
+            HttpContext context, VideoState state)
+        {
+            User user = room.UserManager.GetUserById((int)userId);
+            room.NewVideoState((int)userId, state);
+
+            VideoStatePayload payload = new VideoStatePayload()
+            {
+                currentVideoState = room.GetSuggestedVideoState(),
+                videoTimeSeconds = room.videoTimeSeconds,
+                currentYoutubeVideoId = room.currentYoutubeVideoId,
+                currentYoutubeVideoTitle = room.currentYoutubeVideoTitle
+            };
+
+            RoomDataUpdate update = new RoomDataUpdate()
+            {
+                updateType = UpdateType.VideoUpdate,
+                payload = payload
+            };
+
+            CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+
+            await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, cancelTokenSource.Token);
 
             return payload;
         }
