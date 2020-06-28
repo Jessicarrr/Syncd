@@ -69,8 +69,7 @@ function sendJoinRequest() {
             name: name,
             roomId: roomId
         });
-    console.log("Sending: " + messageToSend);
-    socket.send(messageToSend);
+    send(messageToSend);
 }
 
 function sendVideoStateChangeRequest(videoState) {
@@ -81,6 +80,16 @@ function sendVideoStateChangeRequest(videoState) {
             userId: userId,
             roomId: roomId
         });
+    send(messageToSend);
+}
+
+function send(str) {
     console.log("sending: " + messageToSend);
-    socket.send(messageToSend);
+    if (socket.readyState === socket.OPEN) {
+
+        socket.send(messageToSend);
+    }
+    else {
+        console.log("Could not send because socket is not open");
+    }
 }
