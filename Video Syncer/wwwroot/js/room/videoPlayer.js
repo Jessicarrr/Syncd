@@ -63,14 +63,14 @@ function toggleVideoPlaying() {
     // if the video is playing somehow
     if (stateNumber == 1 || stateNumber == 3) {
         //sendPauseRequest();
-        sendVideoStateChangeRequest(1); // state 1 is playing
+        sendVideoStateChangeRequest(2); // state 1 is playing
         console.log("toggleVideoPlaying - Sending request to pause");
         pauseVideo();
     }
     // if the video is paused somehow
     else if (stateNumber == 2 || stateNumber == -1 || stateNumber == 0 || stateNumber == 5) {
         //sendPlayRequest();
-        sendVideoStateChangeRequest(2); // state 2 is paused
+        sendVideoStateChangeRequest(1); // state 2 is paused
         console.log("toggleVideoPlaying - Sending request to play");
         unpauseVideo();
     }
@@ -146,7 +146,7 @@ function onPlayerStateChange(event) {
             break;
         case 3: //buffering
             sendVideoStateChangeRequest(stateNumber);
-            console.log("onPlayerStateChange - Sending request to buffer");
+            //console.log("onPlayerStateChange - Sending request to buffer");
             break;
         case 5: //"video cued"
 

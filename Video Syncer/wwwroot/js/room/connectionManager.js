@@ -88,6 +88,7 @@ function handleRequestResponse(obj) {
             handleJoinRequestResponse(obj);
             break;
         case RequestType.ChangeVideoState:
+            handleVideoStateChange(obj);
             break;
         case RequestType.Leave:
             break;
@@ -124,6 +125,7 @@ function handleServerUpdate(obj) {
         case UpdateType.PlaylistUpdate:
             break;
         case UpdateType.VideoUpdate:
+            handleVideoStateChange(obj);
             break;
     }
 }
@@ -216,6 +218,22 @@ function sendVideoStateChangeRequest(videoState) {
             roomId: roomId
         });
     send(messageToSend);
+}
+
+function handleVideoStateChange(obj) {
+    var videoStateData = obj["payload"];
+
+    if (videoStateData == null) {
+        return;
+    }
+
+    var newVideoState = videoStateData["currentVideoState"];
+    var newTimeSeconds = videoStateData["videoTimeSeconds"];
+    var newVideoId = videoStateData["currentYoutubeVideoId"];
+    var newVideoTitle = videoStateData["currentYoutubeVideoTitle"];
+
+    serverSetVideoAndState(newVideoId, newVideoState, newTimeSeconds);
+    setVideoTitle(newVideoTitle);
 }
 
 function send(str) {

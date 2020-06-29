@@ -331,27 +331,32 @@ namespace Video_Syncer.Controllers
             HttpContext context, VideoState state)
         {
             User user = room.UserManager.GetUserById((int)userId);
-            room.NewVideoState((int)userId, state);
+            bool roomStateChanged = room.NewVideoState((int)userId, state);
 
-            VideoStatePayload payload = new VideoStatePayload()
+            if(roomStateChanged)
             {
-                currentVideoState = room.GetSuggestedVideoState(),
-                videoTimeSeconds = room.videoTimeSeconds,
-                currentYoutubeVideoId = room.currentYoutubeVideoId,
-                currentYoutubeVideoTitle = room.currentYoutubeVideoTitle
-            };
+                VideoStatePayload payload = new VideoStatePayload()
+                {
+                    currentVideoState = room.GetSuggestedVideoState(),
+                    videoTimeSeconds = room.videoTimeSeconds,
+                    currentYoutubeVideoId = room.currentYoutubeVideoId,
+                    currentYoutubeVideoTitle = room.currentYoutubeVideoTitle
+                };
 
-            RoomDataUpdate update = new RoomDataUpdate()
-            {
-                updateType = UpdateType.VideoUpdate,
-                payload = payload
-            };
+                RoomDataUpdate update = new RoomDataUpdate()
+                {
+                    updateType = UpdateType.VideoUpdate,
+                    payload = payload
+                };
 
-            CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+                CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
 
-            await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, cancelTokenSource.Token);
+                await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, cancelTokenSource.Token);
 
-            return payload;
+                return payload;
+
+            }
+            return null;
         }
     }
 }

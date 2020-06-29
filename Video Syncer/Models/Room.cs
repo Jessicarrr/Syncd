@@ -155,12 +155,14 @@ namespace Video_Syncer.Models
                 return UserManager.GetUserList().First().videoState;
             }
         }
-
-        public void NewVideoState(int userId, VideoState newState)
+        public bool NewVideoState(int userId, VideoState newState)
         {
+            bool returnVal = false;
+
             if (newState == VideoState.Paused)
             {
                 UserManager.SetStateForAll(VideoState.Paused);
+                returnVal = true;
             }
             else if (newState == VideoState.Playing)
             {
@@ -169,6 +171,7 @@ namespace Video_Syncer.Models
                     videoTimeSeconds = 0;
                 }
                 UserManager.SetStateForAll(newState);
+                returnVal = true;
                 
             }
             else if(newState == VideoState.Ended)
@@ -182,12 +185,17 @@ namespace Video_Syncer.Models
                     //TODO: Playlist support, play next video.
                     PlaylistObject obj = PlaylistManager.GoToNextVideo();
                     NewVideo(obj);
+                    returnVal = true;
+                }
+                else
+                {
+                    returnVal = false;
                 }
             }
             UpdateVideoStatistics(videoTimeSeconds, currentYoutubeVideoId);
 
             UserManager.UpdateLastConnectionTime(userId);
-            
+
             /*
             else if (newState == VideoState.Unstarted)
             {
@@ -197,6 +205,7 @@ namespace Video_Syncer.Models
             {
                 currentVideoState = VideoState.Paused;
             }*/
+            return returnVal;
         }
 
 
