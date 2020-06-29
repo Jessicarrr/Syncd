@@ -78,7 +78,7 @@ namespace Video_Syncer.Models
             this.ConnectionManager = connectionManager;
             logger = LoggingHandler.CreateLogger<Room>();
 
-            //StartPeriodicTasks();
+            StartPeriodicTasks();
         }
 
         private void StartPeriodicTasks()
@@ -107,9 +107,15 @@ namespace Video_Syncer.Models
                     break;
                 }
 
-                new Task(() => UserManager.ForceLeaveAllTimedOutUsers()).Start();
+                //new Task(() => UserManager.ForceLeaveAllTimedOutUsers()).Start();
+                new Task(() => PeriodicUpdateVideoStatistics()).Start();
                 await Task.Delay(periodicTaskMilliseconds);
             }
+        }
+
+        public void PeriodicUpdateVideoStatistics()
+        {
+            UpdateVideoStatistics();
         }
 
         public void NewVideo(string youtubeId)
@@ -192,7 +198,7 @@ namespace Video_Syncer.Models
                     returnVal = false;
                 }
             }
-            UpdateVideoStatistics(videoTimeSeconds, currentYoutubeVideoId);
+            UpdateVideoStatistics();
 
             UserManager.UpdateLastConnectionTime(userId);
 
@@ -227,7 +233,7 @@ namespace Video_Syncer.Models
             lastCheck = DateTimeOffset.Now.ToUnixTimeMilliseconds();
         }
 
-        public void UpdateVideoStatistics(double seconds, string youtubeId)
+        public void UpdateVideoStatistics()
         {
             if (GetSuggestedVideoState() == VideoState.Playing)
             {
