@@ -118,7 +118,7 @@ namespace Video_Syncer.Controllers
 
             while(!receivedResult.CloseStatus.HasValue)
             {
-                string receivedText = System.Text.Encoding.UTF8.GetString(receivedBytes).Replace("\u0000", "");
+                string receivedText = System.Text.Encoding.UTF8.GetString(receivedBytes, 0, receivedResult.Count);
 
                 logger.LogInformation("[VSY] receivedText = " + receivedText);
                 Trace.TraceInformation("[VSY] receivedText = " + receivedText);
