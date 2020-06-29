@@ -123,16 +123,31 @@ namespace Video_Syncer.Controllers
                 logger.LogInformation("[VSY] receivedText = " + receivedText);
                 Trace.TraceInformation("[VSY] receivedText = " + receivedText);
 
-                dynamic unknownObject = JObject.Parse(receivedText);
+                try
+                {
+                    dynamic unknownObject = JObject.Parse(receivedText);
 
-                string response = await ValidateAndHandleRequest(context, socket, unknownObject);
+                    string response = await ValidateAndHandleRequest(context, socket, unknownObject);
 
-                sentBytes = System.Text.Encoding.UTF8.GetBytes(response);
-                await socket.SendAsync(new ArraySegment<byte>(sentBytes, 0, response.Length),
-                    WebSocketMessageType.Text, receivedResult.EndOfMessage, CancellationToken.None);
+                    sentBytes = System.Text.Encoding.UTF8.GetBytes(response);
+                    await socket.SendAsync(new ArraySegment<byte>(sentBytes, 0, response.Length),
+                        WebSocketMessageType.Text, receivedResult.EndOfMessage, CancellationToken.None);
 
-                receivedResult = await socket.ReceiveAsync(
-                    new ArraySegment<byte>(receivedBytes), cancellationToken);
+                    receivedResult = await socket.ReceiveAsync(
+                        new ArraySegment<byte>(receivedBytes), cancellationToken);
+                }
+                catch(JsonReaderException e)
+                {
+                    logger.LogError("[VSY] Error reading json in RoomController.HandleWebSocketConnection. error = " + e.Message + "\n" + e.StackTrace);
+                    Trace.TraceError("[VSY] Error reading json in RoomController.HandleWebSocketConnection. error = " + e.Message + "\n" + e.StackTrace);
+                    // TODO : send an error message back to the user
+
+                    // Start listening for a new message
+                    receivedResult = await socket.ReceiveAsync(
+                        new ArraySegment<byte>(receivedBytes), cancellationToken);
+                }
+
+                
             }
 
             logger.LogInformation("[VSY] Connection closed. Status code = " + receivedResult.CloseStatus 
