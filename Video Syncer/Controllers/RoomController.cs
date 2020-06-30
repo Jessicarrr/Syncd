@@ -267,6 +267,10 @@ namespace Video_Syncer.Controllers
                     break;
 
                 case RequestType.Leave:
+                    await LeaveRoom(socket, userId, room);
+
+                    responseObject.success = true;
+                    responseObject.payload = null;
                     break;
                 case RequestType.ChangeName:
                     break;
@@ -325,6 +329,22 @@ namespace Video_Syncer.Controllers
             await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, source.Token);
 
             return payload;
+        }
+
+        private async Task LeaveRoom(WebSocket socket, int? userId, Room room)
+        {
+            await socket.CloseAsync(WebSocketCloseStatus.NormalClosure,
+                        "The user left the room, so the socket was disconnected", CancellationToken.None);
+            room.Leave((int)userId);
+
+            CancellationTokenSource source = new CancellationTokenSource();
+            RoomDataUpdate update = new RoomDataUpdate()
+            {
+                updateType = UpdateType.UserListUpdate,
+                payload = room.UserManager.GetUserList()
+            };
+
+            await room.ConnectionManager.SendUpdateToAll(room, update, source.Token);
         }
 
         private async Task<VideoStatePayload> ChangeVideoState(WebSocket socket, int? userId, Room room, 

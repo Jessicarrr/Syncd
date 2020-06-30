@@ -133,12 +133,11 @@ function handleServerUpdate(obj) {
 function sendJoinRequest() {
     var name = getUsername();
 
-    var messageToSend = JSON.stringify(
-        {
-            requestType: RequestType.Join,
-            name: name,
-            roomId: roomId
-        });
+    var messageToSend = JSON.stringify({
+        requestType: RequestType.Join,
+        name: name,
+        roomId: roomId
+    });
     send(messageToSend);
 }
 
@@ -209,14 +208,22 @@ function handleUserListUpdate(obj) {
     
 }
 
+function sendLeaveRequest() {
+    var messageToSend = JSON.stringify({
+        requestType: RequestType.Leave,
+        userId: userId,
+        roomId: roomId
+    });
+    send(messageToSend);
+}
+
 function sendVideoStateChangeRequest(videoState) {
-    var messageToSend = JSON.stringify(
-        {
-            requestType: RequestType.ChangeVideoState,
-            state: videoState,
-            userId: userId,
-            roomId: roomId
-        });
+    var messageToSend = JSON.stringify({
+        requestType: RequestType.ChangeVideoState,
+        state: videoState,
+        userId: userId,
+        roomId: roomId
+    });
     send(messageToSend);
 }
 

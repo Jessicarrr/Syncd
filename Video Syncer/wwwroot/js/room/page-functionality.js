@@ -1,4 +1,10 @@
-﻿function setupHidePlayerCheckbox() {
+﻿window.onbeforeunload = function (event) {
+    if (userId != -1) {
+        sendLeaveRequest();
+    }
+}
+
+function setupHidePlayerCheckbox() {
     var checkbox = document.getElementById("hide-player-checkbox");
 
     checkbox.addEventListener('change', function () {
