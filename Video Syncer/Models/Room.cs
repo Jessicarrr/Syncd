@@ -36,7 +36,7 @@ namespace Video_Syncer.Models
 
         private long lastCheck = 0;
 
-        public int periodicTaskMilliseconds = 6000;
+        public int periodicTaskMilliseconds = 2000;
         private CancellationTokenSource source;
 
         public long roomCreationTime;
