@@ -273,6 +273,9 @@ namespace Video_Syncer.Controllers
                     responseObject.payload = null;
                     break;
                 case RequestType.ChangeName:
+                    string newName = unknownObject.newName;
+                    responseObject.payload = await ChangeName(userId, room, newName);
+                    responseObject.success = responseObject.payload == null ? false : true;
                     break;
                 case RequestType.Kick:
                     break;
@@ -377,6 +380,27 @@ namespace Video_Syncer.Controllers
 
             }
             return null;
+        }
+
+        private async Task<UserListPayload> ChangeName(int? userId, Room room, string newName)
+        {
+            User user = room.UserManager.GetUserById((int)userId);
+            room.UserManager.ChangeName((int) userId, newName);
+
+            RoomDataUpdate update = new RoomDataUpdate()
+            {
+                updateType = UpdateType.UserListUpdate,
+                payload = room.UserManager.GetUserList()
+            };
+
+            UserListPayload payload = new UserListPayload()
+            {
+                userList = room.UserManager.GetUserList()
+            };
+            CancellationTokenSource source = new CancellationTokenSource();
+
+            await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, source.Token);
+            return payload;
         }
     }
 }

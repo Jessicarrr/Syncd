@@ -91,8 +91,10 @@ function handleRequestResponse(obj) {
             handleVideoStateChange(obj);
             break;
         case RequestType.Leave:
+            // nothing is required
             break;
         case RequestType.ChangeName:
+            handleUserListRequestResponse(obj);
             break;
         case RequestType.Kick:
             break;
@@ -178,6 +180,35 @@ function handleJoinRequestResponse(response) {
     }
 }
 
+function handleUserListRequestResponse(obj) {
+    var payload = obj["payload"];
+    var userList = payload["userList"];
+
+    if (userList !== null) {
+        console.log("User list in user update is " + userList);
+        removeUsers();
+
+        for (var key in userList) {
+            var user = userList[key];
+
+            var currentUserId = user["id"];
+            var currentUserName = user["name"];
+            var currentUserState = user["videoState"];
+            var currentUserVideoTime = user["videoTimeSeconds"];
+            var currentUserRights = user["rights"];
+
+            addUser(currentUserId, currentUserName);
+            updateUIForUser(currentUserId, stateIntToString(currentUserState),
+                formatVideoTime(currentUserVideoTime), currentUserRights);
+
+            //console.log("Updated user" + currentUserName + "(" + currentUserId + ") with " + currentUserState + " and " + currentUserVideoTime);
+        }
+    }
+    else {
+        console.log("User list in user update was " + userList);
+    }
+}
+
 function handleUserListUpdate(obj) {
     var userList = obj["payload"];
 
@@ -241,6 +272,16 @@ function handleVideoStateChange(obj) {
 
     serverSetVideoAndState(newVideoId, newVideoState, newTimeSeconds);
     setVideoTitle(newVideoTitle);
+}
+
+function sendChangeNameRequest(newName) {
+    messageToSend = JSON.stringify({
+        requestType: RequestType.ChangeName,
+        userId: userId,
+        roomId: roomId,
+        newName: newName
+    });
+    send(messageToSend);
 }
 
 function send(str) {
