@@ -150,6 +150,7 @@ function handleJoinRequestResponse(response) {
     userId = payload["userId"];
     myRights = payload["myRights"];
     var newUserList = payload["userList"];
+    var playlist = payload["playlist"];
 
     var newVideo = payload["currentYoutubeVideoId"]; // the YouTube video the room says we should play
     var newVideoTitle = payload["currentYoutubeVideoTitle"]; // the video title
@@ -161,6 +162,13 @@ function handleJoinRequestResponse(response) {
     // set up the YouTube player with the data from the server.
     serverSetVideoAndState(newVideo, newVideoState, newVideoTimeSeconds);
     setVideoTitle(newVideoTitle);
+
+    if (playlist != null) {
+        compareAndRemovePlaylistItems(playlist);
+        compareAndAddPlaylistItems(playlist);
+        updateTitlesAndAuthors(playlist);
+        fixPlaylistArrangement(playlist);
+    }
 
     /*
      * For loop to populate the user list with all users in the room

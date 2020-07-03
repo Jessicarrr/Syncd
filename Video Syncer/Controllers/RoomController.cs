@@ -332,6 +332,7 @@ namespace Video_Syncer.Controllers
                 userId = user.id,
                 myRights = user.rights,
                 userList = room.UserManager.GetUserList(),
+                playlist = room.PlaylistManager.GetPlaylist(),
                 currentYoutubeVideoId = room.currentYoutubeVideoId,
                 currentYoutubeVideoTitle = room.currentYoutubeVideoTitle,
                 currentVideoState = room.UserManager.GetStateForUser(user.id),
