@@ -92,7 +92,7 @@ function adjustTime(percentage) {
     var totalVideoLength = getVideoTotalDuration();
 
     var newVideoTime = parseFloat(((totalVideoLength * percentage) / 100).toFixed(2));
-    sendTimeUpdate(newVideoTime);
+    sendVideoTimeChangeRequest(newVideoTime);
     player.seekTo(newVideoTime);
 }
 

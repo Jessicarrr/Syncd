@@ -113,9 +113,8 @@ function handleRequestResponse(obj) {
         case RequestType.AddToPlaylist:
             break;
         case RequestType.TimeChange:
+            handleVideoStateChange(obj);
             break;
-
-
     }
 }
 
@@ -254,6 +253,16 @@ function sendVideoStateChangeRequest(videoState) {
         state: videoState,
         userId: userId,
         roomId: roomId
+    });
+    send(messageToSend);
+}
+
+function sendVideoTimeChangeRequest(newTime) {
+    var messageToSend = JSON.stringify({
+        requestType: RequestType.TimeChange,
+        roomId: roomId,
+        userId: userId,
+        videoTimeSeconds: newTime
     });
     send(messageToSend);
 }

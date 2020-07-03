@@ -294,6 +294,11 @@ namespace Video_Syncer.Controllers
                 case RequestType.AddToPlaylist:
                     break;
                 case RequestType.TimeChange:
+                    double seconds = unknownObject.videoTimeSeconds;
+                    VideoStatePayload timeChangePayload = await ChangeVideoTime(userId, room, seconds);
+
+                    responseObject.success = responseObject.payload == null ? false : true;
+                    responseObject.payload = timeChangePayload;
                     break;
             }
 
@@ -380,6 +385,31 @@ namespace Video_Syncer.Controllers
 
             }
             return null;
+        }
+
+        private async Task<VideoStatePayload> ChangeVideoTime(int? userId, Room room, double seconds)
+        {
+            User user = room.UserManager.GetUserById((int)userId);
+            room.TimeUpdate(seconds);
+
+            VideoStatePayload payload = new VideoStatePayload()
+            {
+                currentVideoState = room.GetSuggestedVideoState(),
+                videoTimeSeconds = room.videoTimeSeconds,
+                currentYoutubeVideoId = room.currentYoutubeVideoId,
+                currentYoutubeVideoTitle = room.currentYoutubeVideoTitle
+            };
+
+            RoomDataUpdate update = new RoomDataUpdate()
+            {
+                updateType = UpdateType.VideoUpdate,
+                payload = payload
+            };
+
+            CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+
+            await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, cancelTokenSource.Token);
+            return payload;
         }
 
         private async Task<UserListPayload> ChangeName(int? userId, Room room, string newName)
