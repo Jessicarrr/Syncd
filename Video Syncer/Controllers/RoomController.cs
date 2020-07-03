@@ -308,7 +308,7 @@ namespace Video_Syncer.Controllers
                     double seconds = unknownObject.videoTimeSeconds;
                     VideoStatePayload timeChangePayload = await ChangeVideoTime(userId, room, seconds);
 
-                    responseObject.success = responseObject.payload == null ? false : true;
+                    responseObject.success = timeChangePayload == null ? false : true;
                     responseObject.payload = timeChangePayload;
                     break;
             }
