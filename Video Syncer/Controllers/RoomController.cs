@@ -300,7 +300,7 @@ namespace Video_Syncer.Controllers
                     string videoId = unknownObject.youtubeVideoId;
                     PlaylistStatePayload addToPlaylistPayload = await AddToPlaylist(userId, room, videoId);
 
-                    responseObject.success = responseObject.payload == null ? false : true;
+                    responseObject.success = addToPlaylistPayload == null ? false : true;
                     responseObject.payload = addToPlaylistPayload;
 
                     break;
