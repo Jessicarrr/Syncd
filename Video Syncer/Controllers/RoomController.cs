@@ -217,6 +217,11 @@ namespace Video_Syncer.Controllers
                     return Task.FromResult(false);
                 }
 
+                if(room.UserManager.GetUserById((int) userId) == null)
+                {
+                    return Task.FromResult(false);
+                }
+
                 if (!room.UserManager.IsUserSessionIDMatching((int) userId, currentSessionId))
                 {
                     logger.LogWarning("[VSY] Session ID of request did not match in room \"" + room.id 
@@ -292,6 +297,12 @@ namespace Video_Syncer.Controllers
                 case RequestType.RemoveFromPlaylist:
                     break;
                 case RequestType.AddToPlaylist:
+                    string videoId = unknownObject.youtubeVideoId;
+                    PlaylistStatePayload addToPlaylistPayload = await AddToPlaylist(userId, room, videoId);
+
+                    responseObject.success = responseObject.payload == null ? false : true;
+                    responseObject.payload = addToPlaylistPayload;
+
                     break;
                 case RequestType.TimeChange:
                     double seconds = unknownObject.videoTimeSeconds;
@@ -409,6 +420,29 @@ namespace Video_Syncer.Controllers
             CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
 
             await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, cancelTokenSource.Token);
+            return payload;
+        }
+
+        private async Task<PlaylistStatePayload> AddToPlaylist(int? userId, Room room, string videoId)
+        {
+            User user = room.UserManager.GetUserById((int)userId);
+            room.PlaylistManager.AddToPlaylist(videoId);
+
+            PlaylistStatePayload payload = new PlaylistStatePayload()
+            {
+                playlist = room.PlaylistManager.GetPlaylist()
+            };
+
+            RoomDataUpdate update = new RoomDataUpdate()
+            {
+                updateType = UpdateType.PlaylistUpdate,
+                payload = payload
+            };
+
+            CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+
+            await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, cancelTokenSource.Token);
+
             return payload;
         }
 

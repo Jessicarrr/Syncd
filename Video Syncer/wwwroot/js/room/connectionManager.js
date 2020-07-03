@@ -111,6 +111,7 @@ function handleRequestResponse(obj) {
         case RequestType.RemoveFromPlaylist:
             break;
         case RequestType.AddToPlaylist:
+            handlePlaylistUpdate(obj);
             break;
         case RequestType.TimeChange:
             handleVideoStateChange(obj);
@@ -124,6 +125,7 @@ function handleServerUpdate(obj) {
             handleUserListUpdate(obj);
             break;
         case UpdateType.PlaylistUpdate:
+            handlePlaylistUpdate(obj);
             break;
         case UpdateType.VideoUpdate:
             handleVideoStateChange(obj);
@@ -291,6 +293,31 @@ function sendChangeNameRequest(newName) {
         newName: newName
     });
     send(messageToSend);
+}
+
+function sendAddToPlaylistRequest(videoIdParam) {
+    messageToSend = JSON.stringify({
+        requestType: RequestType.AddToPlaylist,
+        userId: userId,
+        roomId: roomId,
+        youtubeVideoId: videoIdParam
+    });
+    send(messageToSend);
+}
+
+function handlePlaylistUpdate(obj) {
+    var payload = obj["payload"];
+    var playlist = payload["playlist"];
+
+    if (playlist != null) {
+        compareAndRemovePlaylistItems(playlist);
+        compareAndAddPlaylistItems(playlist);
+        updateTitlesAndAuthors(playlist);
+        fixPlaylistArrangement(playlist);
+    }
+    else {
+        console.log("playlist is null");
+    }
 }
 
 function send(str) {
