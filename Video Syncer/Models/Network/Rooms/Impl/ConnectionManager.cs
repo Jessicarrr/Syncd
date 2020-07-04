@@ -40,7 +40,7 @@ namespace Video_Syncer.Models.Network.Rooms.Impl
 
                 try
                 {
-                    await loopUser.socket.SendAsync(new ArraySegment<byte>(dataToSend, 0, newString.Length),
+                    await loopUser.socket.SendAsync(dataToSend,
                         WebSocketMessageType.Text, true, CancellationToken.None);
                 }
                 catch(WebSocketException e)
@@ -90,7 +90,7 @@ namespace Video_Syncer.Models.Network.Rooms.Impl
                 
                 try
                 {
-                    await loopUser.socket.SendAsync(new ArraySegment<byte>(dataToSend, 0, newString.Length),
+                    await loopUser.socket.SendAsync(dataToSend,
                     WebSocketMessageType.Text, true, CancellationToken.None);
                 }
                 catch(WebSocketException e)

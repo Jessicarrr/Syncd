@@ -293,6 +293,12 @@ namespace Video_Syncer.Controllers
                 case RequestType.RearrangePlaylist:
                     break;
                 case RequestType.PlayPlaylistVideo:
+                    string videoToPlay = unknownObject.playlistItemId;
+                    VideoStatePayload playPlaylistVideoPayload = await PlayPlaylistVideo(userId, room, videoToPlay);
+
+                    responseObject.success = playPlaylistVideoPayload == null ? false : true;
+                    responseObject.payload = playPlaylistVideoPayload;
+
                     break;
                 case RequestType.PlayVideo:
                     break;
@@ -476,6 +482,32 @@ namespace Video_Syncer.Controllers
 
             return payload;
         }
+
+        private async Task<VideoStatePayload> PlayPlaylistVideo(int? userId, Room room, string videoToPlay)
+        {
+            User user = room.UserManager.GetUserById((int)userId);
+            room.PlayPlaylistVideo(videoToPlay);
+
+            VideoStatePayload payload = new VideoStatePayload()
+            {
+                currentVideoState = room.GetSuggestedVideoState(),
+                videoTimeSeconds = room.videoTimeSeconds,
+                currentYoutubeVideoId = room.currentYoutubeVideoId,
+                currentYoutubeVideoTitle = room.currentYoutubeVideoTitle
+            };
+
+            RoomDataUpdate update = new RoomDataUpdate()
+            {
+                updateType = UpdateType.VideoUpdate,
+                payload = payload
+            };
+            CancellationTokenSource source = new CancellationTokenSource();
+
+            await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, source.Token);
+
+            return payload;
+        }
+
         private async Task<UserListPayload> ChangeName(int? userId, Room room, string newName)
         {
             User user = room.UserManager.GetUserById((int)userId);

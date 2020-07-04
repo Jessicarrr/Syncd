@@ -105,6 +105,7 @@ function handleRequestResponse(obj) {
         case RequestType.RearrangePlaylist:
             break;
         case RequestType.PlayPlaylistVideo:
+            handleVideoStateChange(obj);
             break;
         case RequestType.PlayVideo:
             break;
@@ -338,6 +339,18 @@ function sendDeletePlaylistItemRequest(playlistItemId) {
     });
     send(messageToSend);
 }
+
+function sendPlayPlaylistItemRequest(playlistItemId) {
+    messageToSend = JSON.stringify({
+        requestType: RequestType.PlayPlaylistVideo,
+        roomId: roomId,
+        userId: userId,
+        playlistItemId: playlistItemId
+    });
+    send(messageToSend);
+
+}
+
 
 function send(str) {
     console.log("sending: " + str);
