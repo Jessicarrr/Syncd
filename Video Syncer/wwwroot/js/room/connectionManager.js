@@ -109,6 +109,7 @@ function handleRequestResponse(obj) {
         case RequestType.PlayVideo:
             break;
         case RequestType.RemoveFromPlaylist:
+            handlePlaylistUpdate(obj);
             break;
         case RequestType.AddToPlaylist:
             handlePlaylistUpdate(obj);
@@ -326,6 +327,16 @@ function handlePlaylistUpdate(obj) {
     else {
         console.log("playlist is null");
     }
+}
+
+function sendDeletePlaylistItemRequest(playlistItemId) {
+    messageToSend = JSON.stringify({
+        requestType: RequestType.RemoveFromPlaylist,
+        roomId: roomId,
+        userId: userId,
+        playlistItemId: playlistItemId
+    });
+    send(messageToSend);
 }
 
 function send(str) {

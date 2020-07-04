@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -130,7 +131,8 @@ namespace Video_Syncer.Controllers
                     string response = await ValidateAndHandleRequest(context, socket, unknownObject);
 
                     sentBytes = System.Text.Encoding.UTF8.GetBytes(response);
-                    await socket.SendAsync(new ArraySegment<byte>(sentBytes, 0, response.Length),
+
+                    await socket.SendAsync(sentBytes,
                         WebSocketMessageType.Text, receivedResult.EndOfMessage, CancellationToken.None);
 
                     receivedResult = await socket.ReceiveAsync(
@@ -295,6 +297,11 @@ namespace Video_Syncer.Controllers
                 case RequestType.PlayVideo:
                     break;
                 case RequestType.RemoveFromPlaylist:
+                    string playlistItemId = unknownObject.playlistItemId;
+                    PlaylistStatePayload removeFromPlaylistPayload = await RemoveFromPlaylist(userId, room, playlistItemId);
+
+                    responseObject.success = removeFromPlaylistPayload == null ? false : true;
+                    responseObject.payload = removeFromPlaylistPayload;
                     break;
                 case RequestType.AddToPlaylist:
                     string videoId = unknownObject.youtubeVideoId;
@@ -447,6 +454,28 @@ namespace Video_Syncer.Controllers
             return payload;
         }
 
+        private async Task<PlaylistStatePayload> RemoveFromPlaylist(int? userId, Room room, string playlistItemId)
+        {
+            User user = room.UserManager.GetUserById((int)userId);
+            room.PlaylistManager.RemoveFromPlaylist(playlistItemId);
+
+            PlaylistStatePayload payload = new PlaylistStatePayload()
+            {
+                playlist = room.PlaylistManager.GetPlaylist()
+            };
+
+            RoomDataUpdate update = new RoomDataUpdate()
+            {
+                updateType = UpdateType.PlaylistUpdate,
+                payload = payload
+            };
+
+            CancellationTokenSource source = new CancellationTokenSource();
+
+            await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, source.Token);
+
+            return payload;
+        }
         private async Task<UserListPayload> ChangeName(int? userId, Room room, string newName)
         {
             User user = room.UserManager.GetUserById((int)userId);
