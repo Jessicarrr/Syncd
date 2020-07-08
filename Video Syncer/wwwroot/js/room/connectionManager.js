@@ -25,7 +25,8 @@ const UpdateType = Object.freeze(
     {
         "UserListUpdate": 1,
         "PlaylistUpdate": 2,
-        "VideoUpdate": 3
+        "VideoUpdate": 3,
+        "RedirectToPage": 4
     });
 
 function setupNetworking() {
@@ -131,6 +132,10 @@ function handleServerUpdate(obj) {
             break;
         case UpdateType.VideoUpdate:
             handleVideoStateChange(obj);
+            break;
+        case UpdateType.RedirectToPage:
+            var page = obj["payload"];
+            window.location.replace(page);
             break;
     }
 }
@@ -350,7 +355,20 @@ function sendPlayPlaylistItemRequest(playlistItemId) {
     send(messageToSend);
 
 }
+function sendKickRequest(recipientId) {
+    if (myRights == 0) {
+        return;
+    }
 
+    messageToSend = JSON.stringify({
+        requestType: RequestType.Kick,
+        userId: userId,
+        roomId: roomId,
+        userIdToKick: recipientId
+    });
+
+    send(messageToSend);
+}
 
 function send(str) {
     console.log("sending: " + str);

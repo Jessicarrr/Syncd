@@ -241,6 +241,17 @@ namespace Video_Syncer.Controllers
                 return Task.FromResult(false);
             }
 
+            if(requestType == RequestType.Kick || requestType == RequestType.MakeAdmin || requestType == RequestType.Ban)
+            {
+                int userId = unknownObject.userId;
+                User requestingUser = room.UserManager.GetUserById(userId);
+
+                if(requestingUser.rights != Models.Users.Enum.UserRights.Admin)
+                {
+                    return Task.FromResult(false);
+                }
+            }
+
             return Task.FromResult(true);
         }
 
@@ -285,6 +296,11 @@ namespace Video_Syncer.Controllers
                     responseObject.success = responseObject.payload == null ? false : true;
                     break;
                 case RequestType.Kick:
+                    int userToKick = unknownObject.userIdToKick;
+                    bool kicked = await KickUser(userId, userToKick, room);
+                    responseObject.success = kicked;
+                    responseObject.payload = null;
+
                     break;
                 case RequestType.Ban:
                     break;
@@ -508,6 +524,41 @@ namespace Video_Syncer.Controllers
             return payload;
         }
 
+        private async Task<bool> KickUser(int? userId, int? userToKickId, Room room)
+        {
+            if(userToKickId == null)
+            {
+                return false;
+            }
+
+            User user = room.UserManager.GetUserById((int)userId);
+            User userToKick = room.UserManager.GetUserById((int)userToKickId);
+
+            bool kicked = room.UserManager.Kick(user, userToKick);
+
+            if(kicked)
+            {
+                RoomDataUpdate update = new RoomDataUpdate()
+                {
+                    updateType = UpdateType.RedirectToPage,
+                    payload = "/Kicked"
+                };
+                RoomDataUpdate userListUpdate = new RoomDataUpdate()
+                {
+                    updateType = UpdateType.UserListUpdate,
+                    payload = room.UserManager.GetUserList()
+                };
+                CancellationTokenSource source = new CancellationTokenSource();
+
+                await room.ConnectionManager.SendUpdateToUser(userToKick, room, update, source.Token);
+                await Task.Delay(6000);
+                await room.ConnectionManager.SendUpdateToAll(room, userListUpdate, source.Token);
+
+                return true;
+            }
+            return false;
+            
+        }
         private async Task<UserListPayload> ChangeName(int? userId, Room room, string newName)
         {
             User user = room.UserManager.GetUserById((int)userId);

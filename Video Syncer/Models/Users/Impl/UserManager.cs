@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Video_Syncer.logging;
 using Video_Syncer.Models.Users.Interface;
 using Video_Syncer.Models.Users.Enum;
+using System.Net.WebSockets;
+using System.Threading;
 
 namespace Video_Syncer.Models.Users.Impl
 {
@@ -65,14 +67,6 @@ namespace Video_Syncer.Models.Users.Impl
             {
                 return false;
             }
-            if(!banned)
-            {
-                recipient.ShouldKick = true;
-            }
-            else
-            {
-                recipient.ShouldBan = true;
-            }
             
             Task.Run(async () => await ExecuteKick(user, recipient));
             return true;
@@ -82,6 +76,7 @@ namespace Video_Syncer.Models.Users.Impl
         {
             await Task.Delay(5000);
             logger.LogInformation("[VSY] User \"" + recipient.name + "\" (id: " + recipient.id + ") was forcibly kicked out of the room " + roomId + " by " + user.name + "\" (id: " + user.id + ")");
+            await user.socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Kicked", CancellationToken.None);
             RemoveFromUserList(recipient);
         }
 

@@ -9,6 +9,7 @@ namespace Video_Syncer.Models.Network.StateUpdates.Enum
     {
         UserListUpdate = 1,
         PlaylistUpdate = 2,
-        VideoUpdate = 3
+        VideoUpdate = 3,
+        RedirectToPage = 4
     }
 }
