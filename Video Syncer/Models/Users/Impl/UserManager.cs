@@ -76,7 +76,7 @@ namespace Video_Syncer.Models.Users.Impl
         {
             await Task.Delay(5000);
             logger.LogInformation("[VSY] User \"" + recipient.name + "\" (id: " + recipient.id + ") was forcibly kicked out of the room " + roomId + " by " + user.name + "\" (id: " + user.id + ")");
-            await user.socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Kicked", CancellationToken.None);
+            await recipient.socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Kicked", CancellationToken.None);
             RemoveFromUserList(recipient);
         }
 

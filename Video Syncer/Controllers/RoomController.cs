@@ -144,12 +144,16 @@ namespace Video_Syncer.Controllers
                     Trace.TraceError("[VSY] Error reading json in RoomController.HandleWebSocketConnection. error = " + e.Message + "\n" + e.StackTrace);
                     // TODO : send an error message back to the user
 
-                    // Start listening for a new message
                     receivedResult = await socket.ReceiveAsync(
                         new ArraySegment<byte>(receivedBytes), cancellationToken);
-                }
 
-                
+                }
+                catch(WebSocketException e2)
+                {
+                    logger.LogError("[VSY] WebSocketException in RoomController.HandleWebSocketConnection. error = " + e2.Message + "\n" + e2.StackTrace);
+                    Trace.TraceError("[VSY] WebSocketException in RoomController.HandleWebSocketConnection. error = " + e2.Message + "\n" + e2.StackTrace);
+                    break;
+                }
             }
 
             logger.LogInformation("[VSY] Connection closed. Status code = " + receivedResult.CloseStatus 
@@ -157,8 +161,19 @@ namespace Video_Syncer.Controllers
             Trace.TraceInformation("[VSY] Connection closed. Status code = " + receivedResult.CloseStatus
                 + ", description = '" + receivedResult.CloseStatusDescription + "'");
 
-            await socket.CloseAsync(receivedResult.CloseStatus.Value,
-                receivedResult.CloseStatusDescription, CancellationToken.None);
+            try
+            {
+                await socket.CloseAsync(receivedResult.CloseStatus.Value,
+                       receivedResult.CloseStatusDescription, CancellationToken.None);
+
+            }
+            catch(InvalidOperationException e)
+            {
+                logger.LogError("[VSY] InvalidOperationException in RoomController.HandleWebSocketConnection. error = " + e.Message + "\n" + e.StackTrace);
+                Trace.TraceError("[VSY] InvalidOperationException in RoomController.HandleWebSocketConnection. error = " + e.Message + "\n" + e.StackTrace);
+            }
+            
+            
         }
 
         private async Task<string> ValidateAndHandleRequest(HttpContext context, WebSocket socket, dynamic unknownObject)
@@ -534,23 +549,26 @@ namespace Video_Syncer.Controllers
             User user = room.UserManager.GetUserById((int)userId);
             User userToKick = room.UserManager.GetUserById((int)userToKickId);
 
+            RoomDataUpdate update = new RoomDataUpdate()
+            {
+                updateType = UpdateType.RedirectToPage,
+                payload = "/Kicked"
+            };
+            CancellationTokenSource source = new CancellationTokenSource();
+
+            await room.ConnectionManager.SendUpdateToUser(userToKick, room, update, source.Token);
+            await Task.Delay(1000);
+
             bool kicked = room.UserManager.Kick(user, userToKick);
 
             if(kicked)
             {
-                RoomDataUpdate update = new RoomDataUpdate()
-                {
-                    updateType = UpdateType.RedirectToPage,
-                    payload = "/Kicked"
-                };
                 RoomDataUpdate userListUpdate = new RoomDataUpdate()
                 {
                     updateType = UpdateType.UserListUpdate,
                     payload = room.UserManager.GetUserList()
                 };
-                CancellationTokenSource source = new CancellationTokenSource();
-
-                await room.ConnectionManager.SendUpdateToUser(userToKick, room, update, source.Token);
+                
                 await Task.Delay(6000);
                 await room.ConnectionManager.SendUpdateToAll(room, userListUpdate, source.Token);
 
