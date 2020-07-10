@@ -102,6 +102,7 @@ function handleRequestResponse(obj) {
         case RequestType.Ban:
             break;
         case RequestType.MakeAdmin:
+            handleUserListRequestResponse(obj);
             break;
         case RequestType.RearrangePlaylist:
             break;
@@ -190,6 +191,11 @@ function handleJoinRequestResponse(response) {
         var currentUserVideoTime = user["videoTimeSeconds"];
         var currentUserRights = user["rights"];
 
+        if (currentUserId == userId && currentUserRights != myRights) {
+            console.log("changed rights");
+            myRights = currentUserRights;
+        }
+
         addUser(currentUserId, currentUserName);
         updateUIForUser(currentUserId, stateIntToString(currentUserState),
             formatVideoTime(currentUserVideoTime), currentUserRights);
@@ -206,12 +212,30 @@ function handleUserListRequestResponse(obj) {
 
         for (var key in userList) {
             var user = userList[key];
+            var currentUserId = user["id"];
+            var currentUserRights = user["rights"];
+
+            if (currentUserId == userId) {
+                if ((currentUserRights == 1 || currentUserRights == 0) && myRights != currentUserRights) {
+                    myRights = currentUserRights;
+                }
+                break;
+            }
+        }
+
+        for (var key in userList) {
+            var user = userList[key];
 
             var currentUserId = user["id"];
             var currentUserName = user["name"];
             var currentUserState = user["videoState"];
             var currentUserVideoTime = user["videoTimeSeconds"];
             var currentUserRights = user["rights"];
+
+            if (currentUserId == userId && currentUserRights != myRights) {
+                console.log("changed rights");
+                myRights = currentUserRights;
+            }
 
             addUser(currentUserId, currentUserName);
             updateUIForUser(currentUserId, stateIntToString(currentUserState),
@@ -231,6 +255,19 @@ function handleUserListUpdate(obj) {
     if (userList !== null) {
         console.log("User list in user update is " + userList);
         removeUsers();
+
+        for (var key in userList) {
+            var user = userList[key];
+            var currentUserId = user["id"];
+            var currentUserRights = user["rights"];
+
+            if (currentUserId == userId) {
+                if ((currentUserRights == 1 || currentUserRights == 0) && myRights != currentUserRights) {
+                    myRights = currentUserRights;
+                }
+                break;
+            }
+        }
 
         for (var key in userList) {
             var user = userList[key];
@@ -380,6 +417,21 @@ function sendBanRequest(recipientId) {
         userId: userId,
         roomId: roomId,
         userIdToBan: recipientId
+    });
+
+    send(messageToSend);
+}
+
+function sendMakeAdminRequest(recipientId) {
+    if (myRights == 0) {
+        return;
+    }
+
+    messageToSend = JSON.stringify({
+        requestType: RequestType.MakeAdmin,
+        userId: userId,
+        roomId: roomId,
+        userIdToMakeAdmin: recipientId
     });
 
     send(messageToSend);

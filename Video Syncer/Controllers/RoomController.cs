@@ -326,6 +326,11 @@ namespace Video_Syncer.Controllers
 
                     break;
                 case RequestType.MakeAdmin:
+                    int? targetUserId = unknownObject.userIdToMakeAdmin;
+                    UserListPayload makeAdminPayload = await MakeAdmin(userId, targetUserId, room);
+
+                    responseObject.success = makeAdminPayload != null;
+                    responseObject.payload = makeAdminPayload;
                     break;
                 case RequestType.RearrangePlaylist:
                     break;
@@ -643,6 +648,43 @@ namespace Video_Syncer.Controllers
 
             await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, source.Token);
             return payload;
+        }
+
+        private async Task<UserListPayload> MakeAdmin(int? userId, int? targetUserId, Room room)
+        {
+            if(userId == null || targetUserId == null)
+            {
+                return null;
+            }
+
+            User user = room.UserManager.GetUserById((int)userId);
+            User targetUser = room.UserManager.GetUserById((int)targetUserId);
+            CancellationTokenSource source = new CancellationTokenSource();
+
+            if(user == null || targetUser == null || user.rights != Models.Users.Enum.UserRights.Admin)
+            {
+                return null;
+            }
+
+            bool madeAdmin = room.UserManager.CreateNewAdmin(targetUser);
+
+            if(madeAdmin)
+            {
+                RoomDataUpdate userListUpdate = new RoomDataUpdate()
+                {
+                    updateType = UpdateType.UserListUpdate,
+                    payload = room.UserManager.GetUserList()
+                };
+                UserListPayload payload = new UserListPayload()
+                {
+                    userList = room.UserManager.GetUserList()
+                };
+
+                await room.ConnectionManager.SendUpdateToAllExcept(user, room, userListUpdate, source.Token);
+
+                return payload;
+            }
+            return null;
         }
     }
 }
