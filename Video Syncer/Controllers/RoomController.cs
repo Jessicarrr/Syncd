@@ -318,6 +318,12 @@ namespace Video_Syncer.Controllers
 
                     break;
                 case RequestType.Ban:
+                    int userToBan = unknownObject.userIdToBan;
+                    bool banned = await BanUser(userId, userToBan, room);
+
+                    responseObject.success = banned;
+                    responseObject.payload = null;
+
                     break;
                 case RequestType.MakeAdmin:
                     break;
@@ -577,6 +583,47 @@ namespace Video_Syncer.Controllers
             return false;
             
         }
+
+        private async Task<bool> BanUser(int? userId, int? userToBanId, Room room)
+        {
+            if(userToBanId == null)
+            {
+                return false;
+            }
+
+            User user = room.UserManager.GetUserById((int)userId);
+            User userToBan = room.UserManager.GetUserById((int)userToBanId);
+
+            if(user == null || userToBan == null)
+            {
+                return false;
+            }
+
+            RoomDataUpdate redirect = new RoomDataUpdate()
+            {
+                updateType = UpdateType.RedirectToPage,
+                payload = "/Banned"
+            };
+
+            CancellationTokenSource source = new CancellationTokenSource();
+            
+            bool banned = room.UserManager.Ban(user, userToBan);
+
+            await room.ConnectionManager.SendUpdateToUser(userToBan, room, redirect, source.Token);
+
+            room.UserManager.Kick(user, userToBan);
+            await Task.Delay(6000);
+
+            RoomDataUpdate userListUpdate = new RoomDataUpdate()
+            {
+                updateType = UpdateType.UserListUpdate,
+                payload = room.UserManager.GetUserList()
+            };
+
+            await room.ConnectionManager.SendUpdateToAll(room, userListUpdate, source.Token);
+            return banned;
+        }
+
         private async Task<UserListPayload> ChangeName(int? userId, Room room, string newName)
         {
             User user = room.UserManager.GetUserById((int)userId);

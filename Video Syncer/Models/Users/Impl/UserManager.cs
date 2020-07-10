@@ -61,7 +61,7 @@ namespace Video_Syncer.Models.Users.Impl
             return user.rights == UserRights.Admin;
         }
 
-        public bool Kick(User user, User recipient, bool banned = false)
+        public bool Kick(User user, User recipient)
         {
             if(!userList.Contains(recipient))
             {
@@ -88,7 +88,6 @@ namespace Video_Syncer.Models.Users.Impl
             }
 
             CreateNewBannedUser(recipient);
-            Kick(user, recipient, true);
             return true;
         }
 

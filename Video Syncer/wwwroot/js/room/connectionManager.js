@@ -370,6 +370,21 @@ function sendKickRequest(recipientId) {
     send(messageToSend);
 }
 
+function sendBanRequest(recipientId) {
+    if (myRights == 0) {
+        return;
+    }
+
+    messageToSend = JSON.stringify({
+        requestType: RequestType.Ban,
+        userId: userId,
+        roomId: roomId,
+        userIdToBan: recipientId
+    });
+
+    send(messageToSend);
+}
+
 function send(str) {
     console.log("sending: " + str);
     if (socket.readyState === socket.OPEN) {

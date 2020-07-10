@@ -8,7 +8,7 @@ namespace Video_Syncer.Models.Users.Interface
     public interface IUserManager
     {
         public bool IsSessionIdBanned(string sessionID);
-        public bool Kick(User user, User recipient, bool banned = false);
+        public bool Kick(User user, User recipient);
         public bool Ban(User user, User recipient);
         public bool IsAdmin(User user);
         public bool CreateNewAdmin(User user);
