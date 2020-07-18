@@ -333,6 +333,13 @@ namespace Video_Syncer.Controllers
                     responseObject.payload = makeAdminPayload;
                     break;
                 case RequestType.RearrangePlaylist:
+                    string onTopId = unknownObject.onTopId;
+                    string onBottomId = unknownObject.onBottomId;
+
+                    PlaylistStatePayload rearrangePayload = await RearrangePlaylist(userId, room, onTopId, onBottomId);
+                    responseObject.success = rearrangePayload != null;
+                    responseObject.payload = rearrangePayload;
+
                     break;
                 case RequestType.PlayPlaylistVideo:
                     string videoToPlay = unknownObject.playlistItemId;
@@ -685,6 +692,27 @@ namespace Video_Syncer.Controllers
                 return payload;
             }
             return null;
+        }
+
+        private async Task<PlaylistStatePayload> RearrangePlaylist(int? userId, Room room, string onTopId, string onBottomId)
+        {
+            User user = room.UserManager.GetUserById((int)userId);
+            bool wasSuccessful = room.PlaylistManager.RearrangePlaylist(onTopId, onBottomId);
+            CancellationTokenSource source = new CancellationTokenSource();
+
+            PlaylistStatePayload payload = new PlaylistStatePayload()
+            {
+                playlist = room.PlaylistManager.GetPlaylist()
+            };
+
+            RoomDataUpdate update = new RoomDataUpdate()
+            {
+                updateType = UpdateType.PlaylistUpdate,
+                payload = payload
+            };
+
+            await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, source.Token);
+            return payload;
         }
     }
 }

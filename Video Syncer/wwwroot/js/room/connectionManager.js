@@ -105,6 +105,7 @@ function handleRequestResponse(obj) {
             handleUserListRequestResponse(obj);
             break;
         case RequestType.RearrangePlaylist:
+            handlePlaylistUpdate(obj);
             break;
         case RequestType.PlayPlaylistVideo:
             handleVideoStateChange(obj);
@@ -434,6 +435,17 @@ function sendMakeAdminRequest(recipientId) {
         userIdToMakeAdmin: recipientId
     });
 
+    send(messageToSend);
+}
+
+function sendRearrangePlaylistRequest(onTopId, onBottomId) {
+    messageToSend = JSON.stringify({
+        requestType: RequestType.RearrangePlaylist,
+        userId: userId,
+        roomId: roomId,
+        onTopId: onTopId,
+        onBottomId: onBottomId
+    });
     send(messageToSend);
 }
 
