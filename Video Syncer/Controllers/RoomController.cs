@@ -489,7 +489,23 @@ namespace Video_Syncer.Controllers
         private async Task<PlaylistStatePayload> AddToPlaylist(int? userId, Room room, string videoId)
         {
             User user = room.UserManager.GetUserById((int)userId);
-            room.PlaylistManager.AddToPlaylist(videoId);
+            room.PlaylistManager.AddToPlaylist(videoId, async delegate()
+            {
+                PlaylistStatePayload payload = new PlaylistStatePayload()
+                {
+                    playlist = room.PlaylistManager.GetPlaylist()
+                };
+
+                RoomDataUpdate update = new RoomDataUpdate()
+                {
+                    updateType = UpdateType.PlaylistUpdate,
+                    payload = payload
+                };
+
+                CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+
+                await room.ConnectionManager.SendUpdateToAll(room, update, cancelTokenSource.Token);
+            });
 
             PlaylistStatePayload payload = new PlaylistStatePayload()
             {

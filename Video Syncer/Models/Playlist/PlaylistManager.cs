@@ -40,7 +40,7 @@ namespace Video_Syncer.Models.Playlist
             }
             return false;
         }
-        public void AddToPlaylist(string youtubeId)
+        public void AddToPlaylist(string youtubeId, Action onGetYoutubeData = null)
         {
             PlaylistObject obj = new PlaylistObject();
             Random random = new Random();
@@ -79,6 +79,7 @@ namespace Video_Syncer.Models.Playlist
                     {
                         logger.LogWarning("[VSY] noembed.GetYoutubeData returned null for video with youtube id " + youtubeId);
                     }
+                    onGetYoutubeData?.Invoke(); // invoke the method if it was passed as a parameter
                 });
             });
         }
