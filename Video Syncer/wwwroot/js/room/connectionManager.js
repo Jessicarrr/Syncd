@@ -47,11 +47,13 @@ function setupSocketEvents() {
     socket.onopen = function (event) {
         console.log("socket.onopen: " + event.data);
         sendJoinRequest();
+        document.getElementById("alert-disconnected").style.display = "none";
         //sendVideoStateChangeRequest(1);
     };
 
     socket.onclose = function (event) {
         console.log("socket.onclose: " + event.data);
+        document.getElementById("alert-disconnected").style.display = "block";
     };
 
     socket.onerror = function (event) {
