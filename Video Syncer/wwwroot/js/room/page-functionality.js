@@ -1,6 +1,6 @@
 ﻿window.onbeforeunload = function (event) {
     if (userId != -1) {
-        sendLeaveRequest();
+        disconnect();
     }
 }
 
@@ -42,29 +42,35 @@ function closeDropdownsOnClick(onclickEvent) {
     }
 }
 
-function isDisconnectWarningVisible() {
-    var disconnectWarning = document.getElementById("alert-disconnected");
+function isDisconnectErrorVisible() {
+    var disconnectError = document.getElementById("alert-disconnected");
 
-    if (disconnectWarning.style.display === "none") {
+    if (disconnectError.style.display === "none") {
         return false;
     }
     return true;
 }
 
-function showDisconnectWarning() {
-    var disconnectWarning = document.getElementById("alert-disconnected");
-    disconnectWarning.style.display = "block";
+function showDisconnectError() {
+    var disconnectError = document.getElementById("alert-disconnected");
+    disconnectError.style.display = "block";
 }
 
-function hideDisconnectWarning() {
-    var disconnectWarning = document.getElementById("alert-disconnected");
-    disconnectWarning.style.display = "none";
+function hideDisconnectError() {
+    var disconnectError = document.getElementById("alert-disconnected");
+    disconnectError.style.display = "none";
 }
 
 function changeDisplayedDisconnectAttemptsNumber(number) {
-    var disconnectWarning = document.getElementById("alert-disconnected");
+    var disconnectError = document.getElementById("alert-disconnected");
 
-    disconnectWarning.innerHTML = disconnectWarning.innerHTML.replace(/attempts: \d+/, ('attempts: ' + number));
+    disconnectError.innerHTML = disconnectError.innerHTML.replace(/attempts: \d+/, ('attempts: ' + number));
+}
+
+function displayDisconnectErrorNoMoreAttempts() {
+    var disconnectError = document.getElementById("alert-disconnected");
+
+    disconnectError.innerHTML = "You were disconnected and we were unable to reconnect you. Please try refreshing the page.";
 }
 
 function setVideoTitle(title) {

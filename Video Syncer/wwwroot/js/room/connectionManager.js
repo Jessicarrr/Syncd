@@ -4,6 +4,12 @@ var userId = -1;
 var requestTypeProperty = "requestType";
 var updateTypeProperty = "updateType";
 
+var reconnectionAttempts = 0;
+var maxReconnectionAttempts = 50;
+var reconnectionAttemptInterval = 5000; // 5 seconds
+
+var shouldSocketBeClosed = false;
+
 const RequestType = Object.freeze(
     {
         "Join": 1,
@@ -46,14 +52,21 @@ function connectToServer() {
 function setupSocketEvents() {
     socket.onopen = function (event) {
         console.log("socket.onopen: " + event.data);
+        
+        hideDisconnectError();
+        reconnectionAttempts = 0;
+        changeDisplayedDisconnectAttemptsNumber(0);
         sendJoinRequest();
-        document.getElementById("alert-disconnected").style.display = "none";
         //sendVideoStateChangeRequest(1);
     };
 
     socket.onclose = function (event) {
         console.log("socket.onclose: " + event.data);
-        document.getElementById("alert-disconnected").style.display = "block";
+        
+        if (!shouldSocketBeClosed) {
+            showDisconnectError();
+            tryReconnect();
+        }
     };
 
     socket.onerror = function (event) {
@@ -83,6 +96,29 @@ function setupSocketEvents() {
 
         addMessageToLog("Parsed server message. Random number = " + randomNumber + ", message = \'" + message + "\', sessionId = " + sessionId);*/
     };
+}
+
+function tryReconnect() {
+    var connectionUrl = "wss://" + location.hostname + ":" + location.port + "/Room/ConnectToWebSocket";
+    console.log("Connecting to " + connectionUrl)
+    socket = new WebSocket(connectionUrl);
+
+    if (socket.readyState !== socket.OPEN) {
+        if (reconnectionAttempts <= maxReconnectionAttempts) {
+            setTimeout(tryReconnect, reconnectionAttemptInterval);
+            reconnectionAttempts += 1;
+            changeDisplayedDisconnectAttemptsNumber(reconnectionAttempts)
+        }
+        else {
+            displayDisconnectErrorNoMoreAttempts();
+        }
+    }
+}
+
+function disconnect() {
+    sendLeaveRequest();
+    shouldSocketBeClosed = true;
+    socket.close();
 }
 
 function handleRequestResponse(obj) {
