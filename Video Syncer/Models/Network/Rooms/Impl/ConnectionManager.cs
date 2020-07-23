@@ -24,6 +24,47 @@ namespace Video_Syncer.Models.Network.Rooms.Impl
             logger = LoggingHandler.CreateLogger<ConnectionManager>();
         }
 
+        public async Task CheckAndRemoveDisconnectedUsers(Room room, CancellationToken token)
+        {
+            var dataToSend = new Byte[1];
+            List<User> disconnectedUsers = new List<User>();
+
+            foreach (User loopUser in room.UserManager.GetUserList())
+            {
+                if (token.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                try
+                {
+                    await loopUser.socket.SendAsync(dataToSend, WebSocketMessageType.Text, true, token);
+                }
+                catch(WebSocketException)
+                {
+                    disconnectedUsers.Add(loopUser);
+                }
+            }
+
+            if (disconnectedUsers.Count > 0)
+            {
+                foreach (User disconnectedUser in disconnectedUsers)
+                {
+                    logger.LogError("[VSY] User forced to leave the room when checking for disconnected/closed sockets. User was " + disconnectedUser.name
+                        + " with id " + disconnectedUser.id + " in room " + room.id);
+                    room.Leave(disconnectedUser);
+                }
+
+                RoomDataUpdate newUpdate = new RoomDataUpdate()
+                {
+                    updateType = StateUpdates.Enum.UpdateType.UserListUpdate,
+                    payload = room.UserManager.GetUserList()
+                };
+
+                await SendUpdateToAll(room, newUpdate, token);
+            }
+        }
+
         public async Task SendUpdateToUser(User user, Room room, IUpdate update, CancellationToken token)
         {
             var dataToSend = new Byte[1024];

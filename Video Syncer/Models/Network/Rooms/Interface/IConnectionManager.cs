@@ -10,6 +10,7 @@ namespace Video_Syncer.Models.Network.Rooms.Interface
 {
     public interface IConnectionManager
     {
+        public Task CheckAndRemoveDisconnectedUsers(Room room, CancellationToken token);
         public Task SendUpdateToAll(Room room, IUpdate update, CancellationToken cancellationToken);
         public Task SendUpdateToAllExcept(User user, Room room, IUpdate update, CancellationToken cancellationToken);
         public Task SendUpdateToUser(User user, Room room, IUpdate update, CancellationToken token);

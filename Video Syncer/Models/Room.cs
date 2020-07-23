@@ -37,6 +37,8 @@ namespace Video_Syncer.Models
         private long lastCheck = 0;
 
         public int periodicTaskMilliseconds = 2000;
+        private long periodicRemoveUsersMilliseconds = 15000;
+        private DateTime lastTimeRemovedDisconnectedUsers = DateTime.Now;
         private CancellationTokenSource source;
 
         public long roomCreationTime;
@@ -86,7 +88,7 @@ namespace Video_Syncer.Models
             source = new CancellationTokenSource();
             var task = Task.Run(async () => {
 
-                await PeriodicForceLeaveAllTimedOutUsers(source.Token);
+                await HandlePeriodicTasks(source.Token);
 
             },
             source.Token);
@@ -98,7 +100,7 @@ namespace Video_Syncer.Models
             source.Cancel();
         }
 
-        public async Task PeriodicForceLeaveAllTimedOutUsers(CancellationToken token)
+        public async Task HandlePeriodicTasks(CancellationToken token)
         {
             while (true)
             {
@@ -107,7 +109,14 @@ namespace Video_Syncer.Models
                     break;
                 }
 
-                //new Task(() => UserManager.ForceLeaveAllTimedOutUsers()).Start();
+                TimeSpan elapsed = DateTime.Now - lastTimeRemovedDisconnectedUsers;
+
+                if(elapsed.TotalMilliseconds >= periodicRemoveUsersMilliseconds)
+                {
+                    await ConnectionManager.CheckAndRemoveDisconnectedUsers(this, token);
+                    lastTimeRemovedDisconnectedUsers = DateTime.Now;
+                }
+                
                 new Task(() => PeriodicUpdateVideoStatistics()).Start();
                 await Task.Delay(periodicTaskMilliseconds);
             }

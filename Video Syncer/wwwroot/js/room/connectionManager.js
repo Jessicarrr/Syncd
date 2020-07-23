@@ -74,14 +74,20 @@ function setupSocketEvents() {
     };
 
     socket.onmessage = function (event) {
-        console.log("message: " + event.data);
-        var obj = JSON.parse(event.data);
+        try {
+            var obj = JSON.parse(event.data);
 
-        if (obj.hasOwnProperty(requestTypeProperty)) {
-            handleRequestResponse(obj);
+            console.log("json message: \"" + event.data + "\"");
+
+            if (obj.hasOwnProperty(requestTypeProperty)) {
+                handleRequestResponse(obj);
+            }
+            else if (obj.hasOwnProperty(updateTypeProperty)) {
+                handleServerUpdate(obj);
+            }
         }
-        else if (obj.hasOwnProperty(updateTypeProperty)) {
-            handleServerUpdate(obj);
+        catch (e) {
+            console.log("non-json message: \"" + event.data + "\"");
         }
         
         
