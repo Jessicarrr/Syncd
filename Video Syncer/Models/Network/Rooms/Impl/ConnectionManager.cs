@@ -24,7 +24,7 @@ namespace Video_Syncer.Models.Network.Rooms.Impl
             logger = LoggingHandler.CreateLogger<ConnectionManager>();
         }
 
-        public async Task CheckAndRemoveDisconnectedUsers(Room room, CancellationToken token)
+        public async Task<int> CheckAndRemoveDisconnectedUsers(Room room, CancellationToken token)
         {
             var dataToSend = new Byte[1];
             List<User> disconnectedUsers = new List<User>();
@@ -33,7 +33,7 @@ namespace Video_Syncer.Models.Network.Rooms.Impl
             {
                 if (token.IsCancellationRequested)
                 {
-                    return;
+                    break;
                 }
 
                 try
@@ -45,6 +45,8 @@ namespace Video_Syncer.Models.Network.Rooms.Impl
                     disconnectedUsers.Add(loopUser);
                 }
             }
+
+            int usersToRemove = disconnectedUsers.Count;
 
             if (disconnectedUsers.Count > 0)
             {
@@ -63,6 +65,8 @@ namespace Video_Syncer.Models.Network.Rooms.Impl
 
                 await SendUpdateToAll(room, newUpdate, token);
             }
+
+            return usersToRemove;
         }
 
         public async Task SendUpdateToUser(User user, Room room, IUpdate update, CancellationToken token)

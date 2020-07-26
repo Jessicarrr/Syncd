@@ -8,7 +8,9 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Video_Syncer.logging;
+using Video_Syncer.Models.Network.Payload;
 using Video_Syncer.Models.Network.Rooms.Interface;
+using Video_Syncer.Models.Network.StateUpdates.Impl;
 using Video_Syncer.Models.Playlist;
 using Video_Syncer.Models.Users;
 using Video_Syncer.Models.Users.Enum;
@@ -111,10 +113,36 @@ namespace Video_Syncer.Models
 
                 TimeSpan elapsed = DateTime.Now - lastTimeRemovedDisconnectedUsers;
 
-                if(elapsed.TotalMilliseconds >= periodicRemoveUsersMilliseconds)
+                if (elapsed.TotalMilliseconds >= periodicRemoveUsersMilliseconds)
                 {
-                    await ConnectionManager.CheckAndRemoveDisconnectedUsers(this, token);
+                    int usersRemoved = await ConnectionManager.CheckAndRemoveDisconnectedUsers(this, token);
                     lastTimeRemovedDisconnectedUsers = DateTime.Now;
+
+                    if (usersRemoved > 0 && UserManager.AllHasState(VideoState.Ended))
+                    {
+
+                        //TODO: Playlist support, play next video.
+                        PlaylistObject newVideoObj = PlaylistManager.GoToNextVideo();
+                        NewVideo(newVideoObj);
+
+                        VideoStatePayload payload = new VideoStatePayload()
+                        {
+                            currentVideoState = GetSuggestedVideoState(),
+                            currentYoutubeVideoId = currentYoutubeVideoId,
+                            videoTimeSeconds = videoTimeSeconds,
+                            currentYoutubeVideoTitle = currentYoutubeVideoTitle
+                        };
+
+                        RoomDataUpdate update = new RoomDataUpdate()
+                        {
+                            updateType = Network.StateUpdates.Enum.UpdateType.VideoUpdate,
+                            payload = payload
+                        };
+
+                        CancellationTokenSource source = new CancellationTokenSource();
+
+                        await ConnectionManager.SendUpdateToAll(this, update, source.Token);
+                    }
                 }
                 
                 new Task(() => PeriodicUpdateVideoStatistics()).Start();
