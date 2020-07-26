@@ -199,7 +199,7 @@ function handleServerUpdate(obj) {
             break;
         case UpdateType.RedirectToPage:
             var page = obj["payload"];
-            //window.location.replace(page);
+            window.location.replace(page);
             break;
     }
 }
