@@ -65,7 +65,14 @@ function setupSocketEvents() {
         
         if (!shouldSocketBeClosed) {
             showDisconnectError();
-            tryReconnect();
+
+            if (reconnectionAttempts >= 50) {
+                displayDisconnectErrorNoMoreAttempts();
+            }
+            else {
+                tryReconnect();
+            }
+            
         }
     };
 
@@ -105,20 +112,31 @@ function setupSocketEvents() {
 }
 
 function tryReconnect() {
+    socket = null;
+
     var connectionUrl = "wss://" + location.hostname + ":" + location.port + "/Room/ConnectToWebSocket";
     console.log("Connecting to " + connectionUrl)
     socket = new WebSocket(connectionUrl);
 
-    if (socket.readyState !== socket.OPEN) {
+    setupSocketEvents();
+
+    reconnectionAttempts++;
+    changeDisplayedDisconnectAttemptsNumber(reconnectionAttempts);
+
+    /*if (socket.readyState !== socket.OPEN) {
+        console.log("Socket was not successfully opened. ready state = " + socket.readyState);
+
         if (reconnectionAttempts <= maxReconnectionAttempts) {
             setTimeout(tryReconnect, reconnectionAttemptInterval);
             reconnectionAttempts += 1;
             changeDisplayedDisconnectAttemptsNumber(reconnectionAttempts)
         }
         else {
+            console.log("Socket was successfully opened!! ready state = " + socket.readyState);
             displayDisconnectErrorNoMoreAttempts();
+            setupSocketEvents();
         }
-    }
+    }*/
 }
 
 function disconnect() {
@@ -181,7 +199,7 @@ function handleServerUpdate(obj) {
             break;
         case UpdateType.RedirectToPage:
             var page = obj["payload"];
-            window.location.replace(page);
+            //window.location.replace(page);
             break;
     }
 }
@@ -227,7 +245,9 @@ function handleJoinRequestResponse(response) {
      * For loop to populate the user list with all users in the room
      * (including yourself).
      */
+    removeUsers();
     for (var key in newUserList) {
+        
         var user = newUserList[key];
 
         var currentUserId = user["id"];
