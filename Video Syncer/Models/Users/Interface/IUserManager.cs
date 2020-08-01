@@ -22,6 +22,7 @@ namespace Video_Syncer.Models.Users.Interface
         public void SetStateForUser(int userId, VideoState state);
         public void SetStateForAll(VideoState state);
         public bool AllHasState(VideoState state);
+        public bool SomeoneHasState(VideoState state);
         public VideoState GetStateForUser(int userId);
         public bool UpdateLastConnectionTime(int userId);
         public User UpdateUser(int userId, double seconds);

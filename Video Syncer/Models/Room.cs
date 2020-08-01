@@ -43,6 +43,9 @@ namespace Video_Syncer.Models
         private DateTime lastTimeRemovedDisconnectedUsers = DateTime.Now;
         private CancellationTokenSource source;
 
+        private long playNewVideoAfterEndingDelayMS = 5000;
+        private bool isTransitioningToNewVideo = false;
+
         public long roomCreationTime;
 
         private ILogger logger;
@@ -118,8 +121,9 @@ namespace Video_Syncer.Models
                     int usersRemoved = await ConnectionManager.CheckAndRemoveDisconnectedUsers(this, token);
                     lastTimeRemovedDisconnectedUsers = DateTime.Now;
 
-                    if (usersRemoved > 0 && UserManager.AllHasState(VideoState.Ended))
+                    if (usersRemoved > 0 && UserManager.SomeoneHasState(VideoState.Ended) && !isTransitioningToNewVideo)
                     {
+                        isTransitioningToNewVideo = true;
 
                         //TODO: Playlist support, play next video.
                         PlaylistObject newVideoObj = PlaylistManager.GoToNextVideo();
@@ -142,6 +146,7 @@ namespace Video_Syncer.Models
                         CancellationTokenSource source = new CancellationTokenSource();
 
                         await ConnectionManager.SendUpdateToAll(this, update, source.Token);
+                        isTransitioningToNewVideo = false;
                     }
                 }
                 
@@ -198,7 +203,7 @@ namespace Video_Syncer.Models
                 return UserManager.GetUserList().First().videoState;
             }
         }
-        public bool NewVideoState(int userId, VideoState newState)
+        public async Task<bool> NewVideoState(int userId, VideoState newState)
         {
             bool returnVal = false;
 
@@ -221,7 +226,45 @@ namespace Video_Syncer.Models
             {
                 UserManager.SetStateForUser(userId, VideoState.Ended);
 
-                if(UserManager.AllHasState(VideoState.Ended))
+                if(!isTransitioningToNewVideo)
+                {
+                    isTransitioningToNewVideo = true;
+                    returnVal = false;
+                    #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    Task.Run(async () =>
+                    {
+                        await Task.Delay((int)playNewVideoAfterEndingDelayMS);
+                        PlaylistObject newVideo = PlaylistManager.GoToNextVideo();
+                        NewVideo(newVideo);
+                        returnVal = true;
+
+                        VideoStatePayload payload = new VideoStatePayload()
+                        {
+                            currentVideoState = GetSuggestedVideoState(),
+                            currentYoutubeVideoId = currentYoutubeVideoId,
+                            videoTimeSeconds = videoTimeSeconds,
+                            currentYoutubeVideoTitle = currentYoutubeVideoTitle
+                        };
+
+                        RoomDataUpdate update = new RoomDataUpdate()
+                        {
+                            updateType = Network.StateUpdates.Enum.UpdateType.VideoUpdate,
+                            payload = payload
+                        };
+
+                        CancellationTokenSource source = new CancellationTokenSource();
+
+                        await ConnectionManager.SendUpdateToAll(this, update, source.Token);
+
+                        isTransitioningToNewVideo = false;
+                    });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+
+                }
+                
+
+                /*if(UserManager.AllHasState(VideoState.Ended))
                 {
                     UpdateTime();
 
@@ -233,7 +276,7 @@ namespace Video_Syncer.Models
                 else
                 {
                     returnVal = false;
-                }
+                }*/
             }
             UpdateVideoStatistics();
 
