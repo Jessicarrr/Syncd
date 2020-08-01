@@ -210,7 +210,7 @@ namespace Video_Syncer.Models
                 return UserManager.GetUserList().First().videoState;
             }
         }
-        public async Task<bool> NewVideoState(int userId, VideoState newState)
+        public bool NewVideoState(int userId, VideoState newState)
         {
             bool returnVal = false;
 
@@ -245,24 +245,40 @@ namespace Video_Syncer.Models
 
                         if(!cancelTransitioningToNewVideoToken.Token.IsCancellationRequested)
                         {
-                            PlaylistObject newVideo = PlaylistManager.GoToNextVideo();
-                            NewVideo(newVideo);
-
-                            VideoStatePayload payload = new VideoStatePayload()
+                            try
                             {
-                                currentVideoState = GetSuggestedVideoState(),
-                                currentYoutubeVideoId = currentYoutubeVideoId,
-                                videoTimeSeconds = videoTimeSeconds,
-                                currentYoutubeVideoTitle = currentYoutubeVideoTitle
-                            };
+                                PlaylistObject newVideo = PlaylistManager.GoToNextVideo();
 
-                            RoomDataUpdate update = new RoomDataUpdate()
+                                if (newVideo != null)
+                                {
+                                    NewVideo(newVideo);
+
+                                    VideoStatePayload payload = new VideoStatePayload()
+                                    {
+                                        currentVideoState = GetSuggestedVideoState(),
+                                        currentYoutubeVideoId = currentYoutubeVideoId,
+                                        videoTimeSeconds = videoTimeSeconds,
+                                        currentYoutubeVideoTitle = currentYoutubeVideoTitle
+                                    };
+
+                                    RoomDataUpdate update = new RoomDataUpdate()
+                                    {
+                                        updateType = Network.StateUpdates.Enum.UpdateType.VideoUpdate,
+                                        payload = payload
+                                    };
+
+                                    await ConnectionManager.SendUpdateToAll(this, update, cancelTransitioningToNewVideoToken.Token);
+                                }
+                            }
+                            catch(Exception e)
                             {
-                                updateType = Network.StateUpdates.Enum.UpdateType.VideoUpdate,
-                                payload = payload
-                            };
-
-                            await ConnectionManager.SendUpdateToAll(this, update, cancelTransitioningToNewVideoToken.Token);
+                                logger.LogError("[VSY] Exception in autoplaying video in Room.cs. error:\n" + e.Message + "\n" + e.StackTrace);
+                                Trace.TraceError("[VSY] Exception in autoplaying video in Room.cs. error:\n" + e.Message + "\n" + e.StackTrace);
+                            }
+                            finally
+                            {
+                                isTransitioningToNewVideo = false;
+                            }
                         }
                         isTransitioningToNewVideo = false;
 

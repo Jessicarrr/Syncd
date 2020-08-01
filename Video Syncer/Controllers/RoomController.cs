@@ -433,7 +433,7 @@ namespace Video_Syncer.Controllers
             HttpContext context, VideoState state)
         {
             User user = room.UserManager.GetUserById((int)userId);
-            bool roomStateChanged = await room.NewVideoState((int)userId, state);
+            bool roomStateChanged = room.NewVideoState((int)userId, state);
 
             if(roomStateChanged)
             {

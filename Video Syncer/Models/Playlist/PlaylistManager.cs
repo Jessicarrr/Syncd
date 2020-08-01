@@ -227,7 +227,6 @@ namespace Video_Syncer.Models.Playlist
             }
             else
             {
-                int maxIndex = playlist.Count;
                 int currentIndex = playlist.FindIndex(item => item.id == currentItemPlaying.id);
                 
                 if(currentIndex == -1)
@@ -235,15 +234,15 @@ namespace Video_Syncer.Models.Playlist
                     return null;
                 }
 
-                if(currentIndex == maxIndex)
-                {
-                    return null;
-                }
-                else
+                try
                 {
                     int nextIndex = currentIndex + 1;
                     currentItemPlaying = playlist[nextIndex];
                     return playlist[nextIndex];
+                }
+                catch(Exception)
+                {
+                    return null;
                 }
             }
         }
