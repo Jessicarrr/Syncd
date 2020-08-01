@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Extensions.Logging;
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
@@ -45,6 +46,7 @@ namespace Video_Syncer.Models
 
         private long playNewVideoAfterEndingDelayMS = 5000;
         private bool isTransitioningToNewVideo = false;
+        private CancellationTokenSource cancelTransitioningToNewVideoToken = new CancellationTokenSource();
 
         public long roomCreationTime;
 
@@ -170,6 +172,11 @@ namespace Video_Syncer.Models
 
         public bool PlayPlaylistVideo(string playlistId)
         {
+            if(isTransitioningToNewVideo)
+            {
+                cancelTransitioningToNewVideoToken.Cancel();
+            }
+
             PlaylistObject obj = PlaylistManager.PlayPlaylistObject(playlistId);
 
             if(obj != null)
@@ -230,35 +237,37 @@ namespace Video_Syncer.Models
                 {
                     isTransitioningToNewVideo = true;
                     returnVal = false;
+                    cancelTransitioningToNewVideoToken = new CancellationTokenSource();
                     #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     Task.Run(async () =>
                     {
                         await Task.Delay((int)playNewVideoAfterEndingDelayMS);
-                        PlaylistObject newVideo = PlaylistManager.GoToNextVideo();
-                        NewVideo(newVideo);
-                        returnVal = true;
 
-                        VideoStatePayload payload = new VideoStatePayload()
+                        if(!cancelTransitioningToNewVideoToken.Token.IsCancellationRequested)
                         {
-                            currentVideoState = GetSuggestedVideoState(),
-                            currentYoutubeVideoId = currentYoutubeVideoId,
-                            videoTimeSeconds = videoTimeSeconds,
-                            currentYoutubeVideoTitle = currentYoutubeVideoTitle
-                        };
+                            PlaylistObject newVideo = PlaylistManager.GoToNextVideo();
+                            NewVideo(newVideo);
 
-                        RoomDataUpdate update = new RoomDataUpdate()
-                        {
-                            updateType = Network.StateUpdates.Enum.UpdateType.VideoUpdate,
-                            payload = payload
-                        };
+                            VideoStatePayload payload = new VideoStatePayload()
+                            {
+                                currentVideoState = GetSuggestedVideoState(),
+                                currentYoutubeVideoId = currentYoutubeVideoId,
+                                videoTimeSeconds = videoTimeSeconds,
+                                currentYoutubeVideoTitle = currentYoutubeVideoTitle
+                            };
 
-                        CancellationTokenSource source = new CancellationTokenSource();
+                            RoomDataUpdate update = new RoomDataUpdate()
+                            {
+                                updateType = Network.StateUpdates.Enum.UpdateType.VideoUpdate,
+                                payload = payload
+                            };
 
-                        await ConnectionManager.SendUpdateToAll(this, update, source.Token);
-
+                            await ConnectionManager.SendUpdateToAll(this, update, cancelTransitioningToNewVideoToken.Token);
+                        }
                         isTransitioningToNewVideo = false;
+
                     });
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
 
                 }
