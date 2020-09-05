@@ -170,6 +170,7 @@ body {
     line-height: 18px;
     padding: 0px 15px;
     font-size: 14px;
+    display: none;
 }
 
 #alert-using-internet-explorer {
