@@ -235,10 +235,8 @@ function handleJoinRequestResponse(response) {
     setVideoTitle(newVideoTitle);
 
     if (playlist != null) {
-        compareAndRemovePlaylistItems(playlist);
-        compareAndAddPlaylistItems(playlist);
-        updateTitlesAndAuthors(playlist);
-        fixPlaylistArrangement(playlist);
+        removeAllPlaylistVideos();
+        addPlaylistItems(playlist);
     }
 
     /*
@@ -427,10 +425,8 @@ function handlePlaylistUpdate(obj) {
     var playlist = payload["playlist"];
 
     if (playlist != null) {
-        compareAndRemovePlaylistItems(playlist);
-        compareAndAddPlaylistItems(playlist);
-        updateTitlesAndAuthors(playlist);
-        fixPlaylistArrangement(playlist);
+        removeAllPlaylistVideos();
+        addPlaylistItems(playlist);
     }
     else {
         console.log("playlist is null");
