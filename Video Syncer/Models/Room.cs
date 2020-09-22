@@ -41,7 +41,9 @@ namespace Video_Syncer.Models
 
         public int periodicTaskMilliseconds = 2000;
         private long periodicRemoveUsersMilliseconds = 15000;
+        private long periodicSyncUsersVideosSeconds = 10;
         private DateTime lastTimeRemovedDisconnectedUsers = DateTime.Now;
+        private DateTime lastTimeSyncedUsersVideos = DateTime.Now;
         private CancellationTokenSource source;
 
         private long playNewVideoAfterEndingDelayMS = 5000;
@@ -116,44 +118,73 @@ namespace Video_Syncer.Models
                     break;
                 }
 
-                TimeSpan elapsed = DateTime.Now - lastTimeRemovedDisconnectedUsers;
-
-                if (elapsed.TotalMilliseconds >= periodicRemoveUsersMilliseconds)
-                {
-                    int usersRemoved = await ConnectionManager.CheckAndRemoveDisconnectedUsers(this, token);
-                    lastTimeRemovedDisconnectedUsers = DateTime.Now;
-
-                    if (usersRemoved > 0 && UserManager.SomeoneHasState(VideoState.Ended) && !isTransitioningToNewVideo)
-                    {
-                        isTransitioningToNewVideo = true;
-
-                        //TODO: Playlist support, play next video.
-                        PlaylistObject newVideoObj = PlaylistManager.GoToNextVideo();
-                        NewVideo(newVideoObj);
-
-                        VideoStatePayload payload = new VideoStatePayload()
-                        {
-                            currentVideoState = GetSuggestedVideoState(),
-                            currentYoutubeVideoId = currentYoutubeVideoId,
-                            videoTimeSeconds = videoTimeSeconds,
-                            currentYoutubeVideoTitle = currentYoutubeVideoTitle
-                        };
-
-                        RoomDataUpdate update = new RoomDataUpdate()
-                        {
-                            updateType = Network.StateUpdates.Enum.UpdateType.VideoUpdate,
-                            payload = payload
-                        };
-
-                        CancellationTokenSource source = new CancellationTokenSource();
-
-                        await ConnectionManager.SendUpdateToAll(this, update, source.Token);
-                        isTransitioningToNewVideo = false;
-                    }
-                }
-                
+                await SyncUsersVideos(token);
+                await PeriodicRemoveDisconnectedUsers(token);
                 new Task(() => PeriodicUpdateVideoStatistics()).Start();
                 await Task.Delay(periodicTaskMilliseconds);
+            }
+        }
+
+        public async Task SyncUsersVideos(CancellationToken token)
+        {
+            TimeSpan elapsed = DateTime.Now - lastTimeSyncedUsersVideos;
+
+            if(elapsed.TotalSeconds > periodicSyncUsersVideosSeconds)
+            {
+                lastTimeSyncedUsersVideos = DateTime.Now;
+
+                VideoStatePayload payload = new VideoStatePayload()
+                {
+                    currentVideoState = GetSuggestedVideoState(),
+                    currentYoutubeVideoId = currentYoutubeVideoId,
+                    videoTimeSeconds = videoTimeSeconds,
+                    currentYoutubeVideoTitle = currentYoutubeVideoTitle
+                };
+
+                RoomDataUpdate update = new RoomDataUpdate()
+                {
+                    updateType = Network.StateUpdates.Enum.UpdateType.VideoUpdate,
+                    payload = payload
+                };
+
+                await ConnectionManager.SendUpdateToAll(this, update, token);
+            }
+        }
+
+        public async Task PeriodicRemoveDisconnectedUsers(CancellationToken token)
+        {
+            TimeSpan elapsed = DateTime.Now - lastTimeRemovedDisconnectedUsers;
+
+            if (elapsed.TotalMilliseconds >= periodicRemoveUsersMilliseconds)
+            {
+                int usersRemoved = await ConnectionManager.CheckAndRemoveDisconnectedUsers(this, token);
+                lastTimeRemovedDisconnectedUsers = DateTime.Now;
+
+                if (usersRemoved > 0 && UserManager.SomeoneHasState(VideoState.Ended) && !isTransitioningToNewVideo)
+                {
+                    isTransitioningToNewVideo = true;
+
+                    //TODO: Playlist support, play next video.
+                    PlaylistObject newVideoObj = PlaylistManager.GoToNextVideo();
+                    NewVideo(newVideoObj);
+
+                    VideoStatePayload payload = new VideoStatePayload()
+                    {
+                        currentVideoState = GetSuggestedVideoState(),
+                        currentYoutubeVideoId = currentYoutubeVideoId,
+                        videoTimeSeconds = videoTimeSeconds,
+                        currentYoutubeVideoTitle = currentYoutubeVideoTitle
+                    };
+
+                    RoomDataUpdate update = new RoomDataUpdate()
+                    {
+                        updateType = Network.StateUpdates.Enum.UpdateType.VideoUpdate,
+                        payload = payload
+                    };
+
+                    await ConnectionManager.SendUpdateToAll(this, update, token);
+                    isTransitioningToNewVideo = false;
+                }
             }
         }
 
