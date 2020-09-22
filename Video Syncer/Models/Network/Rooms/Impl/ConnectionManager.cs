@@ -71,8 +71,8 @@ namespace Video_Syncer.Models.Network.Rooms.Impl
 
         public async Task SendUpdateToUser(User user, Room room, IUpdate update, CancellationToken token)
         {
-            var dataToSend = new Byte[1024];
             var newString = JsonConvert.SerializeObject(update);
+            var dataToSend = new Byte[newString.Length] ;
             dataToSend = System.Text.Encoding.UTF8.GetBytes(newString);
             bool userDisconnected = false;
             
@@ -109,8 +109,8 @@ namespace Video_Syncer.Models.Network.Rooms.Impl
 
         public async Task SendUpdateToAll(Room room, IUpdate update, CancellationToken cancellationToken)
         {
-            var dataToSend = new Byte[1024];
             var newString = JsonConvert.SerializeObject(update);
+            var dataToSend = new Byte[newString.Length];
             dataToSend = System.Text.Encoding.UTF8.GetBytes(newString);
             List<User> disconnectedUsers = new List<User>();
 
@@ -154,8 +154,8 @@ namespace Video_Syncer.Models.Network.Rooms.Impl
 
         public async Task SendUpdateToAllExcept(User user, Room room, IUpdate update, CancellationToken cancellationToken)
         {
-            var dataToSend = new Byte[1024];
             var newString = JsonConvert.SerializeObject(update);
+            var dataToSend = new Byte[newString.Length];
             dataToSend = System.Text.Encoding.UTF8.GetBytes(newString);
             List<User> disconnectedUsers = new List<User>();
 
