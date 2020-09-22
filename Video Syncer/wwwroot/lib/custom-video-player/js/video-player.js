@@ -480,12 +480,10 @@ function createTimeSlider(playerControlsDiv) {
     playerControlsDiv.appendChild(timeSlider);
 
     timeSlider.addEventListener('touchstart', function (e) {
-        console.log("touchstart time slider");
         userDraggingTimeSlider = true;
     });
 
     timeSlider.addEventListener('touchend', function (e) {
-        console.log("touchend time slider");
         userDraggingTimeSlider = false;
         userClicksTimeSliderCallback(timeSlider.value);
     });
