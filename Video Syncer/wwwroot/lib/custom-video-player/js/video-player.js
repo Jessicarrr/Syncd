@@ -41,6 +41,9 @@ var volumeButtonUnmutedText = "V";
 
 var shouldTrackTime = false;
 
+var lastTimeMouseMovedInFullscreen;
+var hideUiInFullscreenAfterSeconds = 6;
+
 /**
  * Disables the custom player so that the video can be clicked on and interacted with.
  */
@@ -96,6 +99,24 @@ function fadeIn(element, toOpacity = 1) {
 }
 
 function videoPlayerTick() {
+    if (isFullscreen() && lastTimeMouseMovedInFullscreen != null) {
+        // auto hide video player ui in fullscreen after mouse movement has stopped for a while
+        var currentTime = new Date();
+        var currentTimeMillis = currentTime.getTime();
+        var lastMouseMovementMillis = lastTimeMouseMovedInFullscreen.getTime();
+        var timeSinceLastMovementMillis = currentTimeMillis - lastMouseMovementMillis;
+        var timeSinceLastMovementSeconds = timeSinceLastMovementMillis / 1000;
+
+        if (timeSinceLastMovementSeconds > hideUiInFullscreenAfterSeconds) {
+            fadeOut(bottomButtonDiv);
+            fadeOut(timeSlider);
+            console.log("Should fade out ui");
+        }
+        else {
+            console.log("ui not fading yet because time since last movement = " + timeSinceLastMovementSeconds);
+        }
+    }
+
     try {
         if (isFunction(changeVideoSizeCallback)) {
             fixVideoPlayerSize();
@@ -411,8 +432,14 @@ function setupListeners() {
         fixVideoPlayerSize();
     }, true);
 
-
-    
+    containerDiv.onmousemove = function () {
+        if (isFullscreen()) {
+            lastTimeMouseMovedInFullscreen = new Date();
+            fadeIn(bottomButtonDiv);
+            fadeIn(timeSlider);
+        }
+        
+    };
 
     containerDiv.onmouseenter = function () {
         isMouseOverPlayer = true;
