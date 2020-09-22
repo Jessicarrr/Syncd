@@ -84,7 +84,7 @@ function setupSocketEvents() {
         try {
             var obj = JSON.parse(event.data);
 
-            console.log("json message: \"" + event.data + "\"");
+            //console.log("json message: \"" + event.data + "\"");
 
             if (obj.hasOwnProperty(requestTypeProperty)) {
                 handleRequestResponse(obj);
@@ -94,7 +94,7 @@ function setupSocketEvents() {
             }
         }
         catch (e) {
-            console.log("non-json message: \"" + event.data + "\"");
+            //console.log("non-json message: \"" + event.data + "\"");
         }
         
         
@@ -510,7 +510,7 @@ function sendRearrangePlaylistRequest(onTopId, onBottomId) {
 }
 
 function send(str) {
-    console.log("sending: " + str);
+    //console.log("sending: " + str);
     if (socket.readyState === socket.OPEN) {
 
         socket.send(str);

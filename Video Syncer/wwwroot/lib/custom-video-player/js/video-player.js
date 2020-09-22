@@ -337,7 +337,6 @@ function setToggleVideoPlayingCallback(paramTogglePlayingCallback) {
     }
 
     toggleVideoPlayingCallback = paramTogglePlayingCallback;
-    console.log("setPlayVideoCallback - video callback set to " + paramTogglePlayingCallback);
 }
 
 function isFunction(object) {
@@ -412,6 +411,9 @@ function setupListeners() {
         fixVideoPlayerSize();
     }, true);
 
+
+    
+
     containerDiv.onmouseenter = function () {
         isMouseOverPlayer = true;
         fadeIn(bottomButtonDiv);
@@ -430,6 +432,7 @@ function setupListeners() {
         }, 1000);
 
     };
+
 }
 
 function fixVideoPlayerSize() {
@@ -476,6 +479,17 @@ function createTimeSlider(playerControlsDiv) {
 
     playerControlsDiv.appendChild(timeSlider);
 
+    timeSlider.addEventListener('touchstart', function (e) {
+        console.log("touchstart time slider");
+        userDraggingTimeSlider = true;
+    });
+
+    timeSlider.addEventListener('touchend', function (e) {
+        console.log("touchend time slider");
+        userDraggingTimeSlider = false;
+        userClicksTimeSliderCallback(timeSlider.value);
+    });
+
     timeSlider.onmousedown = function () {
         userDraggingTimeSlider = true;
     };
@@ -485,7 +499,7 @@ function createTimeSlider(playerControlsDiv) {
     };
 
     timeSlider.onclick = function () {
-        console.log("change - " + timeSlider.value);
+        console.log("onclick time slider");
 
         if (isFunction(userClicksTimeSliderCallback)) {
             userClicksTimeSliderCallback(timeSlider.value);
