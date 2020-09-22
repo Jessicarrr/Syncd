@@ -201,6 +201,17 @@ function addFullscreenButtonClick() {
         if (!isFullscreen()) {
             console.log("fullscreen - tryin full screen");
             tryFullScreen();
+
+            setTimeout(function () {
+                if (isFullscreen()) {
+                    console.log("set time");
+                    lastTimeMouseMovedInFullscreen = new Date();
+                }
+                else {
+                    console.log("not full screen??");
+                }
+            }, 1000);
+            
         }
         else {
             console.log("fullscreen - exiting fullscreen");
@@ -440,6 +451,14 @@ function setupListeners() {
         }
         
     };
+
+    containerDiv.addEventListener('touchstart', function (e) {
+        if(isFullscreen()) {
+            lastTimeMouseMovedInFullscreen = new Date();
+            fadeIn(bottomButtonDiv);
+            fadeIn(timeSlider);
+        }
+    });
 
     containerDiv.onmouseenter = function () {
         isMouseOverPlayer = true;
