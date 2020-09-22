@@ -145,7 +145,9 @@ function userSetName() {
 
 function getUsername() {
     if (getCookie(usernameCookie) != "") {
-        return getCookie(usernameCookie);
+        var cookieName = getCookie(usernameCookie);
+        setCookie(usernameCookie, cookieName, 7); // re-save the cookie so it stays longer
+        return cookieName;
     }
     else {
         createNewName();
