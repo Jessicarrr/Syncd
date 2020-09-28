@@ -133,6 +133,11 @@ namespace Video_Syncer.Models
             {
                 lastTimeSyncedUsersVideos = DateTime.Now;
 
+                if(UserManager.SomeoneHasState(VideoState.Ended))
+                {
+                    return;
+                }
+
                 VideoStatePayload payload = new VideoStatePayload()
                 {
                     currentVideoState = GetSuggestedVideoState(),
