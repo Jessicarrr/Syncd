@@ -12,11 +12,27 @@ a {
   color: #0366d6;
 }
 
+/* INTRO BUTTON */
 .btn-primary {
+
+/* 
   color: #fff;
   background-color: #1b6ec2;
-  border-color: #1861ac;
+  border-color: #1861ac; */
+
+  border-radius: 15px;
+  font-weight: bold;
+  box-shadow: 2px 2px 8px #000;
 }
+
+.btn-responsive {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-60%, -50%);
+}
+
+/* END OF INTRO BUTTON */
 
 /* NIGHT MODE SLIDER */
 .switch {
@@ -149,7 +165,8 @@ html {
 }
 
 body {
-  /* Margin bottom by footer height */
+  
+  /* Margin bottom by footer height
   margin-bottom: 60px;
 }
 .footer {
@@ -159,6 +176,7 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
 
 #usernameBox {
     border: none;
@@ -228,4 +246,12 @@ nav {
 
 .navbar-brand {
     color: black;
+}
+
+.col-md-10 {
+    position: absolute;
+    color: #000;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
