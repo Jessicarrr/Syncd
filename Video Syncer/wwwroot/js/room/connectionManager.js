@@ -1,5 +1,6 @@
 ﻿var socket;
 var userId = -1;
+var myRights = 0;
 
 var requestTypeProperty = "requestType";
 var updateTypeProperty = "updateType";
@@ -250,8 +251,6 @@ function handleJoinRequestResponse(response) {
 
         var currentUserId = user["id"];
         var currentUserName = user["name"];
-        var currentUserState = user["videoState"];
-        var currentUserVideoTime = user["videoTimeSeconds"];
         var currentUserRights = user["rights"];
 
         if (currentUserId == userId && currentUserRights != myRights) {
@@ -260,8 +259,7 @@ function handleJoinRequestResponse(response) {
         }
 
         addUser(currentUserId, currentUserName);
-        updateUIForUser(currentUserId, stateIntToString(currentUserState),
-            formatVideoTime(currentUserVideoTime), currentUserRights);
+        updateUIForUser(currentUserId, currentUserRights);
     }
 }
 
@@ -291,8 +289,6 @@ function handleUserListRequestResponse(obj) {
 
             var currentUserId = user["id"];
             var currentUserName = user["name"];
-            var currentUserState = user["videoState"];
-            var currentUserVideoTime = user["videoTimeSeconds"];
             var currentUserRights = user["rights"];
 
             if (currentUserId == userId && currentUserRights != myRights) {
@@ -301,8 +297,7 @@ function handleUserListRequestResponse(obj) {
             }
 
             addUser(currentUserId, currentUserName);
-            updateUIForUser(currentUserId, stateIntToString(currentUserState),
-                formatVideoTime(currentUserVideoTime), currentUserRights);
+            updateUIForUser(currentUserId, currentUserRights);
 
             //console.log("Updated user" + currentUserName + "(" + currentUserId + ") with " + currentUserState + " and " + currentUserVideoTime);
         }
@@ -337,13 +332,10 @@ function handleUserListUpdate(obj) {
 
             var currentUserId = user["id"];
             var currentUserName = user["name"];
-            var currentUserState = user["videoState"];
-            var currentUserVideoTime = user["videoTimeSeconds"];
             var currentUserRights = user["rights"];
 
             addUser(currentUserId, currentUserName);
-            updateUIForUser(currentUserId, stateIntToString(currentUserState),
-                formatVideoTime(currentUserVideoTime), currentUserRights);
+            updateUIForUser(currentUserId, currentUserRights);
 
             //console.log("Updated user" + currentUserName + "(" + currentUserId + ") with " + currentUserState + " and " + currentUserVideoTime);
         }

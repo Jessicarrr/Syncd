@@ -10,19 +10,20 @@ namespace Video_Syncer.Models
 {
     public class User
     {
-        public double videoTimeSeconds { get; set; }
-        public VideoState videoState { get; set; }
+
         public int id { get; set; }
         public string name { get; set; }
         public UserRights rights { get; set; } = UserRights.User;
-        public bool ShouldKick { get; set; } = false;
-        public bool ShouldBan { get; set; } = false;
         [JsonIgnore]
         public string sessionID { get; set; }
         [JsonIgnore]
         public long lastConnectionTime { get; set; }
         [JsonIgnore]
         public WebSocket socket { get; set; }
+        [JsonIgnore]
+        public double videoTimeSeconds { get; set; }
+        [JsonIgnore]
+        public VideoState videoState { get; set; }
 
 
         public User(int Id, string Name, string sessionID)

@@ -22,25 +22,14 @@ function addUserUI(userDiv) {
 /**
  * Update the user list for a specific user.
  * @param {any} userId The identifier for which user to update.
- * @param {any} userState The user's YouTube player state.
- * @param {any} userTime The time the user is at in the video.
+ * @param {any} userRights The user's rights (admin or regular user)
  */
-function updateUIForUser(userId, userState, userTime, userRights) {
+function updateUIForUser(userId, userRights) {
     var updatedUser = false;
 
     userList.forEach(function (entry) {
         if (userId == entry["id"]) {
-            var state = document.getElementById(userId + "userState");
-            var time = document.getElementById(userId + "userTime")
             var rights = document.getElementById(userId + "userRights");
-
-            if (state == null || time == null) {
-                console.log("No state or time?");
-                updatedUser = false;
-            }
-
-            state.innerHTML = userState;
-            time.innerHTML = userTime;
 
             if (userRights === 1) {
                 rights.style.display = "block";
@@ -63,8 +52,6 @@ function createUIForUser(name, id) {
     var userDiv = document.createElement("div");
     var userName = document.createElement("p");
     var userIdElement = document.createElement("p");
-    var userState = document.createElement("p");
-    var userTime = document.createElement("p");
     var userRights = document.createElement("p");
 
     var userKick = document.createElement("p");
@@ -79,12 +66,6 @@ function createUIForUser(name, id) {
     userIdElement.classList.add("userDivElement");
     userIdElement.id = id + "userId";
 
-    userState.classList.add("userDivElement");
-    userState.id = id + "userState";
-
-    userTime.classList.add("userDivElement");
-    userTime.id = id + "userTime";
-
     userRights.classList.add("userDivElement");
     userRights.id = id + "userRights";
 
@@ -98,9 +79,7 @@ function createUIForUser(name, id) {
     userMakeAdmin.id = id + "userMakeAdmin";
 
     userName.innerHTML = name;
-    userIdElement.innerHTML = id;
-    userState.innerHTML = "[Video State]";
-    userTime.innerHTML = "[Video Time]";
+    userIdElement.innerHTML = "#" + id;
     userRights.innerHTML = "👑";
     userKick.innerHTML = "Kick";
     userBan.innerHTML = "Ban";
@@ -134,8 +113,6 @@ function createUIForUser(name, id) {
     userDiv.appendChild(userName);
     userDiv.appendChild(userRights);
     userDiv.appendChild(userIdElement);
-    userDiv.appendChild(userState);
-    userDiv.appendChild(userTime);
     userDiv.appendChild(userKick);
     userDiv.appendChild(userBan);
     userDiv.appendChild(userMakeAdmin);
