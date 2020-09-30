@@ -21,7 +21,15 @@
     width: 100%;
 }
 
+#whole-room-area {
+    background-color: red;
+}
 
+#whole-room-centered {
+    display: flex;
+    justify-content: center;
+    min-height: calc(100vh - 50px);
+}
 
 .playlist-title {
     font-size: 16px;
