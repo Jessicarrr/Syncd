@@ -48,10 +48,11 @@ a {
 
 #middle-area {
     width: 100%;
+    
 }
 
 #area-beneath-header {
-    min-height: calc(100vh - 50px);
+    min-height: calc(100vh - 63px);
 }
 
 .switch input {
