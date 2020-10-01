@@ -3,3 +3,9 @@
     font-size: calc(100% + 1vw + 1vh);
     text-shadow: 2px 2px 8px #000;
 }
+
+#whole-index-area {
+    min-height: calc(100vh - 63px);
+    min-width: 100%;
+    background-color: hotpink;
+}

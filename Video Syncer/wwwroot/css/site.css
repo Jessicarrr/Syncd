@@ -48,7 +48,12 @@ a {
 
 #middle-area {
     width: 100%;
-    
+    min-height: calc(100vh - 63px);
+}
+
+#main-area {
+    width: 100%;
+    min-height: calc(100vh - 63px);
 }
 
 #area-beneath-header {
