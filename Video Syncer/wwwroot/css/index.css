@@ -5,7 +5,33 @@
 }
 
 #whole-index-area {
-    min-height: calc(100vh - 63px);
+    min-height: calc(100vh - 55px);
     min-width: 100%;
     background-color: hotpink;
 }
+
+/* ------------ Start of "create room button" ------------- */
+
+/* create room button in night mode */
+a.btn-info.night-mode {
+    background: #3a3353;
+    border-color: #272237;
+    box-shadow: 0px 2px 4px #1f1f1f;
+}
+
+/* create room button */
+.btn-primary {
+    border-radius: 15px;
+    font-weight: bold;
+    box-shadow: 2px 2px 8px #000;
+}
+
+/* btn-responsive doesnt seem to be used in the home page anymore, leaving it here in case it's reintroduced*/
+.btn-responsive {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-60%, -50%);
+}
+
+/* ------------ End of "create room button" ------------- */

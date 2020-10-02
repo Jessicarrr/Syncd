@@ -1,0 +1,45 @@
+﻿<!-- The Navbar that does not include a night mode switch. this is used on the index page -->
+
+<!-- load the navbar style-->
+<link rel="stylesheet" href="~/css/navbar/navbar-plain.css">
+
+<div class="index-navbar">
+    <!-- The branding part of the navbar, i.e. where it says "syncd" and has the icon -->
+    <ul class="index-navbar-branding index-navbar-ul">
+
+        <!-- Website logo / icon -->
+        <li class="index-navbar-li">
+            <img src="~/images/navbar/brand-image.png" alt="Amazing!" class="index-navbar-brand-image index-navbar-content">
+        </li>
+
+        <!-- website title "syncd" -->
+        <li class="index-navbar-li">
+            <h3 index-navbar-content>Syncd</h3>
+        </li>
+
+    </ul>
+
+    <!-- Links and elements of the navbar that appear on the left side, but to the right of the branding-->
+    <ul class="index-navbar-left index-navbar-ul">
+
+        <!-- Link to "home" -->
+        <li class="index-navbar-li">
+            <a class="index-navbar-content index-navbar-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+        </li>
+    </ul>
+
+    <!-- Links and elements of the navbar that appear to the right hand side -->
+    <ul class="index-navbar-right index-navbar-ul">
+        <li class="index-navbar-li">
+
+            <!-- Username box where users type their username -->
+            <input class="index-navbar-content" type="text" id="username-box">
+
+            <!-- The error that appears when your username is too long -->
+            <div class="alert alert-danger" role="alert" id="alert-username-too-long">
+                Name must be less than 25 characters
+            </div>
+        </li>
+    </ul>
+        
+</div>

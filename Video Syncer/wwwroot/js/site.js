@@ -44,11 +44,11 @@ window.onload = function (event) {
     }
 };
 
-document.getElementById("usernameBox").onfocusout = function () {
+document.getElementById("username-box").onfocusout = function () {
     userSetName();
 }
 
-document.getElementById("usernameBox").addEventListener("keyup", function (e) {
+document.getElementById("username-box").addEventListener("keyup", function (e) {
     if (e.keyCode === 13) {
         userSetName();
     }
@@ -127,7 +127,7 @@ function isUsingInternetExplorer() {
 }
 
 function userSetName() {
-    var newNameDefault = document.getElementById("usernameBox").value;
+    var newNameDefault = document.getElementById("username-box").value;
     var errorMsg = document.getElementById("alert-username-too-long");
 
     if (newNameDefault.length > usernameCharacterLimit) {
@@ -164,7 +164,7 @@ function createNewName() {
         setName(name);
     }
     else {
-        document.getElementById("usernameBox").value = getCookie(usernameCookie);
+        document.getElementById("username-box").value = getCookie(usernameCookie);
     }
 }
 
@@ -175,7 +175,7 @@ function setName(name) {
     setCookie(usernameCookie,
         name,
         7);
-    document.getElementById("usernameBox").value = name;
+    document.getElementById("username-box").value = name;
 }
 
 function setCookie(cname, cvalue, exdays) {

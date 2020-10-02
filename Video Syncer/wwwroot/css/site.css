@@ -12,28 +12,6 @@ a {
   color: #0366d6;
 }
 
-/* INTRO BUTTON */
-.btn-primary {
-
-/* 
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac; */
-
-  border-radius: 15px;
-  font-weight: bold;
-  box-shadow: 2px 2px 8px #000;
-}
-
-.btn-responsive {
-    position: absolute;
-    top: 60%;
-    left: 50%;
-    transform: translate(-60%, -50%);
-}
-
-/* END OF INTRO BUTTON */
-
 /* NIGHT MODE SLIDER */
 .switch {
     position: relative;
@@ -48,16 +26,16 @@ a {
 
 #middle-area {
     width: 100%;
-    min-height: calc(100vh - 63px);
+    min-height: calc(100vh - 55px);
 }
 
 #main-area {
     width: 100%;
-    min-height: calc(100vh - 63px);
+    min-height: calc(100vh - 55px);
 }
 
 #area-beneath-header {
-    min-height: calc(100vh - 63px);
+    min-height: calc(100vh - 55px);
 }
 
 .switch input {
@@ -116,21 +94,13 @@ input:checked + .slider:before {
 }
 
 #night-mode-label {
-    float: right;
-    display: inline;
-    margin-right: 3px;
-    padding-top: 1px;
+    padding-top: 8px;
 }
 
 #night-mode-toggle {
     float: left;
     display: inline;
-    
-}
-
-#night-mode-div {
-    margin-right: 20px;
-    padding-top: 4px;
+    padding-top: 14px;
 }
 
 /* END NIGHT MODE SLIDER */
@@ -194,17 +164,9 @@ body {
 }
 
 
-#usernameBox {
-    border: none;
-}
 
-#alert-username-too-long {
-    margin-bottom: 1px;
-    height: 18px;
-    line-height: 18px;
-    padding: 0px 15px;
-    font-size: 14px;
-}
+
+
 
 #alert-using-internet-explorer {
     display: none;
@@ -220,27 +182,21 @@ h3.night-mode {
     color: #fff;
 }
 
-a.night-mode {
-    color: #d0d0d0;
-}
-a.night-mode:hover {
-    color: white;
-}
-
-a.btn-info.night-mode {
-    background: #3a3353;
-    border-color: #272237;
-    box-shadow: 0px 2px 4px #1f1f1f;
-}
 
 input[type=text].night-mode {
     background: #2c2c2c;
     border-color: #525252;
 }
 
-#usernameBox.night-mode {
-    background: #373737;
+
+/* styling of "a" links in night mode*/
+a.night-mode {
     color: #d0d0d0;
+}
+
+/* styling of "a" links in night mode when the mouse is hovered over it */
+a.night-mode:hover {
+    color: white;
 }
 
 nav.night-mode {
