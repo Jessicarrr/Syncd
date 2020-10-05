@@ -1,14 +1,35 @@
-﻿/* For the intro text */
+﻿
+
+/* For the intro text */
 .text-responsive {
-    font-size: calc(100% + 1vw + 1vh);
+    font-size: calc(100% + 1.5vw + 1.5vh);
     text-shadow: 2px 2px 8px #000;
+    color: #fff;
 }
 
 #whole-index-area {
     min-height: calc(100vh - 55px);
     min-width: 100%;
-    background-color: hotpink;
+/* The background animation */
+    background: linear-gradient(-45deg, #bd4f6c, #d7816a, #f0cf65, #ddedaa, #93b5c6);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
 }
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+/* end of background animation */
 
 /* ------------ Start of "create room button" ------------- */
 
@@ -35,3 +56,4 @@ a.btn-info.night-mode {
 }
 
 /* ------------ End of "create room button" ------------- */
+
