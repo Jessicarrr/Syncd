@@ -13,14 +13,14 @@
         closeDropdownsOnClick(event);
     }
 
-    document.getElementById("usernameBox").addEventListener("focusout", function () {
-        var newNameDefault = document.getElementById("usernameBox").value;
+    document.getElementById("username-box").addEventListener("focusout", function () {
+        var newNameDefault = document.getElementById("username-box").value;
         sendChangeNameRequest(newNameDefault);
     });
 
-    document.getElementById("usernameBox").addEventListener("keyup", function (e) {
+    document.getElementById("username-box").addEventListener("keyup", function (e) {
         if (e.keyCode === 13) {
-            var newNameDefault = document.getElementById("usernameBox").value;
+            var newNameDefault = document.getElementById("username-box").value;
             sendChangeNameRequest(newNameDefault);
         }
     }); 

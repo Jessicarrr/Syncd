@@ -31,17 +31,25 @@ window.onload = function (event) {
 
     var nightToggle = document.getElementById("night-mode-toggle");
 
-    if (getCookie(nightModeCookie) === "true") {
-        toggleNightMode(true);
-        nightToggle.checked = true;
-        setCookie(nightModeCookie, true, 14);
-        isNightMode = true;
-    }
+    if (nightToggle != null) {
+        // if the night mode toggle switch exists, we're on a night mode enabled page.
+        // if the switch doesn't exist, night mode is never activated or handled in any way.
+        // so we're gonna do a lot of night mode related things, like turning on/off night mode,
+        // and adding a click listener to the switch.
 
-    nightToggle.onclick = function () {
-        toggleNightMode(nightToggle.checked);
-        setCookie(nightModeCookie, nightToggle.checked, 14);
+        if (getCookie(nightModeCookie) === "true") {
+            toggleNightMode(true);
+            nightToggle.checked = true;
+            setCookie(nightModeCookie, true, 14);
+            isNightMode = true;
+        }
+
+        nightToggle.onclick = function () {
+            toggleNightMode(nightToggle.checked);
+            setCookie(nightModeCookie, nightToggle.checked, 14);
+        }
     }
+    
 };
 
 document.getElementById("username-box").onfocusout = function () {
@@ -60,6 +68,8 @@ function toggleNightMode(nightmode) {
     var textInputs = document.querySelectorAll("input[type=text]");
     var links = document.querySelectorAll("a");
     var navs = document.querySelectorAll("nav");
+    var playlistAreaDiv = document.getElementById("playlist-area-parent");
+    var userListAreaDiv = document.getElementById("userListArea")
     /*var h3s = document.querySelectorAll("h3");
     var h2s = document.querySelectorAll("h2");*/
     /*var h1s = document.querySelectorAll("h1");
@@ -71,6 +81,19 @@ function toggleNightMode(nightmode) {
     Array.prototype.push.apply(allElementsToChange, links);
     Array.prototype.push.apply(allElementsToChange, navs);
     Array.prototype.push.apply(allElementsToChange, playlistOptions);
+
+    if (playlistAreaDiv != null && typeof playlistAreaDiv !== 'undefined') {
+        allElementsToChange.push(playlistAreaDiv);
+        console.log("added playlist div " + playlistAreaDiv);
+    }
+    else {
+        console.log("playlist div iwas null");
+    }
+
+    if (userListAreaDiv != null && typeof userListAreaDiv !== 'undefined') {
+        allElementsToChange.push(userListAreaDiv);
+    }
+        
     /*Array.prototype.push.apply(allElementsToChange, h3s);
     Array.prototype.push.apply(allElementsToChange, h2s);*/
     /*Array.prototype.push.apply(allElementsToChange, h1s);
