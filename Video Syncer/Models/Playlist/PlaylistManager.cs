@@ -17,7 +17,7 @@ namespace Video_Syncer.Models.Playlist
         public List<PlaylistObject> playlist = new List<PlaylistObject>();
 
         private int uniqueIdLength = 15;
-        private NoEmbedHandler noembed = new NoEmbedHandler();
+        private YoutubeApiHandler youtubeApi = new YoutubeApiHandler();
 
         private PlaylistObject currentItemPlaying = null;
 
@@ -54,7 +54,7 @@ namespace Video_Syncer.Models.Playlist
             CancellationTokenSource source = new CancellationTokenSource();
             Task.Run(async () =>
             {
-                await noembed.GetYoutubeData(youtubeId, source).ContinueWith(result =>
+                await youtubeApi.GetYoutubeData(youtubeId, source).ContinueWith(result =>
                 {
                     JObject jResult = result.Result;
 
