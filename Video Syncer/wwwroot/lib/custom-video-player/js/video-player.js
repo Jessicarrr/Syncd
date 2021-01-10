@@ -508,7 +508,7 @@ function createButtons(playerControlsDiv) {
 function createPlayButton() {
     playButton = document.createElement("button");
     playButton.setAttribute("id", playButtonId);
-    playButton.innerHTML = "P";
+    //playButton.innerHTML = "P";
 
     playButton.onclick = function () {
         if (isFunction(toggleVideoPlayingCallback)) {

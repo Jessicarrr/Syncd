@@ -36,6 +36,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\navbar\index\" />
+    <Folder Include="wwwroot\lib\custom-video-player\images\icons\" />
   </ItemGroup>
 
 </Project>
