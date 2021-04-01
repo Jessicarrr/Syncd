@@ -58,9 +58,11 @@
     border-right: 1px solid gray;
 }
 
-/* navbar title text */
+/* the title of the navbar "Syncd" */
 #navbar-title {
     text-align: center;
+    font-family: Arial, Verdana, sans-serif;
+    line-height: 1.4;
 }
 
 /* the brand image of the navbar. this is the image that appears in the navbar*/
@@ -85,22 +87,24 @@
     margin-bottom: 1px;
     height: 16px;
     line-height: 12px;
-    font-size: 12px;
+    font-size: 11px;
     position: absolute;
 }
 
 /* the night mode styling of the username box */
 #username-box.night-mode {
+    border: 1px solid #4b4b4b;
     background: #373737;
     color: #d0d0d0;
 }
 
 /* the general styling of the username box (applies to day and night modes) */
 #username-box {
-    border: none;
+    border: 1px solid #e6e6e6;
     margin-top: 15px;
-    height: 23px;
-    width: 250px;
+    padding: 0px 0px 2px 2px;
+    height: 24px;
+    width: 200px;
 }
 
 /* The night mode switch */
