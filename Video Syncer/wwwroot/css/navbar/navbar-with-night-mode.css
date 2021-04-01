@@ -1,0 +1,79 @@
+﻿/*the whole nav bar*/
+.room-navbar {
+    box-shadow: 0px 2px 5px #c1c1c1;
+    height: 55px;
+    width: 100%;
+    position: relative;
+    padding: 0px 110px 0px 60px;
+    overflow: hidden;
+}
+
+/* a class created for all items of type "ul" in the navbar*/
+.room-navbar-ul {
+    list-style-type: none; /* Remove bullet points from each item in the navbar*/
+    margin: 0;
+    padding: 7px 0px 0px 0px;
+    padding-right: 15px;
+}
+
+/* a class created for all items of type "li" in the navbar*/
+.room-navbar-li {
+    float: left;
+}
+/* a class meant for any content inside the li items of the navbar */
+.room-navbar-content {
+    display: block;
+    padding: 8px;
+}
+
+/* any link in the navbar (i.e. <a href=""></a>)*/
+.room-navbar-link{
+    color: black;
+}
+
+/* the branding i.e. where it says the name of the site as well as the brand image*/
+.room-navbar-branding {
+    float: left;
+    border-right: 1px solid gray;
+}
+
+/* the brand image of the navbar. this is the image that appears in the navbar*/
+.room-navbar-brand-image {
+    height: 55px;
+    width: 55px;
+    margin-right: 50px;
+}
+
+/* the items on the navbar that appear on the left side of it*/
+.room-navbar-left {
+    float: left;
+}
+
+/* the items on the navbar that appear on the right side of it*/
+.room-navbar-right {
+    float: right;
+}
+
+/* The warning message that alerts the user when their entered name is too long */
+#alert-username-too-long {
+    margin-bottom: 1px;
+    height: 14px;
+    line-height: 12px;
+    padding: 0px 15px;
+    font-size: 12px;
+    position: absolute;
+}
+
+/* the night mode styling of the username box */
+#username-box.night-mode {
+    background: #373737;
+    color: #d0d0d0;
+}
+
+/* the general styling of the username box (applies to day and night modes) */
+#username-box {
+    border: none;
+    margin-bottom: -5px;
+    height: 10%;
+    width: 210px;
+}

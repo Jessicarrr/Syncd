@@ -6,10 +6,17 @@
     min-width: 40%;
     max-width: 50%;
     max-height: 40vh;
-    border: 1px solid #6b6b6b;
-    box-shadow: 1px 1px 3px black, 1px 1px 3px black;
+    border-radius: 3%;
+    background-color: #f8f8f8;
+    box-shadow: 0 0 8px #7e7e7e;
     float: left;
-    margin-right: 8%;
+    margin: 5px 8% 5% 5px;
+    padding-bottom: 10px;
+}
+
+#playlist-area-parent.night-mode {
+    background-color: #2a2a2a;
+    box-shadow: 0 0 10px #000;
 }
 
 #playlist-area {
@@ -21,11 +28,24 @@
     width: 100%;
 }
 
+#whole-room-area {
+    /*background-color: red;*/
+}
 
+#whole-room-centered {
+    display: flex;
+    justify-content: center;
+    min-height: calc(100vh - 50px);
+}
 
+/* The top title of the playlist that just says "Playlist" */
+.playlist-header {
+    padding: 2px 0px 0px 8px;
+}
 .playlist-title {
     font-size: 16px;
     width: 99%;
+    
 }
 
 .playlist-author {
@@ -97,6 +117,7 @@
     left: 20px;
     font-size: 16px;
     line-height: 15px;
+    border: 1px solid black;
 }
 
 .dropdown-content.night-mode {
@@ -135,14 +156,22 @@
 #userListArea {
     height: 35%;
     margin-bottom: 10px;
-    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .3), 1px 1px 1px 1px rgba(0, 0, 0, .3);
+    box-shadow: 0 0 8px #7e7e7e;
     margin-right: 1%;
     min-width: 30%;
     max-width: 35%;
-    border: 1px solid;
     float: right;
     overflow-y: auto;
     max-height: 40vh;
+    background-color: #f8f8f8;
+    border-radius: 3%;
+    margin: 5px 8% 5% 0px;
+    padding: 0 0 10px 0;
+}
+
+#userListArea.night-mode {
+    background-color: #2a2a2a;
+    box-shadow: 0 0 10px #000;
 }
 
 .userDiv {
