@@ -1,40 +1,66 @@
 ﻿/*the whole nav bar*/
-.room-navbar {
+#room-navbar {
     box-shadow: 0px 2px 5px #c1c1c1;
     height: 55px;
     width: 100%;
     position: relative;
-    padding: 0px 110px 0px 60px;
+    padding: 0px 110px 0px 20px;
     overflow: hidden;
+}
+
+#room-navbar.night-mode {
+    box-shadow: 0px 2px 5px black;
 }
 
 /* a class created for all items of type "ul" in the navbar*/
 .room-navbar-ul {
     list-style-type: none; /* Remove bullet points from each item in the navbar*/
-    margin: 0;
-    padding: 7px 0px 0px 0px;
     padding-right: 15px;
+    height: 100%;
 }
 
 /* a class created for all items of type "li" in the navbar*/
 .room-navbar-li {
     float: left;
+    height: 100%;
 }
 /* a class meant for any content inside the li items of the navbar */
 .room-navbar-content {
     display: block;
     padding: 8px;
+    text-align: center;
 }
 
 /* any link in the navbar (i.e. <a href=""></a>)*/
 .room-navbar-link{
     color: black;
+    height: 100%;
+    line-height: 2.3;
+}
+
+/* any link in the navbar (i.e. <a href=""></a>)*/
+.room-navbar-link:hover {
+    background-color: #f3f3f3;
+    color: black;
+    text-decoration: none;
+}
+
+/* any link in the navbar (i.e. <a href=""></a>)*/
+.room-navbar-link.night-mode:hover {
+    background-color: #525252;
+    color: white;
+    text-decoration: none;
 }
 
 /* the branding i.e. where it says the name of the site as well as the brand image*/
 .room-navbar-branding {
     float: left;
     border-right: 1px solid gray;
+}
+
+/* navbar title text */
+#navbar-title {
+    text-align: center;
 }
 
 /* the brand image of the navbar. this is the image that appears in the navbar*/
@@ -57,9 +83,8 @@
 /* The warning message that alerts the user when their entered name is too long */
 #alert-username-too-long {
     margin-bottom: 1px;
-    height: 14px;
+    height: 16px;
     line-height: 12px;
-    padding: 0px 15px;
     font-size: 12px;
     position: absolute;
 }
@@ -73,7 +98,18 @@
 /* the general styling of the username box (applies to day and night modes) */
 #username-box {
     border: none;
-    margin-bottom: -5px;
-    height: 10%;
-    width: 210px;
+    margin-top: 15px;
+    height: 23px;
+    width: 250px;
+}
+
+/* The night mode switch */
+
+#night-mode-div {
+    margin-top: 9px;
+}
+
+/* The night mode text */
+#night-mode-label {
+    margin-top: 6px;
 }
