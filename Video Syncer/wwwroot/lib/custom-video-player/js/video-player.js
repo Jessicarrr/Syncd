@@ -15,6 +15,9 @@ var isMouseOverPlayer = false;
 var lastWidth;
 var lastHeight;
 
+var originalWidth;
+var originalHeight;
+
 var containerDiv;
 var playerControlsDiv;
 var playerElement;
@@ -421,6 +424,8 @@ function createPlayerOverObject(object, playerWidth, playerHeight) {
 
     lastWidth = playerWidth;
     lastHeight = playerHeight;
+    originalWidth = playerWidth;
+    originalHeight = playerHeight;
     playerElement = object;
 
     objectParent.replaceChild(containerDiv, object);
@@ -453,10 +458,24 @@ function setupListeners() {
     };
 
     containerDiv.addEventListener('touchstart', function (e) {
-        if(isFullscreen()) {
+        if (isFullscreen()) {
             lastTimeMouseMovedInFullscreen = new Date();
             fadeIn(bottomButtonDiv);
             fadeIn(timeSlider);
+        }
+        else {
+            if (e.target.id != playerControlsDivId) {
+                return;
+            }
+
+            if (bottomButtonDiv.style.visibility == "visible") {
+                fadeOut(bottomButtonDiv);
+                fadeOut(timeSlider);
+            }
+            else {
+                fadeIn(bottomButtonDiv);
+                fadeIn(timeSlider);
+            }
         }
     });
 
@@ -480,8 +499,31 @@ function setupListeners() {
     };
 
 }
+/*
+function fixVideoPlayerSize() {
+    if (containerDiv.offsetWidth != lastWidth || containerDiv.offsetHeight != lastHeight) {
+        var adjustedHeight = containerDiv.offsetWidth * originalHeight / originalWidth
+
+        changeVideoSizeCallback(containerDiv.offsetWidth, adjustedHeight);
+        changePlayerDimensions(containerDiv.offsetWidth, adjustedHeight);
+        lastWidth = containerDiv.offsetWidth;
+        lastHeight = adjustedHeight;
+        console.log("set to " + lastWidth + " x " + lastHeight);
+    }
+}
+ */
 
 function fixVideoPlayerSize() {
+    var adjustedHeight = containerDiv.offsetWidth * originalHeight / originalWidth
+
+    changeVideoSizeCallback(containerDiv.offsetWidth, adjustedHeight);
+    containerDiv.style.height = adjustedHeight + "px";
+    lastWidth = containerDiv.offsetWidth;
+    lastHeight = containerDiv.offsetHeight;
+    console.log("set to " + lastWidth + " x " + lastHeight);
+}
+
+function fixVideoPlayerSize2() {
     if (containerDiv.offsetWidth != lastWidth || containerDiv.offsetHeight != lastHeight) {
         changeVideoSizeCallback(containerDiv.offsetWidth, containerDiv.offsetHeight);
         lastWidth = containerDiv.offsetWidth;
@@ -623,6 +665,15 @@ function createVolumeSlider() {
         }
 
         
+    });
+
+    volumeHoverButton.addEventListener('touchstart', function (e) {
+        if (volumeSlider.style.display == "none") {
+            volumeSlider.style.display = "block";
+        } else {
+            volumeSlider.style.display = "none";
+        }
+
     });
 
     volumeSlider.addEventListener("mouseenter", function (event) {

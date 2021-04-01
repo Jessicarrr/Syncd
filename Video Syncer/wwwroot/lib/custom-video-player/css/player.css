@@ -104,16 +104,19 @@
 }
 
 #cpvl-timeSlider::-moz-range-thumb {
-    width: 1%; /* Set a specific slider handle width */
-    height: 1%; /* Slider handle height */
+    width: 10px; /* Set a specific slider handle width */
+    height: 3px; /* Slider handle height */
     background: #FF0000; /* Red background */
+    color: red;
     cursor: pointer; /* Cursor on hover */
 }
 
 #cpvl-timeSlider::-webkit-slider-thumb:hover {
     height: 10px;
+    width: 20px;
 }
 
 #cpvl-timeSlider::-moz-range-thumb:hover {
     height: 10px;
+    width: 20px;
 }
