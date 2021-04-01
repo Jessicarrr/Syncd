@@ -31,7 +31,7 @@
 .index-navbar-link {
     color: black;
     height: 100%;
-    line-height: 2.2;
+    line-height: 2.3;
 }
 
 /* any link in the navbar when hovered over with the mouse */
@@ -88,6 +88,6 @@
 #username-box {
     border: #f5f5f5;
     margin-top: 15px;
-    height: 40%;
+    height: 23px;
     width: 250px;
 }
