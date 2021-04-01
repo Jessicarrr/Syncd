@@ -4,31 +4,46 @@
     height: 55px;
     width: 100%;
     position: relative;
-    padding: 0px 110px 0px 60px;
+    padding: 0px 110px 0px 20px;
     overflow: hidden;
 }
 
 /* a class created for all items of type "ul" in the navbar*/
 .index-navbar-ul {
     list-style-type: none; /* Remove bullet points from each item in the navbar*/
-    margin: 0;
-    padding: 7px 0px 0px 0px;
     padding-right: 15px;
+    height: 100%;
 }
 
 /* a class created for all items of type "li" in the navbar*/
 .index-navbar-li {
     float: left;
+    height: 100%;
 }
 /* a class meant for any content inside the li items of the navbar */
 .index-navbar-content {
     display: block;
     padding: 8px;
+    text-align: center;
 }
 
 /* any link in the navbar (i.e. <a href=""></a>)*/
-.index-navbar-link{
+.index-navbar-link {
     color: black;
+    height: 100%;
+    line-height: 2.2;
+}
+
+/* any link in the navbar when hovered over with the mouse */
+.index-navbar-link:hover {
+    background-color: #f3f3f3;
+    color: black;
+    text-decoration: none;
+}
+
+/* the title of the navbar "Syncd" */
+#navbar-title {
+    text-align: center;
 }
 
 /* the branding i.e. where it says the name of the site as well as the brand image*/
@@ -74,6 +89,6 @@
 #username-box {
     border: none;
     margin-bottom: -5px;
-    height: 10%;
+    height: 30%;
     width: 210px;
 }
