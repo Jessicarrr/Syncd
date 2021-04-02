@@ -62,6 +62,15 @@ document.getElementById("username-box").addEventListener("keyup", function (e) {
     }
 }); 
 
+function onClickHamburger() {
+    var x = document.getElementById("navbar");
+    if (x.className === "index-navbar") {
+        x.className += " responsive";
+    } else {
+        x.className = "index-navbar";
+    }
+}
+
 function toggleNightMode(nightmode) {
     var body = document.querySelector('body');
     var playlistOptions = document.querySelectorAll(".playlist-options-button");
