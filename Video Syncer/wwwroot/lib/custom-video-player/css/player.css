@@ -40,6 +40,8 @@
 
 #cvpl-customVolumeButton {
     float: left;
+    background: url('../images/icons/volume.png') no-repeat center;
+    background-size: 80% 60%;
 }
 
 #cvpl-volumeSlider {

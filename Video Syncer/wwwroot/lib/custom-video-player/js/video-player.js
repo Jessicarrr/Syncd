@@ -38,11 +38,6 @@ var getCurrentVideoTimeCallback;
 var getTotalVideoDurationCallback;
 var changeVideoSizeCallback;
 
-var volumeButtonMutedFontSize = "10px";
-var volumeButtonUnmutedFontSize = "16px";
-var volumeButtonMutedText = "Muted";
-var volumeButtonUnmutedText = "V";
-
 var shouldTrackTime = false;
 
 var lastTimeMouseMovedInFullscreen;
@@ -642,15 +637,13 @@ function createPlayButton() {
 function setVolumeSliderPosition(positionNumber) {
     volumeSlider.setAttribute("value", positionNumber);
 
-    var volumeButtonCurrentText = volumeHoverButton.innerHTML;
-
-    if (positionNumber <= 0 && volumeButtonCurrentText !== volumeButtonMutedText) {
-        volumeHoverButton.innerHTML = volumeButtonMutedText;
-        volumeHoverButton.style.fontSize = volumeButtonMutedFontSize;
+    if (positionNumber <= 0) {
+        volumeHoverButton.style.background = "url('../lib/custom-video-player/images/icons/volume-muted.png') no-repeat center"
+        volumeHoverButton.style.backgroundSize = "80% 60%";
     }
-    else if (positionNumber > 0 && volumeButtonCurrentText != volumeButtonUnmutedText) {
-        volumeHoverButton.innerHTML = volumeButtonUnmutedText;
-        volumeHoverButton.style.fontSize = volumeButtonUnmutedFontSize;
+    else if (positionNumber > 0) {
+        volumeHoverButton.style.background = "url('../lib/custom-video-player/images/icons/volume.png') no-repeat center"
+        volumeHoverButton.style.backgroundSize = "80% 60%";
     }
 }
 
@@ -667,7 +660,7 @@ function createVolumeSlider() {
 
     volumeHoverButton = document.createElement("button");
     volumeHoverButton.setAttribute("id", volumeButtonHoverId);
-    volumeHoverButton.innerHTML = "V";
+    //volumeHoverButton.innerHTML = "V";
 
     volumeHoverButton.addEventListener("mouseenter", function (event) {
         mouseInVolumeButton = true;
@@ -714,18 +707,27 @@ function createVolumeSlider() {
     volumeSlider.oninput = function () {
         if (isFunction(volumeChangeCallback)) {
             var volumeValue = volumeSlider.value;
-            var volumeButtonCurrentText = volumeHoverButton.innerHTML;
+            //var volumeButtonCurrentText = volumeHoverButton.innerHTML;
 
             volumeChangeCallback(volumeValue);
 
-            if (volumeValue <= 0 && volumeButtonCurrentText !== volumeButtonMutedText) {
+            if (volumeValue <= 0) {
+                volumeHoverButton.style.background = "url('../lib/custom-video-player/images/icons/volume-muted.png') no-repeat center"
+                volumeHoverButton.style.backgroundSize = "80% 60%";
+            }
+            else if (volumeValue > 0) {
+                volumeHoverButton.style.background = "url('../lib/custom-video-player/images/icons/volume.png') no-repeat center"
+                volumeHoverButton.style.backgroundSize = "80% 60%";
+            }
+
+            /*if (volumeValue <= 0 && volumeButtonCurrentText !== volumeButtonMutedText) {
                 volumeHoverButton.innerHTML = volumeButtonMutedText;
                 volumeHoverButton.style.fontSize = volumeButtonMutedFontSize;
             }
             else if (volumeValue > 0 && volumeButtonCurrentText != volumeButtonUnmutedText) {
                 volumeHoverButton.innerHTML = volumeButtonUnmutedText;
                 volumeHoverButton.style.fontSize = volumeButtonUnmutedFontSize;
-            }
+            }*/
         }
     };
 
