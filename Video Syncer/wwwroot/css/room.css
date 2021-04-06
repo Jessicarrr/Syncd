@@ -226,7 +226,7 @@ p[id$="userTime"] {
 
 #user-and-playlist-area {
     overflow: hidden;
-    width: 75%;
+    width: 100%;
 }
 
 #userListArea {
@@ -267,7 +267,7 @@ tr{
 }
 
 #searchBar {
-    width: 70%;
+    width: 85%;
     margin-bottom: 10px;
 }
 
