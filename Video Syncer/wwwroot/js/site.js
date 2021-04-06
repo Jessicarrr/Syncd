@@ -64,10 +64,10 @@ document.getElementById("username-box").addEventListener("keyup", function (e) {
 
 function onClickHamburger() {
     var x = document.getElementById("navbar");
-    if (x.className === "index-navbar") {
+    if (x.className === "whole-navbar") {
         x.className += " responsive";
     } else {
-        x.className = "index-navbar";
+        x.className = "whole-navbar";
     }
 }
 
@@ -77,6 +77,8 @@ function toggleNightMode(nightmode) {
     var textInputs = document.querySelectorAll("input[type=text]");
     var links = document.querySelectorAll("a");
     var navs = document.querySelectorAll("nav");
+    var lis = document.querySelectorAll("li");
+    var is = document.querySelectorAll("i");
     var playlistAreaDiv = document.getElementById("playlist-area-parent");
     var userListAreaDiv = document.getElementById("userListArea")
     /*var h3s = document.querySelectorAll("h3");
@@ -89,6 +91,8 @@ function toggleNightMode(nightmode) {
     Array.prototype.push.apply(allElementsToChange, textInputs);
     Array.prototype.push.apply(allElementsToChange, links);
     Array.prototype.push.apply(allElementsToChange, navs);
+    Array.prototype.push.apply(allElementsToChange, lis);
+    Array.prototype.push.apply(allElementsToChange, is);
     Array.prototype.push.apply(allElementsToChange, playlistOptions);
 
     if (playlistAreaDiv != null && typeof playlistAreaDiv !== 'undefined') {

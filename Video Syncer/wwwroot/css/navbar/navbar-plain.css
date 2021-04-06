@@ -27,7 +27,7 @@
 }
 
 /*the whole nav bar*/
-.index-navbar {
+.whole-navbar {
     box-shadow: 0px 2px 8px rgba(255, 105, 180, 0.25);
     height: 55px;
     width: 100%;
@@ -134,7 +134,7 @@
         display: block;
     }
 
-    .index-navbar {
+    .whole-navbar {
         padding: 0px 110px 0px 0px;
     }
 
@@ -145,31 +145,31 @@
 }
 
 @media screen and (max-width: 767px) {
-    .index-navbar.responsive {
+    .whole-navbar.responsive {
         position: relative;
         overflow: visible;
         background-color: white;
     }
 
-    .index-navbar.responsive .index-navbar-left {
-        float: none;
-        display: block;
-        text-align: left;
-        background-color: white;
-    }
-    .index-navbar.responsive .index-navbar-right {
-        float: none;
-        display: block;
-        text-align: left;
-        background-color: white;
-    }
-    .index-navbar.responsive .index-navbar-ul {
-        /*padding-right: 0px;*/
-        /*margin: 0px 0px -14px 0px;*/
-        float: left;
-        margin-bottom: 0px;
-        min-width: 350px;
-        width: 55%;
-        margin: 0px 0px -14px 0px;
-    }
+        .whole-navbar.responsive .index-navbar-left {
+            float: none;
+            display: block;
+            text-align: left;
+            background-color: white;
+        }
+        .whole-navbar.responsive .index-navbar-right {
+            float: none;
+            display: block;
+            text-align: left;
+            background-color: white;
+        }
+        .whole-navbar.responsive .index-navbar-ul {
+            /*padding-right: 0px;*/
+            /*margin: 0px 0px -14px 0px;*/
+            float: left;
+            margin-bottom: 0px;
+            min-width: 350px;
+            width: 55%;
+            margin: 0px 0px -14px 0px;
+        }
 }
