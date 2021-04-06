@@ -32,6 +32,7 @@ var fullscreenButton;
 
 var toggleVideoPlayingCallback;
 var volumeChangeCallback;
+var isVideoPlayingCallback;
 var userClicksTimeSliderCallback;
 var getCurrentVideoTimeCallback;
 var getTotalVideoDurationCallback;
@@ -374,6 +375,14 @@ function setToggleVideoPlayingCallback(paramTogglePlayingCallback) {
     toggleVideoPlayingCallback = paramTogglePlayingCallback;
 }
 
+function setIsVideoPlayingCallback(paramIsVideoPlayingCallback) {
+    if (!isFunction(paramIsVideoPlayingCallback)) {
+        throw "First parameter must be a function";
+    }
+
+    isVideoPlayingCallback = paramIsVideoPlayingCallback;
+}
+
 function isFunction(object) {
     if (typeof object === 'function') {
         return true;
@@ -613,6 +622,17 @@ function createPlayButton() {
     playButton.onclick = function () {
         if (isFunction(toggleVideoPlayingCallback)) {
             toggleVideoPlayingCallback();
+
+            if (isFunction(isVideoPlayingCallback)) {
+                if (isVideoPlayingCallback() === true) {
+                    playButton.style.background = "url('../lib/custom-video-player/images/icons/play.png') no-repeat center"
+                    playButton.style.backgroundSize = "60% 60%";
+                }
+                else if (isVideoPlayingCallback() === false) {
+                    playButton.style.background = "url('../lib/custom-video-player/images/icons/pause.png') no-repeat center"
+                    playButton.style.backgroundSize = "60% 60%";
+                }
+            }
         }
     };
 

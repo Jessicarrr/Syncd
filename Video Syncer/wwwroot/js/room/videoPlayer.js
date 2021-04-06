@@ -100,6 +100,15 @@ function getVideoTotalDuration() {
     return player.getDuration();
 }
 
+function isVideoPlaying() {
+    if (stateNumber == 1 || stateNumber == 3) {
+        return true;
+    }
+    else if (stateNumber == 2 || stateNumber == -1 || stateNumber == 0 || stateNumber == 5) {
+        return false;
+    }
+}
+
 // 4. The API will call this function when the video player is ready.
 function onPlayerReady(event) {
     console.log("youtube player is ready");
@@ -109,6 +118,7 @@ function onPlayerReady(event) {
     setClickTimeSliderCallback(adjustTime);
     givePlayerAbilityToTrackTime(getVideoTime, getVideoTotalDuration);
     setChangeVideoSizeCallback(setYoutubePlayerSize);
+    setIsVideoPlayingCallback(isVideoPlaying);
 
     setVolumeSliderPosition(0);
 
