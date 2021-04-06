@@ -121,6 +121,17 @@ function videoPlayerTick() {
             fixVideoPlayerSize();
         }
         trackTime();
+
+        if (isFunction(isVideoPlayingCallback)) {
+            if (isVideoPlayingCallback() === true) {
+                playButton.style.background = "url('../lib/custom-video-player/images/icons/pause.png') no-repeat center"
+                playButton.style.backgroundSize = "60% 60%";
+            }
+            else if (isVideoPlayingCallback() === false) {
+                playButton.style.background = "url('../lib/custom-video-player/images/icons/play.png') no-repeat center"
+                playButton.style.backgroundSize = "60% 60%";
+            }
+        }
     }
     catch(err) {
         console.log("videoPlayerTick - Error with in video-player.js videoPlayerTick() caught. message = "
@@ -444,7 +455,7 @@ function createPlayerOverObject(object, playerWidth, playerHeight) {
 }
 
 function setupTicks() {
-    setInterval(videoPlayerTick, 900);
+    setInterval(videoPlayerTick, 500);
 }
 
 function setupListeners() {
@@ -549,7 +560,6 @@ function createHTML(playerControlsDiv) {
 function createFullscreenButton() {
     fullscreenButton = document.createElement("button");
     fullscreenButton.setAttribute("id", fullscreenButtonId);
-    fullscreenButton.innerHTML = "FS";
     bottomButtonDiv.appendChild(fullscreenButton);
 }
 
