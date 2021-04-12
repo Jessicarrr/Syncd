@@ -3,8 +3,8 @@
 /* Playlist */
 #playlist-area-parent {
     overflow: auto;
-    min-width: 40%;
-    max-width: 50%;
+    max-width: 35%;
+    min-width: 150px;
     max-height: 40vh;
     border-radius: 3%;
     background-color: #f8f8f8;
