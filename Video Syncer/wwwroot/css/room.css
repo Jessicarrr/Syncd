@@ -4,19 +4,19 @@
 #playlist-area-parent {
     overflow: auto;
     max-width: 35%;
-    min-width: 150px;
+    min-width: 100px;
     max-height: 40vh;
-    border-radius: 3%;
     background-color: #f8f8f8;
-    box-shadow: 0 0 8px #7e7e7e;
-    float: left;
-    margin: 5px 8% 5% 5px;
+    box-shadow: 2px 4px 5px #a1a1a1;
+    margin: 5px 5% 5% 0px;
     padding-bottom: 10px;
+    display: inline-block;
+    float: left;
 }
 
 #playlist-area-parent.night-mode {
     background-color: #2a2a2a;
-    box-shadow: 0 0 10px #000;
+    box-shadow: 3px 5px 5px #222222;
 }
 
 #playlist-area {
@@ -26,6 +26,7 @@
     margin-bottom: 8%;
     position: relative;
     width: 100%;
+    
 }
 
 #whole-room-area {
@@ -89,7 +90,7 @@
     height: 100%;
     cursor: pointer;
     float: right;
-    margin-left: 20px;
+    margin-left: 2px;
     border-left: 1px solid #6b6b6b;
     padding-left: 6px;
     padding-bottom: 6px;
@@ -160,56 +161,79 @@
 #userListArea {
     height: 35%;
     margin-bottom: 10px;
-    box-shadow: 0 0 8px #7e7e7e;
     margin-right: 1%;
-    min-width: 30%;
+    min-width: 170px;
     max-width: 35%;
-    float: right;
     overflow-y: auto;
     max-height: 40vh;
-    background-color: #f8f8f8;
-    border-radius: 3%;
-    margin: 5px 8% 5% 0px;
+    background-color: transparent;
+    margin: 5px 2% 5% 0px;
     padding: 0 0 10px 0;
+    box-shadow: 2px 4px 5px #a1a1a1;
+    border: 1px solid gray;
+    display: inline-block;
 }
 
 #userListArea.night-mode {
     background-color: #2a2a2a;
-    box-shadow: 0 0 10px #000;
+    box-shadow: 3px 5px 5px #222222;
+    border: none;
 }
 
 .userDiv {
-    border-bottom: 1px solid gray;
-    margin-bottom: 2px;
     padding: 0px 5px 5px 5px;
     display: inline-block;
     width: 100%;
     min-width: 100%;
+
+}
+
+i[id$="userIcon"] {
+    display: inline-block;
+    background: transparent;
+    transform: scale(0.85, 0.85212);
+}
+
+div[id$="userIconDiv"] {
+    display: inline-block;
+    background: transparent;
+    width: 23px;
+    height: 25px;
 }
 
 p[id$="userName"] {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 16px;
+    vertical-align: bottom;
+    line-height: 1.51;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 64%;
+}
+
+p[id$="userId"] {
+    display: inline-block;
     font-weight: bold;
     font-size: 16px;
     word-break: break-all;
-}
-
-p[id$="userRights"], p[id$="userId"], p[id$="userState"] {
-    float: left;
-    margin-right: 3px;
-    padding-right: 3px;
-    border-right: 1px solid Gainsboro;
-    font-size: 12px;
+    color: #797979;
+    vertical-align: bottom;
+    line-height: 1.51;
+    
 }
 
 p[id$="userKick"], p[id$="userBan"], p[id$="userMakeAdmin"] {
     float: left;
     margin-right: 3px;
     padding-right: 3px;
-    border-right: 1px solid Gainsboro;
     font-size: 12px;
     color: #3973fc;
     text-decoration: underline;
     cursor: pointer;
+    margin-bottom: 15px;
+
+    height: 5px;
 }
 
 p[id$="userTime"] {
@@ -227,14 +251,6 @@ p[id$="userTime"] {
 #user-and-playlist-area {
     overflow: hidden;
     width: 100%;
-}
-
-#userListArea {
-    float: left;
-}
-
-#playlist-area {
-    float: left;
 }
 
 .table-heading {
@@ -279,6 +295,58 @@ tr{
     display: flex;
 }
 
+@media screen and (max-width: 760px) {
+    i[id$="userIcon"] {
+        transform: scale(0.75, 0.75212);
+    }
 
+    div[id$="userIconDiv"] {
+        width: 20px;
+        height: 15px;
+    }
 
+    p[id$="userName"] {
+        font-size: 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100px;
+        /*display: inline-block;
+        font-weight: bold;
+        word-break: break-all;
+        vertical-align: bottom;
+        line-height: 1.51;*/
+    }
 
+    p[id$="userId"] {
+        font-size: 12px;
+
+        /*
+        display: inline-block;
+        font-weight: bold;
+        word-break: break-all;
+        color: #797979;
+        vertical-align: bottom;
+        line-height: 1.51;
+        */
+    }
+
+    p[id$="userKick"], p[id$="userBan"], p[id$="userMakeAdmin"] {
+        font-size: 11px;
+        padding-right: 16px;
+    }
+
+    .playlist-title {
+        font-size: 12px;
+    }
+
+    .playlist-author {
+        font-size: 11px;
+    }
+    .dropdown-content {
+        width: 10px !important;
+        font-size: 12px;
+    }
+
+    .dropdown-content p {
+    }
+}

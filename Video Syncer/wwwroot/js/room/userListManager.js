@@ -29,10 +29,14 @@ function updateUIForUser(userId, userRights) {
 
     userList.forEach(function (entry) {
         if (userId == entry["id"]) {
-            var rights = document.getElementById(userId + "userRights");
+            var icon = document.getElementById(userId + "userIcon");
 
             if (userRights === 1) {
-                rights.style.display = "block";
+
+                icon.classList.remove("fa-user");
+                icon.classList.add("fa-crown");
+                icon.style.color = "darkgoldenrod";
+                icon.style.marginLeft = "-2px"
             }
 
             updatedUser = true;
@@ -50,9 +54,14 @@ function updateUIForUser(userId, userRights) {
  */
 function createUIForUser(name, id) {
     var userDiv = document.createElement("div");
+
+    var topLineDiv = document.createElement("div");
+    var bottomLineDiv = document.createElement("div");
+    var userIconDiv = document.createElement("div");
+
     var userName = document.createElement("p");
     var userIdElement = document.createElement("p");
-    var userRights = document.createElement("p");
+    var userIcon = document.createElement("i");
 
     var userKick = document.createElement("p");
     var userBan = document.createElement("p");
@@ -60,14 +69,16 @@ function createUIForUser(name, id) {
 
     userDiv.classList.add("userDiv");
 
+    userIcon.classList.add("fa", "fa-user", "icon");
+    userIcon.id = id + "userIcon";
+
+    userIconDiv.id = id + "userIconDiv";
+
     userName.classList.add("userDivElement");
     userName.id = id + "userName";
 
     userIdElement.classList.add("userDivElement");
     userIdElement.id = id + "userId";
-
-    userRights.classList.add("userDivElement");
-    userRights.id = id + "userRights";
 
     userKick.classList.add("userDivElement");
     userKick.id = id + "userKick";
@@ -78,14 +89,16 @@ function createUIForUser(name, id) {
     userMakeAdmin.classList.add("userDivElement");
     userMakeAdmin.id = id + "userMakeAdmin";
 
+    
     userName.innerHTML = name;
     userIdElement.innerHTML = "#" + id;
-    userRights.innerHTML = "👑";
     userKick.innerHTML = "Kick";
     userBan.innerHTML = "Ban";
     userMakeAdmin.innerHTML = "Make Admin";
 
-    userRights.style.display = "none";
+    if (isNightMode === true) {
+        userIcon.classList.add("night-mode");
+    }
 
     if (myRights == 1 && id != userId) {
         userKick.style.display = "block";
@@ -110,12 +123,17 @@ function createUIForUser(name, id) {
         sendBanRequest(id);
     };
 
-    userDiv.appendChild(userName);
-    userDiv.appendChild(userRights);
-    userDiv.appendChild(userIdElement);
-    userDiv.appendChild(userKick);
-    userDiv.appendChild(userBan);
-    userDiv.appendChild(userMakeAdmin);
+    userDiv.appendChild(topLineDiv);
+    userDiv.appendChild(bottomLineDiv);
+
+    userIconDiv.appendChild(userIcon);
+
+    topLineDiv.appendChild(userIconDiv);
+    topLineDiv.appendChild(userName);
+    topLineDiv.appendChild(userIdElement);
+    bottomLineDiv.appendChild(userKick);
+    bottomLineDiv.appendChild(userBan);
+    bottomLineDiv.appendChild(userMakeAdmin);
 
     return userDiv;
 }
