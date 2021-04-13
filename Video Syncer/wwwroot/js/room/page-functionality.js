@@ -4,6 +4,20 @@
     }
 }
 
+function showInitialLoadingScreen() {
+    var loadingScreen = document.getElementById("initial-loading-screen");
+
+    loadingScreen.style.display = "block";
+    document.documentElement.style.overflow = "hidden";
+}
+
+function hideInitialLoadingScreen() {
+    var loadingScreen = document.getElementById("initial-loading-screen");
+
+    loadingScreen.style.display = "none";
+    document.documentElement.style.overflow = "auto";
+}
+
 function setupHidePlayerCheckbox() {
     var checkbox = document.getElementById("hide-player-checkbox");
 

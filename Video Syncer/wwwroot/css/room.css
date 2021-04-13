@@ -1,4 +1,38 @@
-﻿
+﻿.loading-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    z-index: 1000;
+    display: none;
+}
+
+.loading-info {
+}
+
+.loading-screen-middle {
+    position: absolute;
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    font-size: 1.5em;
+    display: flex;
+    flex-direction: column;
+}
+
+.loading-text {
+    vertical-align: bottom;
+    text-align: left;
+    color: white;
+}
+
+.loading-icon {
+    background: transparent;
+    color: hotpink;
+    margin-bottom: 10px;
+}
 
 /* Playlist */
 #playlist-area-parent {

@@ -53,7 +53,8 @@ function connectToServer() {
 function setupSocketEvents() {
     socket.onopen = function (event) {
         console.log("socket.onopen: " + event.data);
-        
+
+        hideInitialLoadingScreen();
         hideDisconnectError();
         reconnectionAttempts = 0;
         changeDisplayedDisconnectAttemptsNumber(0);
