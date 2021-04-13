@@ -54,12 +54,14 @@ function setupSocketEvents() {
     socket.onopen = function (event) {
         console.log("socket.onopen: " + event.data);
 
-        hideInitialLoadingScreen();
+        
         hideDisconnectError();
         reconnectionAttempts = 0;
         changeDisplayedDisconnectAttemptsNumber(0);
         sendJoinRequest();
         //sendVideoStateChangeRequest(1);
+
+        setTimeout(hideInitialLoadingScreen, 1000);
     };
 
     socket.onclose = function (event) {
