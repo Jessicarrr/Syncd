@@ -163,7 +163,7 @@
     margin-bottom: 10px;
     margin-right: 1%;
     min-width: 170px;
-    max-width: 35%;
+    width: 40%;
     overflow-y: auto;
     max-height: 40vh;
     background-color: transparent;
@@ -207,6 +207,7 @@ p[id$="userName"] {
     font-size: 16px;
     vertical-align: bottom;
     line-height: 1.51;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 64%;
