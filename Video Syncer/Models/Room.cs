@@ -46,6 +46,10 @@ namespace Video_Syncer.Models
         private DateTime lastTimeSyncedUsersVideos = DateTime.Now;
         private CancellationTokenSource source;
 
+        private CancellationTokenSource destroyRoomTokenSource;
+        private int timeUntilEmptyRoomDestroyedMS = 120000; // 120 seconds
+        public bool RoomShouldBeDestroyed { get; private set; }
+
         private long playNewVideoAfterEndingDelayMS = 5000;
         private bool isTransitioningToNewVideo = false;
         private CancellationTokenSource cancelTransitioningToNewVideoToken = new CancellationTokenSource();
@@ -70,6 +74,7 @@ namespace Video_Syncer.Models
             logger = LoggingHandler.CreateLogger<Room>();
 
             StartPeriodicTasks();
+            StartEmptyRoomCountDown();
         }
 
         public Room(IPlaylistManager playlistManager, IUserManager userManager, IConnectionManager connectionManager,
@@ -90,6 +95,7 @@ namespace Video_Syncer.Models
             logger = LoggingHandler.CreateLogger<Room>();
 
             StartPeriodicTasks();
+            StartEmptyRoomCountDown();
         }
 
         private void StartPeriodicTasks()
@@ -413,10 +419,32 @@ namespace Video_Syncer.Models
             
         }
 
+        public void StartEmptyRoomCountDown()
+        {
+            destroyRoomTokenSource = new CancellationTokenSource();
+
+            var task = Task.Run(async () =>
+            {
+                await Task.Delay(timeUntilEmptyRoomDestroyedMS, destroyRoomTokenSource.Token);
+                RoomShouldBeDestroyed = true;
+                logger.LogInformation("[VSY] Room " + id + " has been empty for " + timeUntilEmptyRoomDestroyedMS / 1000  + " seconds. Room has been tagged to be destroyed");
+            },
+            destroyRoomTokenSource.Token);
+        }
+
         public User Join(string name, string sessionID)
         {
             User user = UserManager.Join(name, sessionID);
             HandleJoiningUser(user);
+
+            if (destroyRoomTokenSource != null) 
+            {
+                logger.LogInformation("[VSY] Stopped room destroy count down");
+                destroyRoomTokenSource.Cancel();
+                RoomShouldBeDestroyed = false;
+            }
+            
+
             return user;
         }
 
@@ -424,6 +452,12 @@ namespace Video_Syncer.Models
         {
             logger.LogInformation("[VSY]User with user id " + userId + " has left.");
             UserManager.RemoveFromUserList(userId);
+
+            if (UserManager.GetNumUsers() <= 0)
+            {
+                StartEmptyRoomCountDown();
+                logger.LogInformation("[VSY] Started room destroy count down");
+            }
         }
 
         private void HandleJoiningUser(User user)
