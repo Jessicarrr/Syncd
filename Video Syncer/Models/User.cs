@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Video_Syncer.Models.Users.Enum;
@@ -17,6 +18,10 @@ namespace Video_Syncer.Models
         [JsonIgnore]
         public string sessionID { get; set; }
         [JsonIgnore]
+        public IPAddress IpAddress { get; set; }
+
+        public string IpAddressString { get; set; }
+        [JsonIgnore]
         public long lastConnectionTime { get; set; }
         [JsonIgnore]
         public WebSocket socket { get; set; }
@@ -26,11 +31,13 @@ namespace Video_Syncer.Models
         public VideoState videoState { get; set; }
 
 
-        public User(int Id, string Name, string sessionID)
+        public User(int Id, string Name, string sessionID, IPAddress ipAddress)
         {
             this.id = Id;
             this.name = Name;
             this.sessionID = sessionID;
+            this.IpAddress = ipAddress;
+            this.IpAddressString = ipAddress.ToString();
 
             videoState = VideoState.Unstarted;
             videoTimeSeconds = -1;

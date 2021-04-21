@@ -208,6 +208,7 @@ namespace Video_Syncer.Controllers
         private Task<bool> ValidateRequest(HttpContext context, RequestType requestType, dynamic unknownObject)
         {
             var currentSessionId = context.Session.Id;
+            var address = context.Connection.RemoteIpAddress;
             
             string requestTypeHumanReadable = Enum.GetName(typeof(RequestType), requestType);
 
@@ -380,7 +381,7 @@ namespace Video_Syncer.Controllers
 
         private async Task<JoinRoomPayload> JoinRoom(WebSocket socket, string name, Room room, HttpContext context)
         {
-            User user = room.Join(name, context.Session.Id);
+            User user = room.Join(name, context.Session.Id, context.Connection.RemoteIpAddress);
 
             if(user == null)
             {

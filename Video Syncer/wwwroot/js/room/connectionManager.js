@@ -88,7 +88,7 @@ function setupSocketEvents() {
         try {
             var obj = JSON.parse(event.data);
 
-            //console.log("json message: \"" + event.data + "\"");
+            console.log("json message: \"" + event.data + "\"");
 
             if (obj.hasOwnProperty(requestTypeProperty)) {
                 handleRequestResponse(obj);

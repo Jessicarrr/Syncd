@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Video_Syncer.Models.Users.Interface
@@ -13,7 +14,7 @@ namespace Video_Syncer.Models.Users.Interface
         public bool IsAdmin(User user);
         public bool CreateNewAdmin(User user);
         public bool RemoveAdmin(User user);
-        public User Join(string name, string sessionID);
+        public User Join(string name, string sessionID, IPAddress ipAddress);
         public bool ChangeName(int userId, string newName);
         public bool AddToUserList(User user);
         public void RemoveFromUserList(User user);
@@ -26,7 +27,7 @@ namespace Video_Syncer.Models.Users.Interface
         public VideoState GetStateForUser(int userId);
         public bool UpdateLastConnectionTime(int userId);
         public User UpdateUser(int userId, double seconds);
-        public User CreateNewUser(string name, string sessionID);
+        public User CreateNewUser(string name, string sessionID, IPAddress ipAddress);
         public bool IsFull();
         public bool UserIdExists(int id);
 

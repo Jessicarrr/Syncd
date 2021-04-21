@@ -9,6 +9,7 @@ using Video_Syncer.Models.Users.Interface;
 using Video_Syncer.Models.Users.Enum;
 using System.Net.WebSockets;
 using System.Threading;
+using System.Net;
 
 namespace Video_Syncer.Models.Users.Impl
 {
@@ -158,14 +159,14 @@ namespace Video_Syncer.Models.Users.Impl
             return false;
         }
 
-        public User Join(string name, string sessionID)
+        public User Join(string name, string sessionID, IPAddress ipAddress)
         {
             if(IsSessionIdBanned(sessionID))
             {
                 return null;
             }
 
-            User user = CreateNewUser(name, sessionID);
+            User user = CreateNewUser(name, sessionID, ipAddress);
             logger.LogInformation("[VSY]Joining user \"" + user.name + "\"");
             AddToUserList(user);
 
@@ -365,7 +366,7 @@ namespace Video_Syncer.Models.Users.Impl
             return null;
         }
 
-        public User CreateNewUser(string name, string sessionID)
+        public User CreateNewUser(string name, string sessionID, IPAddress ipAddress)
         {
             int userId = this.CreateUniqueUserId();
 
@@ -373,7 +374,7 @@ namespace Video_Syncer.Models.Users.Impl
             {
                 name = name.Substring(0, usernameCharacterLimit);
             }
-            User user = new User(userId, name, sessionID);
+            User user = new User(userId, name, sessionID, ipAddress);
             return user;
         }
 

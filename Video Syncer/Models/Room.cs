@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -432,9 +433,9 @@ namespace Video_Syncer.Models
             destroyRoomTokenSource.Token);
         }
 
-        public User Join(string name, string sessionID)
+        public User Join(string name, string sessionID, IPAddress ipAddress)
         {
-            User user = UserManager.Join(name, sessionID);
+            User user = UserManager.Join(name, sessionID, ipAddress);
             HandleJoiningUser(user);
 
             if (destroyRoomTokenSource != null) 
