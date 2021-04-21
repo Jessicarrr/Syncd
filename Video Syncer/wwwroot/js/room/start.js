@@ -1,5 +1,5 @@
-﻿$(window).on('load', function () {
-    showInitialLoadingScreen();
+﻿
+$(window).on('load', function () {
     createNewName();
     document.getElementById("addButton").addEventListener("click", addVideoFromSearchBar);
 
