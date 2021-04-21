@@ -24,6 +24,8 @@ namespace Video_Syncer
 {
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_syncdOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -57,6 +59,16 @@ namespace Video_Syncer
                 loggingBuilder.AddDebug();
                 loggingBuilder.AddAzureWebAppDiagnostics();
                 loggingBuilder.AddApplicationInsights("ikey");
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("https://prototypevideosyncingsite111.azurewebsites.net/",
+                                                          "https://syncd.me/");
+                                  });
             });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -95,12 +107,18 @@ namespace Video_Syncer
             {
                 KeepAliveInterval = TimeSpan.FromSeconds(30)
             };
+
+            //webSocketOptions.AllowedOrigins.Add("https://prototypevideosyncingsite111.azurewebsites.net/");
+            //webSocketOptions.AllowedOrigins.Add("https://syncd.me");
+
             app.UseWebSockets(webSocketOptions);
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthorization();
             
