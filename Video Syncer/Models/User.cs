@@ -19,8 +19,6 @@ namespace Video_Syncer.Models
         public string sessionID { get; set; }
         [JsonIgnore]
         public IPAddress IpAddress { get; set; }
-
-        public string IpAddressString { get; set; }
         [JsonIgnore]
         public long lastConnectionTime { get; set; }
         [JsonIgnore]
@@ -37,7 +35,6 @@ namespace Video_Syncer.Models
             this.name = Name;
             this.sessionID = sessionID;
             this.IpAddress = ipAddress;
-            this.IpAddressString = ipAddress.ToString();
 
             videoState = VideoState.Unstarted;
             videoTimeSeconds = -1;
