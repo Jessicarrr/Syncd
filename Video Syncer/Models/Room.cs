@@ -47,7 +47,7 @@ namespace Video_Syncer.Models
         private CancellationTokenSource source;
 
         private CancellationTokenSource destroyRoomTokenSource;
-        private int timeUntilEmptyRoomDestroyedMS = 120000; // 120 seconds
+        private int timeUntilEmptyRoomDestroyedMS = 300000; // 300 seconds, or 5 minutes
         public bool RoomShouldBeDestroyed { get; private set; }
 
         private long playNewVideoAfterEndingDelayMS = 5000;
