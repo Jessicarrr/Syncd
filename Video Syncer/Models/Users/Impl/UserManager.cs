@@ -30,6 +30,7 @@ namespace Video_Syncer.Models.Users.Impl
 
         protected List<string> adminSessionIDs { get; set; } = new List<string>();
         protected List<string> bannedSessionIDs { get; set; } = new List<string>();
+        protected List<IPAddress> bannedIpAddresses { get; set; } = new List<IPAddress>();
 
         public UserManager(string roomId)
         {
@@ -99,6 +100,12 @@ namespace Video_Syncer.Models.Users.Impl
             if(!bannedSessionIDs.Contains(userSessionID))
             {
                 bannedSessionIDs.Add(userSessionID);
+                
+            }
+
+            if(!bannedIpAddresses.Contains(user.IpAddress))
+            {
+                bannedIpAddresses.Add(user.IpAddress);
             }
         }
 
@@ -159,9 +166,20 @@ namespace Video_Syncer.Models.Users.Impl
             return false;
         }
 
+        public bool IsIpAddressBanned(IPAddress paramIp)
+        {
+            IEnumerable<IPAddress> matchingIpAddresses = bannedIpAddresses.Where(ip => ip.Equals(paramIp));
+
+            if(matchingIpAddresses.Count() > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public User Join(string name, string sessionID, IPAddress ipAddress)
         {
-            if(IsSessionIdBanned(sessionID))
+            if(IsSessionIdBanned(sessionID) || IsIpAddressBanned(ipAddress))
             {
                 return null;
             }
@@ -433,6 +451,22 @@ namespace Video_Syncer.Models.Users.Impl
             }
 
             if (String.Equals(user.sessionID, sessionID))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool IsUserIpAddressMatching(int userId, IPAddress ipAddress)
+        {
+            User user = GetUserById(userId);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            if (ipAddress.Equals(user.IpAddress))
             {
                 return true;
             }

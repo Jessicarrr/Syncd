@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -50,8 +51,9 @@ namespace Video_Syncer.Controllers
                 else
                 {
                     string sessionID = HttpContext.Session.Id;
+                    IPAddress ipAddress = HttpContext.Connection.RemoteIpAddress;
 
-                    if(room.UserManager.IsSessionIdBanned(sessionID))
+                    if(room.UserManager.IsSessionIdBanned(sessionID) || room.UserManager.IsIpAddressBanned(ipAddress))
                     {
                         return RedirectToAction("Banned", "Home");
                     }
@@ -208,7 +210,7 @@ namespace Video_Syncer.Controllers
         private Task<bool> ValidateRequest(HttpContext context, RequestType requestType, dynamic unknownObject)
         {
             var currentSessionId = context.Session.Id;
-            var address = context.Connection.RemoteIpAddress;
+            var currentIpAddress = context.Connection.RemoteIpAddress;
             
             string requestTypeHumanReadable = Enum.GetName(typeof(RequestType), requestType);
 
@@ -248,12 +250,26 @@ namespace Video_Syncer.Controllers
                     return Task.FromResult(false);
                 }
                 
+                if (!room.UserManager.IsUserIpAddressMatching((int) userId, currentIpAddress))
+                {
+                    logger.LogWarning("[VSY] IP Address of request did not match in room \"" + room.id
+                        + "\"! Ip address of the request was " + currentIpAddress + ", and request type was "
+                        + requestTypeHumanReadable);
+                    return Task.FromResult(false);
+                }
             }
 
             if (room.UserManager.IsSessionIdBanned(currentSessionId))
             {
                 logger.LogWarning("[VSY] A banned session ID tried to make a request (request type was " + requestTypeHumanReadable
                     + "). Session ID was " + currentSessionId);
+                return Task.FromResult(false);
+            }
+
+            if (room.UserManager.IsIpAddressBanned(currentIpAddress))
+            {
+                logger.LogWarning("[VSY] A banned ip address tried to make a request (request type was " + requestTypeHumanReadable
+                    + "). IP address was " + currentIpAddress);
                 return Task.FromResult(false);
             }
 
