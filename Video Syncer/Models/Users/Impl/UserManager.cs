@@ -10,6 +10,7 @@ using Video_Syncer.Models.Users.Enum;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Net;
+using System.Web;
 
 namespace Video_Syncer.Models.Users.Impl
 {
@@ -51,6 +52,21 @@ namespace Video_Syncer.Models.Users.Impl
         public List<User> GetUserList()
         {
             return userList;
+        }
+
+        public List<User> GetAllAdmins()
+        {
+            List<User> adminList = new List<User>();
+
+            foreach(User user in userList) 
+            {
+                if(user.rights == UserRights.Admin)
+                {
+                    adminList.Add(user);
+                }
+            }
+
+            return adminList;
         }
 
         public List<string> GetSessionIdList()
@@ -224,7 +240,7 @@ namespace Video_Syncer.Models.Users.Impl
                 return true;
             }
 
-            relevantUser.name = newName;
+            relevantUser.name = HttpUtility.HtmlEncode(newName);
             return true;
         }
 
@@ -392,7 +408,10 @@ namespace Video_Syncer.Models.Users.Impl
             {
                 name = name.Substring(0, usernameCharacterLimit);
             }
-            User user = new User(userId, name, sessionID, ipAddress);
+
+            string encodedName = HttpUtility.HtmlEncode(name);
+
+            User user = new User(userId, encodedName, sessionID, ipAddress);
             return user;
         }
 

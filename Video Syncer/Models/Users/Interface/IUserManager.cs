@@ -40,6 +40,7 @@ namespace Video_Syncer.Models.Users.Interface
         public int GetNumUsers();
 
         public List<User> GetUserList();
+        public List<User> GetAllAdmins();
         public List<string> GetSessionIdList();
     }
 }

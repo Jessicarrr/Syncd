@@ -535,7 +535,6 @@ function fixVideoPlayerSize() {
     containerDiv.style.height = adjustedHeight + "px";
     lastWidth = containerDiv.offsetWidth;
     lastHeight = containerDiv.offsetHeight;
-    console.log("set to " + lastWidth + " x " + lastHeight);
 }
 
 function fixVideoPlayerSize2() {
@@ -543,7 +542,6 @@ function fixVideoPlayerSize2() {
         changeVideoSizeCallback(containerDiv.offsetWidth, containerDiv.offsetHeight);
         lastWidth = containerDiv.offsetWidth;
         lastHeight = containerDiv.offsetHeight;
-        console.log("set to " + lastWidth + " x " + lastHeight);
     }
 }
 

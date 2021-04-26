@@ -33,7 +33,8 @@ const UpdateType = Object.freeze(
         "UserListUpdate": 1,
         "PlaylistUpdate": 2,
         "VideoUpdate": 3,
-        "RedirectToPage": 4
+        "RedirectToPage": 4,
+        "AdminLogMessage": 5
     });
 
 function setupNetworking() {
@@ -204,6 +205,9 @@ function handleServerUpdate(obj) {
         case UpdateType.RedirectToPage:
             var page = obj["payload"];
             window.location.replace(page);
+            break;
+        case UpdateType.AdminLogMessage:
+            handleAdminLogMessage(obj);
             break;
     }
 }
@@ -425,6 +429,16 @@ function handlePlaylistUpdate(obj) {
     }
     else {
         console.log("playlist is null");
+    }
+}
+
+function handleAdminLogMessage(obj) {
+    var payload = obj["payload"];
+    var user = payload["user"];
+    var actionMessage = payload["actionMessage"];
+
+    if (actionMessage != null) {
+        addNewAdminLogMessage(user, actionMessage);
     }
 }
 

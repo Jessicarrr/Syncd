@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,7 @@ using Video_Syncer.Models.Network.RequestResponses.Enum;
 using Video_Syncer.Models.Network.RequestResponses.Impl;
 using Video_Syncer.Models.Network.StateUpdates.Enum;
 using Video_Syncer.Models.Network.StateUpdates.Impl;
+using Video_Syncer.Models.Playlist;
 using Video_Syncer.Views.Room;
 
 namespace Video_Syncer.Controllers
@@ -395,6 +397,24 @@ namespace Video_Syncer.Controllers
             return JsonConvert.SerializeObject(responseObject);
         }
 
+        private async Task SendAdminLogMessage(Room room, User aboutUser, string message, CancellationToken token)
+        {
+            AdminLogMessagePayload payload = new AdminLogMessagePayload()
+            {
+                user = aboutUser,
+                actionMessage = message
+
+            };
+
+            RoomDataUpdate update = new RoomDataUpdate()
+            {
+                updateType = UpdateType.AdminLogMessage,
+                payload = payload
+            };
+
+            await room.ConnectionManager.SendUpdateToAdmins(room, update, token);
+        }
+
         private async Task<JoinRoomPayload> JoinRoom(WebSocket socket, string name, Room room, HttpContext context)
         {
             User user = room.Join(name, context.Session.Id, context.Connection.RemoteIpAddress);
@@ -426,17 +446,23 @@ namespace Video_Syncer.Controllers
             };
 
             await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, source.Token);
+            await SendAdminLogMessage(room, user, "joined the room", source.Token);
 
             return payload;
         }
 
         private async Task LeaveRoom(WebSocket socket, int? userId, Room room)
         {
+            CancellationTokenSource source = new CancellationTokenSource();
+            User user = room.UserManager.GetUserById((int)userId);
+
+            await SendAdminLogMessage(room, user, "left the room", source.Token);
+
             await socket.CloseAsync(WebSocketCloseStatus.NormalClosure,
                         "The user left the room, so the socket was disconnected", CancellationToken.None);
             room.Leave((int)userId);
 
-            CancellationTokenSource source = new CancellationTokenSource();
+            
             RoomDataUpdate update = new RoomDataUpdate()
             {
                 updateType = UpdateType.UserListUpdate,
@@ -444,6 +470,7 @@ namespace Video_Syncer.Controllers
             };
 
             await room.ConnectionManager.SendUpdateToAll(room, update, source.Token);
+
         }
 
         private async Task<VideoStatePayload> ChangeVideoState(WebSocket socket, int? userId, Room room, 
@@ -471,6 +498,10 @@ namespace Video_Syncer.Controllers
                 CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
 
                 await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, cancelTokenSource.Token);
+
+                string videoStateHumanReadable = Enum.GetName(typeof(VideoState), state);
+
+                await SendAdminLogMessage(room, user, "changed the video state to " + videoStateHumanReadable, cancelTokenSource.Token);
 
                 return payload;
 
@@ -500,13 +531,15 @@ namespace Video_Syncer.Controllers
             CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
 
             await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, cancelTokenSource.Token);
+            await SendAdminLogMessage(room, user, "changed the video time to " + seconds + " seconds.", cancelTokenSource.Token);
             return payload;
         }
 
         private async Task<PlaylistStatePayload> AddToPlaylist(int? userId, Room room, string videoId)
         {
             User user = room.UserManager.GetUserById((int)userId);
-            room.PlaylistManager.AddToPlaylist(videoId, async delegate()
+
+            Func<PlaylistObject, Task<int>> playlistVideoGotNamed = async delegate(PlaylistObject playlistObject)
             {
                 PlaylistStatePayload payload = new PlaylistStatePayload()
                 {
@@ -518,11 +551,25 @@ namespace Video_Syncer.Controllers
                     updateType = UpdateType.PlaylistUpdate,
                     payload = payload
                 };
+                AdminLogMessagePayload adminPayload = new AdminLogMessagePayload()
+                {
+                    user = user,
+                    actionMessage = ""
+                };
+                RoomDataUpdate adminUpdate = new RoomDataUpdate()
+                {
+                    updateType = UpdateType.AdminLogMessage,
+                    payload = adminPayload
+                };
 
                 CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
 
                 await room.ConnectionManager.SendUpdateToAll(room, update, cancelTokenSource.Token);
-            });
+                await SendAdminLogMessage(room, user, "video added by this user was called \"" + playlistObject.title + "\"", cancelTokenSource.Token);
+                return 0;
+            };
+
+            room.PlaylistManager.AddToPlaylist(videoId, playlistVideoGotNamed);
 
             PlaylistStatePayload payload = new PlaylistStatePayload()
             {
@@ -538,6 +585,7 @@ namespace Video_Syncer.Controllers
             CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
 
             await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, cancelTokenSource.Token);
+            await SendAdminLogMessage(room, user, "added video http://youtube.com/watch?v=" + videoId, cancelTokenSource.Token);
 
             return payload;
         }
@@ -545,6 +593,11 @@ namespace Video_Syncer.Controllers
         private async Task<PlaylistStatePayload> RemoveFromPlaylist(int? userId, Room room, string playlistItemId)
         {
             User user = room.UserManager.GetUserById((int)userId);
+            PlaylistObject selectedPlaylistObject = room.PlaylistManager.GetPlaylistObject(playlistItemId);
+            CancellationTokenSource source = new CancellationTokenSource();
+
+            await SendAdminLogMessage(room, user, "deleted video from the playlist called \"" + selectedPlaylistObject.title + "\"", source.Token);
+
             room.PlaylistManager.RemoveFromPlaylist(playlistItemId);
 
             PlaylistStatePayload payload = new PlaylistStatePayload()
@@ -558,7 +611,7 @@ namespace Video_Syncer.Controllers
                 payload = payload
             };
 
-            CancellationTokenSource source = new CancellationTokenSource();
+           
 
             await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, source.Token);
 
@@ -568,6 +621,7 @@ namespace Video_Syncer.Controllers
         private async Task<VideoStatePayload> PlayPlaylistVideo(int? userId, Room room, string videoToPlay)
         {
             User user = room.UserManager.GetUserById((int)userId);
+            PlaylistObject selectedPlaylistObject = room.PlaylistManager.GetPlaylistObject(videoToPlay);
             room.PlayPlaylistVideo(videoToPlay);
 
             VideoStatePayload payload = new VideoStatePayload()
@@ -586,6 +640,7 @@ namespace Video_Syncer.Controllers
             CancellationTokenSource source = new CancellationTokenSource();
 
             await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, source.Token);
+            await SendAdminLogMessage(room, user, "selected the playlist video \"" + selectedPlaylistObject.title + "\"", source.Token);
 
             return payload;
         }
@@ -608,6 +663,7 @@ namespace Video_Syncer.Controllers
             CancellationTokenSource source = new CancellationTokenSource();
 
             await room.ConnectionManager.SendUpdateToUser(userToKick, room, update, source.Token);
+            await SendAdminLogMessage(room, user, "tried to kick user \"" + userToKick.name + "#" + userToKick.id + "\"", source.Token);
             await Task.Delay(1000);
 
             bool kicked = room.UserManager.Kick(user, userToKick);
@@ -655,6 +711,7 @@ namespace Video_Syncer.Controllers
             bool banned = room.UserManager.Ban(user, userToBan);
 
             await room.ConnectionManager.SendUpdateToUser(userToBan, room, redirect, source.Token);
+            await SendAdminLogMessage(room, user, "tried to ban user \"" + userToBan.name + "#" + userToBan.id + "\"", source.Token);
 
             room.UserManager.Kick(user, userToBan);
             await Task.Delay(6000);
@@ -672,6 +729,7 @@ namespace Video_Syncer.Controllers
         private async Task<UserListPayload> ChangeName(int? userId, Room room, string newName)
         {
             User user = room.UserManager.GetUserById((int)userId);
+            string oldName = user.name;
             room.UserManager.ChangeName((int) userId, newName);
 
             RoomDataUpdate update = new RoomDataUpdate()
@@ -687,6 +745,7 @@ namespace Video_Syncer.Controllers
             CancellationTokenSource source = new CancellationTokenSource();
 
             await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, source.Token);
+            await SendAdminLogMessage(room, user, "changed their name from \"" + oldName + "\" to \"" + user.name + "\"", source.Token);
             return payload;
         }
 
@@ -707,6 +766,7 @@ namespace Video_Syncer.Controllers
             }
 
             bool madeAdmin = room.UserManager.CreateNewAdmin(targetUser);
+            await SendAdminLogMessage(room, user, "tried to make \"" + targetUser.name + "#" + targetUser.id + "\" into an admin", source.Token);
 
             if(madeAdmin)
             {
@@ -745,6 +805,7 @@ namespace Video_Syncer.Controllers
             };
 
             await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, source.Token);
+            await SendAdminLogMessage(room, user, "rearranged some videos in the playlist", source.Token);
             return payload;
         }
     }
