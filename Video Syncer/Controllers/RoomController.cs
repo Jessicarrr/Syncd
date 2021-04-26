@@ -538,6 +538,7 @@ namespace Video_Syncer.Controllers
         private async Task<PlaylistStatePayload> AddToPlaylist(int? userId, Room room, string videoId)
         {
             User user = room.UserManager.GetUserById((int)userId);
+            string encodedVideoId = HttpUtility.HtmlEncode(videoId);
 
             Func<PlaylistObject, Task<int>> playlistVideoGotNamed = async delegate(PlaylistObject playlistObject)
             {
@@ -569,7 +570,7 @@ namespace Video_Syncer.Controllers
                 return 0;
             };
 
-            room.PlaylistManager.AddToPlaylist(videoId, playlistVideoGotNamed);
+            room.PlaylistManager.AddToPlaylist(encodedVideoId, playlistVideoGotNamed);
 
             PlaylistStatePayload payload = new PlaylistStatePayload()
             {
@@ -585,7 +586,7 @@ namespace Video_Syncer.Controllers
             CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
 
             await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, cancelTokenSource.Token);
-            await SendAdminLogMessage(room, user, "added video http://youtube.com/watch?v=" + videoId, cancelTokenSource.Token);
+            await SendAdminLogMessage(room, user, "added video http://youtube.com/watch?v=" + encodedVideoId, cancelTokenSource.Token);
 
             return payload;
         }
