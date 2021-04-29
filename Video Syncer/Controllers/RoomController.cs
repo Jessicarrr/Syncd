@@ -656,6 +656,11 @@ namespace Video_Syncer.Controllers
             User user = room.UserManager.GetUserById((int)userId);
             User userToKick = room.UserManager.GetUserById((int)userToKickId);
 
+            if (userToKick == null)
+            {
+                return false;
+            }
+
             RoomDataUpdate update = new RoomDataUpdate()
             {
                 updateType = UpdateType.RedirectToPage,

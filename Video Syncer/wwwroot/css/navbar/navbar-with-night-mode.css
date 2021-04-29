@@ -10,11 +10,15 @@
     margin-top: 11px;
 }
 
+.icon-no-margin {
+    color: hotpink;
+}
+
 .link-icon {
     
 }
 
-.icon.night-mode, .link-icon.night-mode, .fa-bars.night-mode {
+.icon.night-mode, .link-icon.night-mode, .fa-bars.night-mode, .icon-no-margin.night-mode {
     color: mediumpurple;
 }
 

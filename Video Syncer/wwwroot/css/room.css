@@ -330,8 +330,148 @@ tr{
     display: flex;
 }
 
+#admin-log-area {
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    background: white;
+    width: 45%;
+    border: 1px solid lightgray;
+    padding-bottom: 2vh;
+    display: flex;
+    flex-direction: row;
+}
+
+#admin-log-area.night-mode {
+    background-color: #373737;
+    border: 1px solid #272727;
+
+}
+
+#admin-log-viewer {
+    width: 100%;
+}
+
+#admin-log-viewer-header {
+    font-size: 20px;
+    height: 30px;
+    cursor: pointer;
+    border-bottom: 1px solid lightgray;
+    padding-bottom: 31px;
+    margin-bottom: 2px;
+    display: flex;
+    flex-direction: row;
+}
+
+#admin-log-viewer-header.night-mode {
+    border-bottom: 1px solid #272727;
+}
+
+.admin-log-viewer-header-icon {
+    margin: 6px 5px 0px 3px;
+}
+
+#admin-log-viewer-body {
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    font-size: 12px;
+    height: 20vh;
+}
+
+.admin-log-viewer-item {
+    font-size: 14px;
+    margin: 0 0 8px 0;
+}
+.admin-log-viewer-name {
+    background: transparent;
+    border: none;
+    color: mediumblue;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+}
+
+.admin-log-viewer-name.night-mode {
+    color: skyblue;
+}
+
+#admin-log-actions-area {
+    padding-left: 5px;
+    border-left: 1px solid lightgray;
+    width: 40%;
+    display: none;
+    flex-direction: column;
+}
+#admin-log-actions-area.night-mode {
+    border-left: 1px solid #272727;
+}
+#admin-log-actions-header {
+    display: flex;
+    flex-direction: row;
+    min-width: 100%;
+    margin-bottom: 10px;
+    padding-top: 10px;
+}
+.close-button {
+    color: darkred;
+    background: transparent;
+    border: none;
+    height: 20px;
+    width: 5%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 20px;
+}
+
+#admin-log-actions-title-area {
+    width: 75%;
+    display: flex;
+    flex-direction: row;
+}
+.admin-log-actions-title.name {
+    font-size: 18px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 70%;
+    margin-right: 0;
+    padding-right: 0;
+    white-space: nowrap;
+}
+.admin-log-actions-title.id {
+    font-size: 18px;
+    width: 30%;
+}
+
+.admin-log-action-button {
+    width: 90%;
+    height: 35%;
+    background: transparent;
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin: 20px auto 0px auto;
+}
+
+.admin-log-action-button.night-mode {
+    color: white;
+}
+
 @media screen and (max-width: 760px) {
-    i[id$="userIcon"] {
+    .admin-log-viewer-item {
+        font-size: 12px;
+    }
+
+    .admin-log-actions-title.name {
+        font-size: 14px;
+        width: 60%;
+    }
+
+    .admin-log-actions-title.id {
+        font-size: 14px;
+    }
+
+    i [id$="userIcon"] {
         transform: scale(0.75, 0.75212);
     }
 
@@ -385,3 +525,4 @@ tr{
     .dropdown-content p {
     }
 }
+

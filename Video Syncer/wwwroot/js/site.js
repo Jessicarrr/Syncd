@@ -81,6 +81,7 @@ function toggleNightMode(nightmode) {
     var is = document.querySelectorAll("i");
     var playlistAreaDiv = document.getElementById("playlist-area-parent");
     var userListAreaDiv = document.getElementById("userListArea")
+    var others = document.getElementsByClassName("can-have-night-mode");
     /*var h3s = document.querySelectorAll("h3");
     var h2s = document.querySelectorAll("h2");*/
     /*var h1s = document.querySelectorAll("h1");
@@ -94,6 +95,7 @@ function toggleNightMode(nightmode) {
     Array.prototype.push.apply(allElementsToChange, lis);
     Array.prototype.push.apply(allElementsToChange, is);
     Array.prototype.push.apply(allElementsToChange, playlistOptions);
+    Array.prototype.push.apply(allElementsToChange, others);
 
     if (playlistAreaDiv != null && typeof playlistAreaDiv !== 'undefined') {
         allElementsToChange.push(playlistAreaDiv);

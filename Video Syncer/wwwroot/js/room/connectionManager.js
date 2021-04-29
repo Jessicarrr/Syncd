@@ -247,6 +247,10 @@ function handleJoinRequestResponse(response) {
         addPlaylistItems(playlist);
     }
 
+    if (myRights == 1) {
+        showAdminLogs();
+    }
+
     /*
      * For loop to populate the user list with all users in the room
      * (including yourself).
@@ -263,6 +267,10 @@ function handleJoinRequestResponse(response) {
         if (currentUserId == userId && currentUserRights != myRights) {
             console.log("changed rights");
             myRights = currentUserRights;
+
+            if (currentUserRights === 1) {
+                showAdminLogs();
+            }
         }
 
         addUser(currentUserId, currentUserName);
@@ -284,8 +292,12 @@ function handleUserListRequestResponse(obj) {
             var currentUserRights = user["rights"];
 
             if (currentUserId == userId) {
-                if ((currentUserRights == 1 || currentUserRights == 0) && myRights != currentUserRights) {
+                if (myRights != currentUserRights) {
                     myRights = currentUserRights;
+
+                    if (currentUserRights === 1) {
+                        showAdminLogs();
+                    }
                 }
                 break;
             }
@@ -301,6 +313,10 @@ function handleUserListRequestResponse(obj) {
             if (currentUserId == userId && currentUserRights != myRights) {
                 console.log("changed rights");
                 myRights = currentUserRights;
+
+                if (currentUserRights === 1) {
+                    showAdminLogs();
+                }
             }
 
             addUser(currentUserId, currentUserName);
@@ -329,6 +345,10 @@ function handleUserListUpdate(obj) {
             if (currentUserId == userId) {
                 if ((currentUserRights == 1 || currentUserRights == 0) && myRights != currentUserRights) {
                     myRights = currentUserRights;
+
+                    if (currentUserRights === 1) {
+                        showAdminLogs();
+                    }
                 }
                 break;
             }

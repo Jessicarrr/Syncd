@@ -98,8 +98,38 @@
         
     </div>
     
+    
 </div>
-
+<div id="admin-log-area" class="can-have-night-mode">
+    <div id="admin-log-viewer">
+        <div id="admin-log-viewer-header" class="can-have-night-mode">
+            <i class="icon-no-margin admin-log-viewer-header-icon fa fa-eye"></i>
+            <p>Usage logs</p>
+        </div>
+        <div id="admin-log-viewer-body">
+            
+        </div>
+    </div>
+    <div id="admin-log-actions-area" class="can-have-night-mode">
+        <div id="admin-log-actions-header">
+            <div id="admin-log-actions-title-area">
+                <h3 id="admin-log-actions-name" class="admin-log-actions-title name">FDKIkgidogoakiKGDOIKGOIkg</h3>
+                <h3 id="admin-log-actions-id" class="admin-log-actions-title id">#5555</h3>
+            </div>
+            
+            <button id="admin-log-actions-close-button" class="close-button">X</button>
+        </div>
+        
+        <button id="admin-log-action-kick-button" class="admin-log-action-button can-have-night-mode">
+            <i class="icon-no-margin fa fa-sign-out-alt"></i>
+            Kick
+        </button>
+        <button id="admin-log-action-ban-button" class="admin-log-action-button can-have-night-mode">
+            <i class="icon-no-margin fa fa-ban"></i>
+            Ban
+        </button>
+    </div>
+</div>
 
 @foreach (User user in Model.userList)
 {

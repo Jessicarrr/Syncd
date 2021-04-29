@@ -1,5 +1,6 @@
 ﻿
 $(window).on('load', function () {
+    
     createNewName();
     document.getElementById("addButton").addEventListener("click", addVideoFromSearchBar);
 
@@ -24,7 +25,16 @@ $(window).on('load', function () {
             var newNameDefault = document.getElementById("username-box").value;
             sendChangeNameRequest(newNameDefault);
         }
-    }); 
+    });
+
+    setupAdminLogs();
+
+    if (myRights == 1) {
+        showAdminLogs();
+    } else {
+        hideAdminLogs();
+    }
+    
 });
 
 var tickMs = 200; // how often to run function tick()

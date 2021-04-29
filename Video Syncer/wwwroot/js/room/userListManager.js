@@ -96,8 +96,10 @@ function createUIForUser(name, id) {
     userBan.innerHTML = "Ban";
     userMakeAdmin.innerHTML = "Make Admin";
 
-    if (isNightMode === true) {
-        userIcon.classList.add("night-mode");
+    if (typeof isNightMode !== 'undefined') {
+        if (isNightMode === true) {
+            userIcon.classList.add("night-mode");
+        }
     }
 
     if (myRights == 1 && id != userId) {
