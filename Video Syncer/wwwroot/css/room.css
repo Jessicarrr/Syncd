@@ -46,6 +46,7 @@
     padding-bottom: 10px;
     display: inline-block;
     float: left;
+    border-radius: 5px;
 }
 
 #playlist-area-parent.night-mode {
@@ -206,6 +207,7 @@
     box-shadow: 2px 4px 5px #a1a1a1;
     border: 1px solid gray;
     display: inline-block;
+    border-radius: 5px;
 }
 
 #userListArea.night-mode {
