@@ -18,6 +18,12 @@ function hideInitialLoadingScreen() {
     document.documentElement.style.overflow = "auto";
 }
 
+function decodeHtml(html) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+}
+
 function setupHidePlayerCheckbox() {
     var checkbox = document.getElementById("hide-player-checkbox");
 

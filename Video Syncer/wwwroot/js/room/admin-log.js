@@ -14,18 +14,26 @@ function atBottom(ele) {
 
 function addNewAdminLogMessage(user, actionMessage) {
     var adminViewerBody = document.getElementById("admin-log-viewer-body");
-    var userString = user.name + "#" + user.id;
     var shouldScrollToBottom = false;
+    var userName = user.name;
 
     if (atBottom(adminViewerBody)) {
         shouldScrollToBottom = true;
     }
+
     var newMessage = document.createElement("p");
     newMessage.classList.add("admin-log-viewer-item");
 
+    if (typeof (decodeHtml) !== 'undefined') {
+        actionMessage = decodeHtml(actionMessage);
+        userName = decodeHtml(userName);
+    }
+
+    var userString = userName + "#" + user.id;
+
     if (user.id !== userId) {
         var name = document.createElement("button");
-        name.innerHTML = userString;
+        name.innerText = userString;
         name.classList.add("admin-log-viewer-name", "can-have-night-mode");
 
         if (typeof (isNightMode) !== 'undefined') {
@@ -40,10 +48,12 @@ function addNewAdminLogMessage(user, actionMessage) {
         };
 
         newMessage.appendChild(name);
+
+
         newMessage.append(" " + actionMessage);
     }
     else {
-        newMessage.innerText = user.name + "#" + user.id + " " + actionMessage;
+        newMessage.innerText = userString + " " + actionMessage;
     }
    
     
@@ -77,8 +87,13 @@ function setActionsAreaUser(user) {
     var idText = document.getElementById("admin-log-actions-id");
     var kickButton = document.getElementById("admin-log-action-kick-button");
     var banButton = document.getElementById("admin-log-action-ban-button");
+    var userName = user.name;
 
-    nameText.innerText = user.name;
+    if (typeof (decodeHtml) !== 'undefined') {
+        userName = decodeHtml(userName);
+    }
+
+    nameText.innerText = userName
     idText.innerText = "#" + user.id;
 
     kickButton.onclick = function () {
