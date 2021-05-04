@@ -53,7 +53,7 @@ function addNewAdminLogMessage(user, actionMessage) {
         newMessage.append(" " + actionMessage);
     }
     else {
-        newMessage.innerText = userString + " " + actionMessage;
+        newMessage.innerText = "You " + actionMessage;
     }
    
     

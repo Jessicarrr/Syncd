@@ -343,6 +343,7 @@ tr{
     padding-bottom: 2vh;
     display: flex;
     flex-direction: row;
+    border-radius: 3px;
 }
 
 #admin-log-area.night-mode {
@@ -436,27 +437,33 @@ tr{
     font-size: 18px;
     text-overflow: ellipsis;
     overflow: hidden;
-    width: 70%;
+    max-width: 70%;
     margin-right: 0;
     padding-right: 0;
     white-space: nowrap;
+    font-family: Verdana, sans-serif;
 }
 .admin-log-actions-title.id {
     font-size: 18px;
-    width: 30%;
+    max-width: 30%;
+    font-family: Verdana, sans-serif;
 }
 
 .admin-log-action-button {
-    width: 90%;
-    height: 35%;
+    width: 60%;
+    height: 15%;
     background: transparent;
     border: 1px solid gray;
-    border-radius: 5px;
-    margin: 20px auto 0px auto;
+    border-radius: 2px;
+    margin: 15px auto 35px auto;
+    box-shadow: 2px 4px 4px #c3c2c2;
 }
 
 .admin-log-action-button.night-mode {
     color: white;
+    box-shadow: 2px 4px 4px #272727;
+    border: none;
+    background-color: #313131;
 }
 
 @media screen and (max-width: 760px) {
