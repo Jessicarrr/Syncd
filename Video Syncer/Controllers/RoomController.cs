@@ -566,7 +566,7 @@ namespace Video_Syncer.Controllers
                 CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
 
                 await room.ConnectionManager.SendUpdateToAll(room, update, cancelTokenSource.Token);
-                await SendAdminLogMessage(room, user, "video added by this user was called \"" + playlistObject.title + "\"", cancelTokenSource.Token);
+                await SendAdminLogMessage(room, user, "added a video called \"" + playlistObject.title + "\"", cancelTokenSource.Token);
                 return 0;
             };
 
@@ -586,7 +586,7 @@ namespace Video_Syncer.Controllers
             CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
 
             await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, cancelTokenSource.Token);
-            await SendAdminLogMessage(room, user, "added video http://youtube.com/watch?v=" + encodedVideoId, cancelTokenSource.Token);
+            await SendAdminLogMessage(room, user, "submitted the video url http://youtube.com/watch?v=" + encodedVideoId, cancelTokenSource.Token);
 
             return payload;
         }
@@ -751,7 +751,7 @@ namespace Video_Syncer.Controllers
             CancellationTokenSource source = new CancellationTokenSource();
 
             await room.ConnectionManager.SendUpdateToAllExcept(user, room, update, source.Token);
-            await SendAdminLogMessage(room, user, "changed their name from \"" + oldName + "\" to \"" + user.name + "\"", source.Token);
+            await SendAdminLogMessage(room, user, "changed name from \"" + oldName + "\" to \"" + user.name + "\"", source.Token);
             return payload;
         }
 
