@@ -61,11 +61,25 @@
                 <div id="player"></div>
             </div>
 
-            <input type="checkbox" id="hide-player-checkbox" />
-            <label for="hide-player-checkbox">Disable player</label>
-            <br />
+            <hr />
 
             <h3 id="video-title"></h3>
+
+            <div class="underneath-player-button-area">
+                <div class="underneath-player-button" id="disable-player-button">
+                    <i class="icon-no-margin fa fa-photo-video fa-2x" id="disable-player-icon"></i>
+                    <!--<input type="checkbox" id="hide-player-checkbox" />-->
+                    Disable player
+                </div>
+                <div class="underneath-player-button" id="usage-logs-activator-button">
+                    <i class="icon-no-margin fa fa-eye fa-2x"></i>
+                    <!--<input type="checkbox" id="hide-player-checkbox" />-->
+                    Usage logs
+                </div>
+
+            </div>
+
+
 
             <hr />
 
@@ -105,6 +119,7 @@
         <div id="admin-log-viewer-header" class="can-have-night-mode">
             <i class="icon-no-margin admin-log-viewer-header-icon fa fa-eye"></i>
             <p>Usage logs</p>
+            <i class="fa fa-times close-button" id="admin-log-close-button"></i>
         </div>
         <div id="admin-log-viewer-body">
             
@@ -117,7 +132,7 @@
                 <h3 id="admin-log-actions-id" class="admin-log-actions-title id">#5555</h3>
             </div>
             
-            <button id="admin-log-actions-close-button" class="close-button">X</button>
+            <i id="admin-log-actions-close-button" class="fa fa-times close-button"></i>
         </div>
         
         <button id="admin-log-action-kick-button" class="admin-log-action-button can-have-night-mode">

@@ -248,7 +248,7 @@ function handleJoinRequestResponse(response) {
     }
 
     if (myRights == 1) {
-        showAdminLogs();
+        showUsageLogsButton();
     }
 
     /*
@@ -269,7 +269,7 @@ function handleJoinRequestResponse(response) {
             myRights = currentUserRights;
 
             if (currentUserRights === 1) {
-                showAdminLogs();
+                showUsageLogsButton();
             }
         }
 
@@ -296,7 +296,7 @@ function handleUserListRequestResponse(obj) {
                     myRights = currentUserRights;
 
                     if (currentUserRights === 1) {
-                        showAdminLogs();
+                        showUsageLogsButton();
                     }
                 }
                 break;
@@ -315,7 +315,7 @@ function handleUserListRequestResponse(obj) {
                 myRights = currentUserRights;
 
                 if (currentUserRights === 1) {
-                    showAdminLogs();
+                    showUsageLogsButton();
                 }
             }
 
@@ -347,7 +347,7 @@ function handleUserListUpdate(obj) {
                     myRights = currentUserRights;
 
                     if (currentUserRights === 1) {
-                        showAdminLogs();
+                        showUsageLogsButton();
                     }
                 }
                 break;

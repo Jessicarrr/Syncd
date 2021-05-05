@@ -43,6 +43,13 @@ var shouldTrackTime = false;
 var lastTimeMouseMovedInFullscreen;
 var hideUiInFullscreenAfterSeconds = 6;
 
+function isPlayerDisabled() {
+    if (playerControlsDiv.style.display == "none") {
+        return true;
+    }
+    return false;
+}
+
 /**
  * Disables the custom player so that the video can be clicked on and interacted with.
  */

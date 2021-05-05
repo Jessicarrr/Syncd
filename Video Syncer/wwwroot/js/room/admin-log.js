@@ -1,6 +1,8 @@
 ﻿var adminLogAreaOriginalWidth;
 var adminLogAreaOriginalPadding;
 
+var wasScrolledAtBottomWhenMinimized = false;
+
 function atBottom(ele) {
     var sh = ele.scrollHeight;
     var st = ele.scrollTop;
@@ -71,15 +73,29 @@ function openAdminLog() {
     closeActionsArea();
     adminLogViewerBody.style.display = "flex";
     adminLogArea.style.paddingBottom = adminLogAreaOriginalPadding;
+
+    if (wasScrolledAtBottomWhenMinimized === true) {
+        adminLogViewerBody.scrollTop = adminLogViewerBody.scrollHeight;
+        console.log("SCROLLING TO BOTTOM");
+    }
 }
 
 function minimizeAdminLog() {
     var adminLogViewerBody = document.getElementById("admin-log-viewer-body");
     var adminLogArea = document.getElementById("admin-log-area");
 
+    if (atBottom(adminLogViewerBody)) {
+        wasScrolledAtBottomWhenMinimized = true;
+    }
+    else {
+        wasScrolledAtBottomWhenMinimized = false;
+    }
+
     closeActionsArea();
     adminLogViewerBody.style.display = "none";
     adminLogArea.style.paddingBottom = "0";
+
+    
 }
 
 function setActionsAreaUser(user) {
@@ -142,7 +158,10 @@ function hideAdminLogs() {
 
 function showAdminLogs() {
     var adminLog = document.getElementById("admin-log-area");
+    var adminViewerBody = document.getElementById("admin-log-viewer-body");
+
     adminLog.style.display = "flex";
+    adminViewerBody.scrollTop = adminViewerBody.scrollHeight;
 }
 
 function setupAdminLogs() {

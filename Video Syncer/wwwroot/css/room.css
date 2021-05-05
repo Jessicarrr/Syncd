@@ -316,7 +316,7 @@ tr{
 }
 
 #video-title{ 
-    margin-bottom: 2%;
+    margin-top: -0.7%;
 }
 
 #searchBar {
@@ -341,7 +341,7 @@ tr{
     width: 45%;
     border: 1px solid lightgray;
     padding-bottom: 2vh;
-    display: flex;
+    display: none;
     flex-direction: row;
     border-radius: 3px;
 }
@@ -365,6 +365,7 @@ tr{
     margin-bottom: 2px;
     display: flex;
     flex-direction: row;
+    position: relative;
 }
 
 #admin-log-viewer-header.night-mode {
@@ -415,17 +416,19 @@ tr{
     min-width: 100%;
     margin-bottom: 10px;
     padding-top: 10px;
+    position: relative;
 }
 .close-button {
-    color: darkred;
+    color: #e53c3c;
     background: transparent;
     border: none;
     height: 20px;
-    width: 5%;
+    width: 5px;
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 20%;
+    right: 15px;
     font-size: 20px;
+    cursor: pointer;
 }
 
 #admin-log-actions-title-area {
@@ -452,6 +455,7 @@ tr{
 .admin-log-action-button {
     width: 60%;
     height: 15%;
+    min-height: 50px;
     background: transparent;
     border: 1px solid gray;
     border-radius: 2px;
@@ -464,6 +468,24 @@ tr{
     box-shadow: 2px 4px 4px #272727;
     border: none;
     background-color: #313131;
+}
+
+.underneath-player-button-area {
+    display: flex;
+    flex-direction: row;
+}
+.underneath-player-button {
+    font-size: 10px;
+    display: flex;
+    flex-direction: column;
+    width: 60px;
+    margin-right: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+#usage-logs-activator-button {
+    display: none;
 }
 
 @media screen and (max-width: 760px) {

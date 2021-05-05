@@ -9,7 +9,9 @@ $(window).on('load', function () {
     console.log("Attempting to make custom video player...");
     createPlayerOverObject(playerHTMLObject, youtubeWidth, youtubeHeight);
 
-    setupHidePlayerCheckbox();
+    setupHidePlayerButton();
+    setupUsageLogsButton();
+    setupUsageLogsCloseButton();
 
     window.onclick = function (event) {
         closeDropdownsOnClick(event);
@@ -30,9 +32,9 @@ $(window).on('load', function () {
     setupAdminLogs();
 
     if (myRights == 1) {
-        showAdminLogs();
+        showUsageLogsButton();
     } else {
-        hideAdminLogs();
+        hideUsageLogsButton();
     }
     
 });
