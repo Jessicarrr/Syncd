@@ -30,14 +30,21 @@
 
 #cvpl-fullscreenButton {
     float: right;
+    background: url('../images/icons/fullscreen.png') no-repeat center;
+    background-size: 70% 70%;
+    
 }
 
 #cvpl-playButton {
     float: left;
+    background: url('../images/icons/play.png') no-repeat center;
+    background-size: 60% 60%;
 }
 
 #cvpl-customVolumeButton {
     float: left;
+    background: url('../images/icons/volume.png') no-repeat center;
+    background-size: 80% 60%;
 }
 
 #cvpl-volumeSlider {
@@ -47,7 +54,23 @@
     vertical-align: top;
     cursor: pointer;
     float: left;
+    border-radius: 5px;
+    background-color: black;
     display: none;
+}
+
+#cvpl-volumeSlider::-moz-range-thumb {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: darkred;
+    border-color:darkred;
+    cursor: pointer;
+}
+#cvpl-volumeSlider::-moz-range-track {
+    background: white;
+    color: white;
+    cursor: pointer;
 }
 
 #cvpl-bottomButtonDiv {
@@ -69,7 +92,7 @@
     color: white;
     float: left;
     margin-right: 4px;
-    line-height: 33px;
+    line-height: 1.95;
 }
 /* The slider itself */
 #cpvl-timeSlider {
@@ -102,16 +125,25 @@
 }
 
 #cpvl-timeSlider::-moz-range-thumb {
-    width: 1%; /* Set a specific slider handle width */
-    height: 1%; /* Slider handle height */
+    width: 10px; /* Set a specific slider handle width */
+    height: 3px; /* Slider handle height */
     background: #FF0000; /* Red background */
+    color: red;
     cursor: pointer; /* Cursor on hover */
 }
 
 #cpvl-timeSlider::-webkit-slider-thumb:hover {
     height: 10px;
+    width: 20px;
 }
 
 #cpvl-timeSlider::-moz-range-thumb:hover {
     height: 10px;
+    width: 20px;
+}
+
+@media screen and (max-width : 767px) {
+    #cvpl-timeDisplay {
+        line-height: 2.33;
+    }
 }

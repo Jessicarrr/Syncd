@@ -1,15 +1,57 @@
-﻿
+﻿.loading-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0) linear-gradient(45deg, rgb(66, 43, 53), rgb(38, 23, 49)) repeat scroll 0% 0%;
+    z-index: 1000;
+    display: none;
+}
+
+.loading-info {
+}
+
+.loading-screen-middle {
+    position: absolute;
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    font-size: 1.5em;
+    display: flex;
+    flex-direction: column;
+}
+
+.loading-text {
+    vertical-align: bottom;
+    text-align: left;
+    color: white;
+}
+
+.loading-icon {
+    background: transparent;
+    color: hotpink;
+    margin-bottom: 10px;
+}
 
 /* Playlist */
 #playlist-area-parent {
     overflow: auto;
-    min-width: 40%;
-    max-width: 50%;
+    max-width: 35%;
+    min-width: 100px;
     max-height: 40vh;
-    border: 1px solid #6b6b6b;
-    box-shadow: 1px 1px 3px black, 1px 1px 3px black;
+    background-color: #f8f8f8;
+    box-shadow: 2px 4px 5px #a1a1a1;
+    margin: 5px 5% 5% 0px;
+    padding-bottom: 10px;
+    display: inline-block;
     float: left;
-    margin-right: 8%;
+    border-radius: 5px;
+}
+
+#playlist-area-parent.night-mode {
+    background-color: #2a2a2a;
+    box-shadow: 3px 5px 5px #222222;
 }
 
 #playlist-area {
@@ -19,13 +61,31 @@
     margin-bottom: 8%;
     position: relative;
     width: 100%;
+    
 }
 
+#whole-room-area {
+    /*background-color: red;*/
+    max-width: 80%;
+    margin: auto;
+    padding-top: 10px;
+}
 
+#whole-room-centered {
+    /*display: flex;
+    justify-content: center;
+    width: 100%;
+    min-height: calc(100vh - 50px);*/
+}
 
+/* The top title of the playlist that just says "Playlist" */
+.playlist-header {
+    padding: 2px 0px 0px 8px;
+}
 .playlist-title {
     font-size: 16px;
     width: 99%;
+    
 }
 
 .playlist-author {
@@ -65,7 +125,7 @@
     height: 100%;
     cursor: pointer;
     float: right;
-    margin-left: 20px;
+    margin-left: 2px;
     border-left: 1px solid #6b6b6b;
     padding-left: 6px;
     padding-bottom: 6px;
@@ -97,6 +157,7 @@
     left: 20px;
     font-size: 16px;
     line-height: 15px;
+    border: 1px solid black;
 }
 
 .dropdown-content.night-mode {
@@ -135,47 +196,81 @@
 #userListArea {
     height: 35%;
     margin-bottom: 10px;
-    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .3), 1px 1px 1px 1px rgba(0, 0, 0, .3);
     margin-right: 1%;
-    min-width: 20%;
-    max-width: 35%;
-    border: 1px solid;
-    float: right;
+    min-width: 170px;
+    width: 40%;
     overflow-y: auto;
     max-height: 40vh;
+    background-color: transparent;
+    margin: 5px 2% 5% 0px;
+    padding: 0 0 10px 0;
+    box-shadow: 2px 4px 5px #a1a1a1;
+    border: 1px solid gray;
+    display: inline-block;
+    border-radius: 5px;
+}
+
+#userListArea.night-mode {
+    background-color: #2a2a2a;
+    box-shadow: 3px 5px 5px #222222;
+    border: none;
 }
 
 .userDiv {
-    border-bottom: 1px solid gray;
-    margin-bottom: 2px;
     padding: 0px 5px 5px 5px;
     display: inline-block;
     width: 100%;
+    min-width: 100%;
+
+}
+
+i[id$="userIcon"] {
+    display: inline-block;
+    background: transparent;
+    transform: scale(0.85, 0.85212);
+}
+
+div[id$="userIconDiv"] {
+    display: inline-block;
+    background: transparent;
+    width: 23px;
+    height: 25px;
 }
 
 p[id$="userName"] {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 16px;
+    vertical-align: bottom;
+    line-height: 1.51;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 64%;
+}
+
+p[id$="userId"] {
+    display: inline-block;
     font-weight: bold;
     font-size: 16px;
     word-break: break-all;
-}
-
-p[id$="userRights"], p[id$="userId"], p[id$="userState"] {
-    float: left;
-    margin-right: 3px;
-    padding-right: 3px;
-    border-right: 1px solid Gainsboro;
-    font-size: 12px;
+    color: #797979;
+    vertical-align: bottom;
+    line-height: 1.51;
+    
 }
 
 p[id$="userKick"], p[id$="userBan"], p[id$="userMakeAdmin"] {
     float: left;
     margin-right: 3px;
     padding-right: 3px;
-    border-right: 1px solid Gainsboro;
     font-size: 12px;
     color: #3973fc;
     text-decoration: underline;
     cursor: pointer;
+    margin-bottom: 15px;
+
+    height: 5px;
 }
 
 p[id$="userTime"] {
@@ -192,15 +287,7 @@ p[id$="userTime"] {
 
 #user-and-playlist-area {
     overflow: hidden;
-    width: 75%;
-}
-
-#userListArea {
-    float: left;
-}
-
-#playlist-area {
-    float: left;
+    width: 100%;
 }
 
 .table-heading {
@@ -229,11 +316,11 @@ tr{
 }
 
 #video-title{ 
-    margin-bottom: 2%;
+    margin-top: -0.7%;
 }
 
 #searchBar {
-    width: 70%;
+    width: 85%;
     margin-bottom: 10px;
 }
 
@@ -245,6 +332,228 @@ tr{
     display: flex;
 }
 
+#admin-log-area {
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    background: white;
+    width: 45%;
+    border: 1px solid lightgray;
+    padding-bottom: 2vh;
+    display: none;
+    flex-direction: row;
+    border-radius: 3px;
+}
 
+#admin-log-area.night-mode {
+    background-color: #373737;
+    border: 1px solid #272727;
 
+}
+
+#admin-log-viewer {
+    width: 100%;
+}
+
+#admin-log-viewer-header {
+    font-size: 20px;
+    height: 30px;
+    cursor: pointer;
+    border-bottom: 1px solid lightgray;
+    padding-bottom: 31px;
+    margin-bottom: 2px;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+}
+
+#admin-log-viewer-header.night-mode {
+    border-bottom: 1px solid #272727;
+}
+
+.admin-log-viewer-header-icon {
+    margin: 6px 5px 0px 3px;
+}
+
+#admin-log-viewer-body {
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    font-size: 12px;
+    height: 20vh;
+}
+
+.admin-log-viewer-item {
+    font-size: 14px;
+    margin: 0 0 8px 0;
+}
+.admin-log-viewer-name {
+    background: transparent;
+    border: none;
+    color: mediumblue;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+}
+
+.admin-log-viewer-name.night-mode {
+    color: skyblue;
+}
+
+#admin-log-actions-area {
+    padding-left: 5px;
+    border-left: 1px solid lightgray;
+    width: 40%;
+    display: none;
+    flex-direction: column;
+}
+#admin-log-actions-area.night-mode {
+    border-left: 1px solid #272727;
+}
+#admin-log-actions-header {
+    display: flex;
+    flex-direction: row;
+    min-width: 100%;
+    margin-bottom: 10px;
+    padding-top: 10px;
+    position: relative;
+}
+.close-button {
+    color: #e53c3c;
+    background: transparent;
+    border: none;
+    height: 20px;
+    width: 5px;
+    position: absolute;
+    top: 20%;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+#admin-log-actions-title-area {
+    width: 75%;
+    display: flex;
+    flex-direction: row;
+}
+.admin-log-actions-title.name {
+    font-size: 18px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 70%;
+    margin-right: 0;
+    padding-right: 0;
+    white-space: nowrap;
+    font-family: Verdana, sans-serif;
+}
+.admin-log-actions-title.id {
+    font-size: 18px;
+    max-width: 30%;
+    font-family: Verdana, sans-serif;
+}
+
+.admin-log-action-button {
+    width: 60%;
+    height: 15%;
+    min-height: 50px;
+    background: transparent;
+    border: 1px solid gray;
+    border-radius: 2px;
+    margin: 15px auto 35px auto;
+    box-shadow: 2px 4px 4px #c3c2c2;
+}
+
+.admin-log-action-button.night-mode {
+    color: white;
+    box-shadow: 2px 4px 4px #272727;
+    border: none;
+    background-color: #313131;
+}
+
+.underneath-player-button-area {
+    display: flex;
+    flex-direction: row;
+}
+.underneath-player-button {
+    font-size: 10px;
+    display: flex;
+    flex-direction: column;
+    width: 60px;
+    margin-right: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+#usage-logs-activator-button {
+    display: none;
+}
+
+@media screen and (max-width: 760px) {
+    .admin-log-viewer-item {
+        font-size: 12px;
+    }
+
+    .admin-log-actions-title.name {
+        font-size: 14px;
+        width: 60%;
+    }
+
+    .admin-log-actions-title.id {
+        font-size: 14px;
+    }
+
+    i [id$="userIcon"] {
+        transform: scale(0.75, 0.75212);
+    }
+
+    div[id$="userIconDiv"] {
+        width: 20px;
+        height: 15px;
+    }
+
+    p[id$="userName"] {
+        font-size: 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100px;
+        /*display: inline-block;
+        font-weight: bold;
+        word-break: break-all;
+        vertical-align: bottom;
+        line-height: 1.51;*/
+    }
+
+    p[id$="userId"] {
+        font-size: 12px;
+
+        /*
+        display: inline-block;
+        font-weight: bold;
+        word-break: break-all;
+        color: #797979;
+        vertical-align: bottom;
+        line-height: 1.51;
+        */
+    }
+
+    p[id$="userKick"], p[id$="userBan"], p[id$="userMakeAdmin"] {
+        font-size: 11px;
+        padding-right: 16px;
+    }
+
+    .playlist-title {
+        font-size: 12px;
+    }
+
+    .playlist-author {
+        font-size: 11px;
+    }
+    .dropdown-content {
+        width: 10px !important;
+        font-size: 12px;
+    }
+
+    .dropdown-content p {
+    }
+}
 

@@ -1,8 +1,8 @@
 ﻿var stateText = "[Video State]"; // the current video state (paused/playing/etc) in a readable format for UI purposes.
 var stateNumber = -1; // the current video state (paused/playing/etc)
 
-var youtubeWidth = '1062';
-var youtubeHeight = '597';
+var youtubeWidth = '3840';
+var youtubeHeight = '2160';
 function startLoadingYoutubePlayer() {
     // 1. This code loads the IFrame Player API code asynchronously.
     var tag = document.createElement('script');
@@ -100,6 +100,15 @@ function getVideoTotalDuration() {
     return player.getDuration();
 }
 
+function isVideoPlaying() {
+    if (stateNumber == 1 || stateNumber == 3) {
+        return true;
+    }
+    else if (stateNumber == 2 || stateNumber == -1 || stateNumber == 0 || stateNumber == 5) {
+        return false;
+    }
+}
+
 // 4. The API will call this function when the video player is ready.
 function onPlayerReady(event) {
     console.log("youtube player is ready");
@@ -109,6 +118,7 @@ function onPlayerReady(event) {
     setClickTimeSliderCallback(adjustTime);
     givePlayerAbilityToTrackTime(getVideoTime, getVideoTotalDuration);
     setChangeVideoSizeCallback(setYoutubePlayerSize);
+    setIsVideoPlayingCallback(isVideoPlaying);
 
     setVolumeSliderPosition(0);
 

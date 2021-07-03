@@ -170,7 +170,7 @@ namespace Video_Syncer.Models
             {
                 int roomAgeInMinutes = room.GetMinutesSinceRoomCreation();
 
-                if(room.UserManager.GetNumUsers() <= 0)
+                if(room.UserManager.GetNumUsers() <= 0 && room.RoomShouldBeDestroyed == true)
                 {
                     if (roomAgeInMinutes < 1)
                     {

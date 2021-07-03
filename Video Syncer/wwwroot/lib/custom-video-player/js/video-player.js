@@ -15,6 +15,9 @@ var isMouseOverPlayer = false;
 var lastWidth;
 var lastHeight;
 
+var originalWidth;
+var originalHeight;
+
 var containerDiv;
 var playerControlsDiv;
 var playerElement;
@@ -29,17 +32,23 @@ var fullscreenButton;
 
 var toggleVideoPlayingCallback;
 var volumeChangeCallback;
+var isVideoPlayingCallback;
 var userClicksTimeSliderCallback;
 var getCurrentVideoTimeCallback;
 var getTotalVideoDurationCallback;
 var changeVideoSizeCallback;
 
-var volumeButtonMutedFontSize = "10px";
-var volumeButtonUnmutedFontSize = "16px";
-var volumeButtonMutedText = "Muted";
-var volumeButtonUnmutedText = "V";
-
 var shouldTrackTime = false;
+
+var lastTimeMouseMovedInFullscreen;
+var hideUiInFullscreenAfterSeconds = 6;
+
+function isPlayerDisabled() {
+    if (playerControlsDiv.style.display == "none") {
+        return true;
+    }
+    return false;
+}
 
 /**
  * Disables the custom player so that the video can be clicked on and interacted with.
@@ -96,11 +105,40 @@ function fadeIn(element, toOpacity = 1) {
 }
 
 function videoPlayerTick() {
+    if (isFullscreen() && lastTimeMouseMovedInFullscreen != null) {
+        // auto hide video player ui in fullscreen after mouse movement has stopped for a while
+        var currentTime = new Date();
+        var currentTimeMillis = currentTime.getTime();
+        var lastMouseMovementMillis = lastTimeMouseMovedInFullscreen.getTime();
+        var timeSinceLastMovementMillis = currentTimeMillis - lastMouseMovementMillis;
+        var timeSinceLastMovementSeconds = timeSinceLastMovementMillis / 1000;
+
+        if (timeSinceLastMovementSeconds > hideUiInFullscreenAfterSeconds) {
+            fadeOut(bottomButtonDiv);
+            fadeOut(timeSlider);
+            console.log("Should fade out ui");
+        }
+        else {
+            console.log("ui not fading yet because time since last movement = " + timeSinceLastMovementSeconds);
+        }
+    }
+
     try {
         if (isFunction(changeVideoSizeCallback)) {
             fixVideoPlayerSize();
         }
         trackTime();
+
+        if (isFunction(isVideoPlayingCallback)) {
+            if (isVideoPlayingCallback() === true) {
+                playButton.style.background = "url('../lib/custom-video-player/images/icons/pause.png') no-repeat center"
+                playButton.style.backgroundSize = "60% 60%";
+            }
+            else if (isVideoPlayingCallback() === false) {
+                playButton.style.background = "url('../lib/custom-video-player/images/icons/play.png') no-repeat center"
+                playButton.style.backgroundSize = "60% 60%";
+            }
+        }
     }
     catch(err) {
         console.log("videoPlayerTick - Error with in video-player.js videoPlayerTick() caught. message = "
@@ -180,6 +218,17 @@ function addFullscreenButtonClick() {
         if (!isFullscreen()) {
             console.log("fullscreen - tryin full screen");
             tryFullScreen();
+
+            setTimeout(function () {
+                if (isFullscreen()) {
+                    console.log("set time");
+                    lastTimeMouseMovedInFullscreen = new Date();
+                }
+                else {
+                    console.log("not full screen??");
+                }
+            }, 1000);
+            
         }
         else {
             console.log("fullscreen - exiting fullscreen");
@@ -337,7 +386,14 @@ function setToggleVideoPlayingCallback(paramTogglePlayingCallback) {
     }
 
     toggleVideoPlayingCallback = paramTogglePlayingCallback;
-    console.log("setPlayVideoCallback - video callback set to " + paramTogglePlayingCallback);
+}
+
+function setIsVideoPlayingCallback(paramIsVideoPlayingCallback) {
+    if (!isFunction(paramIsVideoPlayingCallback)) {
+        throw "First parameter must be a function";
+    }
+
+    isVideoPlayingCallback = paramIsVideoPlayingCallback;
 }
 
 function isFunction(object) {
@@ -390,6 +446,8 @@ function createPlayerOverObject(object, playerWidth, playerHeight) {
 
     lastWidth = playerWidth;
     lastHeight = playerHeight;
+    originalWidth = playerWidth;
+    originalHeight = playerHeight;
     playerElement = object;
 
     objectParent.replaceChild(containerDiv, object);
@@ -404,13 +462,44 @@ function createPlayerOverObject(object, playerWidth, playerHeight) {
 }
 
 function setupTicks() {
-    setInterval(videoPlayerTick, 900);
+    setInterval(videoPlayerTick, 500);
 }
 
 function setupListeners() {
     window.addEventListener("resize", function () {
         fixVideoPlayerSize();
     }, true);
+
+    containerDiv.onmousemove = function () {
+        if (isFullscreen()) {
+            lastTimeMouseMovedInFullscreen = new Date();
+            fadeIn(bottomButtonDiv);
+            fadeIn(timeSlider);
+        }
+        
+    };
+
+    containerDiv.addEventListener('touchstart', function (e) {
+        if (isFullscreen()) {
+            lastTimeMouseMovedInFullscreen = new Date();
+            fadeIn(bottomButtonDiv);
+            fadeIn(timeSlider);
+        }
+        else {
+            if (e.target.id != playerControlsDivId) {
+                return;
+            }
+
+            if (bottomButtonDiv.style.visibility == "visible") {
+                fadeOut(bottomButtonDiv);
+                fadeOut(timeSlider);
+            }
+            else {
+                fadeIn(bottomButtonDiv);
+                fadeIn(timeSlider);
+            }
+        }
+    });
 
     containerDiv.onmouseenter = function () {
         isMouseOverPlayer = true;
@@ -430,14 +519,36 @@ function setupListeners() {
         }, 1000);
 
     };
+
 }
+/*
+function fixVideoPlayerSize() {
+    if (containerDiv.offsetWidth != lastWidth || containerDiv.offsetHeight != lastHeight) {
+        var adjustedHeight = containerDiv.offsetWidth * originalHeight / originalWidth
+
+        changeVideoSizeCallback(containerDiv.offsetWidth, adjustedHeight);
+        changePlayerDimensions(containerDiv.offsetWidth, adjustedHeight);
+        lastWidth = containerDiv.offsetWidth;
+        lastHeight = adjustedHeight;
+        console.log("set to " + lastWidth + " x " + lastHeight);
+    }
+}
+ */
 
 function fixVideoPlayerSize() {
+    var adjustedHeight = containerDiv.offsetWidth * originalHeight / originalWidth
+
+    changeVideoSizeCallback(containerDiv.offsetWidth, adjustedHeight);
+    containerDiv.style.height = adjustedHeight + "px";
+    lastWidth = containerDiv.offsetWidth;
+    lastHeight = containerDiv.offsetHeight;
+}
+
+function fixVideoPlayerSize2() {
     if (containerDiv.offsetWidth != lastWidth || containerDiv.offsetHeight != lastHeight) {
         changeVideoSizeCallback(containerDiv.offsetWidth, containerDiv.offsetHeight);
         lastWidth = containerDiv.offsetWidth;
         lastHeight = containerDiv.offsetHeight;
-        console.log("set to " + lastWidth + " x " + lastHeight);
     }
 }
 
@@ -454,7 +565,6 @@ function createHTML(playerControlsDiv) {
 function createFullscreenButton() {
     fullscreenButton = document.createElement("button");
     fullscreenButton.setAttribute("id", fullscreenButtonId);
-    fullscreenButton.innerHTML = "FS";
     bottomButtonDiv.appendChild(fullscreenButton);
 }
 
@@ -476,6 +586,15 @@ function createTimeSlider(playerControlsDiv) {
 
     playerControlsDiv.appendChild(timeSlider);
 
+    timeSlider.addEventListener('touchstart', function (e) {
+        userDraggingTimeSlider = true;
+    });
+
+    timeSlider.addEventListener('touchend', function (e) {
+        userDraggingTimeSlider = false;
+        userClicksTimeSliderCallback(timeSlider.value);
+    });
+
     timeSlider.onmousedown = function () {
         userDraggingTimeSlider = true;
     };
@@ -485,7 +604,7 @@ function createTimeSlider(playerControlsDiv) {
     };
 
     timeSlider.onclick = function () {
-        console.log("change - " + timeSlider.value);
+        console.log("onclick time slider");
 
         if (isFunction(userClicksTimeSliderCallback)) {
             userClicksTimeSliderCallback(timeSlider.value);
@@ -508,11 +627,22 @@ function createButtons(playerControlsDiv) {
 function createPlayButton() {
     playButton = document.createElement("button");
     playButton.setAttribute("id", playButtonId);
-    playButton.innerHTML = "P";
+    //playButton.innerHTML = "P";
 
     playButton.onclick = function () {
         if (isFunction(toggleVideoPlayingCallback)) {
             toggleVideoPlayingCallback();
+
+            if (isFunction(isVideoPlayingCallback)) {
+                if (isVideoPlayingCallback() === true) {
+                    playButton.style.background = "url('../lib/custom-video-player/images/icons/play.png') no-repeat center"
+                    playButton.style.backgroundSize = "60% 60%";
+                }
+                else if (isVideoPlayingCallback() === false) {
+                    playButton.style.background = "url('../lib/custom-video-player/images/icons/pause.png') no-repeat center"
+                    playButton.style.backgroundSize = "60% 60%";
+                }
+            }
         }
     };
 
@@ -522,15 +652,13 @@ function createPlayButton() {
 function setVolumeSliderPosition(positionNumber) {
     volumeSlider.setAttribute("value", positionNumber);
 
-    var volumeButtonCurrentText = volumeHoverButton.innerHTML;
-
-    if (positionNumber <= 0 && volumeButtonCurrentText !== volumeButtonMutedText) {
-        volumeHoverButton.innerHTML = volumeButtonMutedText;
-        volumeHoverButton.style.fontSize = volumeButtonMutedFontSize;
+    if (positionNumber <= 0) {
+        volumeHoverButton.style.background = "url('../lib/custom-video-player/images/icons/volume-muted.png') no-repeat center"
+        volumeHoverButton.style.backgroundSize = "80% 60%";
     }
-    else if (positionNumber > 0 && volumeButtonCurrentText != volumeButtonUnmutedText) {
-        volumeHoverButton.innerHTML = volumeButtonUnmutedText;
-        volumeHoverButton.style.fontSize = volumeButtonUnmutedFontSize;
+    else if (positionNumber > 0) {
+        volumeHoverButton.style.background = "url('../lib/custom-video-player/images/icons/volume.png') no-repeat center"
+        volumeHoverButton.style.backgroundSize = "80% 60%";
     }
 }
 
@@ -547,7 +675,7 @@ function createVolumeSlider() {
 
     volumeHoverButton = document.createElement("button");
     volumeHoverButton.setAttribute("id", volumeButtonHoverId);
-    volumeHoverButton.innerHTML = "V";
+    //volumeHoverButton.innerHTML = "V";
 
     volumeHoverButton.addEventListener("mouseenter", function (event) {
         mouseInVolumeButton = true;
@@ -565,6 +693,15 @@ function createVolumeSlider() {
         }
 
         
+    });
+
+    volumeHoverButton.addEventListener('touchstart', function (e) {
+        if (volumeSlider.style.display == "none") {
+            volumeSlider.style.display = "block";
+        } else {
+            volumeSlider.style.display = "none";
+        }
+
     });
 
     volumeSlider.addEventListener("mouseenter", function (event) {
@@ -585,18 +722,27 @@ function createVolumeSlider() {
     volumeSlider.oninput = function () {
         if (isFunction(volumeChangeCallback)) {
             var volumeValue = volumeSlider.value;
-            var volumeButtonCurrentText = volumeHoverButton.innerHTML;
+            //var volumeButtonCurrentText = volumeHoverButton.innerHTML;
 
             volumeChangeCallback(volumeValue);
 
-            if (volumeValue <= 0 && volumeButtonCurrentText !== volumeButtonMutedText) {
+            if (volumeValue <= 0) {
+                volumeHoverButton.style.background = "url('../lib/custom-video-player/images/icons/volume-muted.png') no-repeat center"
+                volumeHoverButton.style.backgroundSize = "80% 60%";
+            }
+            else if (volumeValue > 0) {
+                volumeHoverButton.style.background = "url('../lib/custom-video-player/images/icons/volume.png') no-repeat center"
+                volumeHoverButton.style.backgroundSize = "80% 60%";
+            }
+
+            /*if (volumeValue <= 0 && volumeButtonCurrentText !== volumeButtonMutedText) {
                 volumeHoverButton.innerHTML = volumeButtonMutedText;
                 volumeHoverButton.style.fontSize = volumeButtonMutedFontSize;
             }
             else if (volumeValue > 0 && volumeButtonCurrentText != volumeButtonUnmutedText) {
                 volumeHoverButton.innerHTML = volumeButtonUnmutedText;
                 volumeHoverButton.style.fontSize = volumeButtonUnmutedFontSize;
-            }
+            }*/
         }
     };
 

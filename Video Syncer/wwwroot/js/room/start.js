@@ -1,4 +1,6 @@
-﻿$(window).on('load', function () {
+﻿
+$(window).on('load', function () {
+    
     createNewName();
     document.getElementById("addButton").addEventListener("click", addVideoFromSearchBar);
 
@@ -7,23 +9,34 @@
     console.log("Attempting to make custom video player...");
     createPlayerOverObject(playerHTMLObject, youtubeWidth, youtubeHeight);
 
-    setupHidePlayerCheckbox();
+    setupHidePlayerButton();
+    setupUsageLogsButton();
+    setupUsageLogsCloseButton();
 
     window.onclick = function (event) {
         closeDropdownsOnClick(event);
     }
 
-    document.getElementById("usernameBox").addEventListener("focusout", function () {
-        var newNameDefault = document.getElementById("usernameBox").value;
+    document.getElementById("username-box").addEventListener("focusout", function () {
+        var newNameDefault = document.getElementById("username-box").value;
         sendChangeNameRequest(newNameDefault);
     });
 
-    document.getElementById("usernameBox").addEventListener("keyup", function (e) {
+    document.getElementById("username-box").addEventListener("keyup", function (e) {
         if (e.keyCode === 13) {
-            var newNameDefault = document.getElementById("usernameBox").value;
+            var newNameDefault = document.getElementById("username-box").value;
             sendChangeNameRequest(newNameDefault);
         }
-    }); 
+    });
+
+    setupAdminLogs();
+
+    if (myRights == 1) {
+        showUsageLogsButton();
+    } else {
+        hideUsageLogsButton();
+    }
+    
 });
 
 var tickMs = 200; // how often to run function tick()

@@ -4,20 +4,89 @@
     }
 }
 
-function setupHidePlayerCheckbox() {
-    var checkbox = document.getElementById("hide-player-checkbox");
+function showInitialLoadingScreen() {
+    var loadingScreen = document.getElementById("initial-loading-screen");
 
-    checkbox.addEventListener('change', function () {
-        if (this.checked) {
-            console.log("hide");
-            //makeButtonAreaInvisible();
-            disablePlayer();
-        }
-        else {
-            //makeButtonAreaVisible();
+    loadingScreen.style.display = "block";
+    document.documentElement.style.overflow = "hidden";
+}
+
+function hideInitialLoadingScreen() {
+    var loadingScreen = document.getElementById("initial-loading-screen");
+
+    loadingScreen.style.display = "none";
+    document.documentElement.style.overflow = "auto";
+}
+
+function showUsageLogsButton() {
+    var buttonArea = document.getElementById("usage-logs-activator-button");
+
+    buttonArea.style.display = "flex";
+}
+
+function hideUsageLogsButton() {
+    var buttonArea = document.getElementById("usage-logs-activator-button");
+
+    buttonArea.style.display = "none";
+}
+
+function decodeHtml(html) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+}
+
+function setupHidePlayerButton() {
+    var button = document.getElementById("disable-player-button");
+    var icon = document.getElementById("disable-player-icon");
+
+    button.onclick = function () {
+        if (isPlayerDisabled()) {
             enablePlayer();
+            icon.style.color = null;
+            
+        } else {
+            disablePlayer();
+            icon.style.color = "red";
         }
-    });
+    };
+
+    button.ontouchend = function () {
+        if (isPlayerDisabled()) {
+            enablePlayer();
+            icon.style.color = null;
+        } else {
+            disablePlayer();
+            icon.style.color = "red";
+            
+        }
+    };
+}
+
+function setupUsageLogsButton() {
+    var button = document.getElementById("usage-logs-activator-button");
+
+    button.onclick = function () {
+        showAdminLogs();
+        openAdminLog();
+    };
+
+    button.ontouchend = function () {
+        showAdminLogs();
+        openAdminLog();
+    };
+}
+
+function setupUsageLogsCloseButton() {
+    var button = document.getElementById("admin-log-close-button");
+
+    button.onclick = function () {
+        hideAdminLogs();
+    };
+
+    button.ontouchend = function () {
+        hideAdminLogs();
+    };
 }
 
 function closeDropdowns() {

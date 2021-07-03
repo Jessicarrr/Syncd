@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,8 +42,14 @@ namespace Video_Syncer.Models
 
         public int periodicTaskMilliseconds = 2000;
         private long periodicRemoveUsersMilliseconds = 15000;
+        private long periodicSyncUsersVideosSeconds = 10;
         private DateTime lastTimeRemovedDisconnectedUsers = DateTime.Now;
+        private DateTime lastTimeSyncedUsersVideos = DateTime.Now;
         private CancellationTokenSource source;
+
+        private CancellationTokenSource destroyRoomTokenSource;
+        private int timeUntilEmptyRoomDestroyedMS = 300000; // 300 seconds, or 5 minutes
+        public bool RoomShouldBeDestroyed { get; private set; }
 
         private long playNewVideoAfterEndingDelayMS = 5000;
         private bool isTransitioningToNewVideo = false;
@@ -68,6 +75,7 @@ namespace Video_Syncer.Models
             logger = LoggingHandler.CreateLogger<Room>();
 
             StartPeriodicTasks();
+            StartEmptyRoomCountDown();
         }
 
         public Room(IPlaylistManager playlistManager, IUserManager userManager, IConnectionManager connectionManager,
@@ -88,6 +96,7 @@ namespace Video_Syncer.Models
             logger = LoggingHandler.CreateLogger<Room>();
 
             StartPeriodicTasks();
+            StartEmptyRoomCountDown();
         }
 
         private void StartPeriodicTasks()
@@ -116,44 +125,78 @@ namespace Video_Syncer.Models
                     break;
                 }
 
-                TimeSpan elapsed = DateTime.Now - lastTimeRemovedDisconnectedUsers;
-
-                if (elapsed.TotalMilliseconds >= periodicRemoveUsersMilliseconds)
-                {
-                    int usersRemoved = await ConnectionManager.CheckAndRemoveDisconnectedUsers(this, token);
-                    lastTimeRemovedDisconnectedUsers = DateTime.Now;
-
-                    if (usersRemoved > 0 && UserManager.SomeoneHasState(VideoState.Ended) && !isTransitioningToNewVideo)
-                    {
-                        isTransitioningToNewVideo = true;
-
-                        //TODO: Playlist support, play next video.
-                        PlaylistObject newVideoObj = PlaylistManager.GoToNextVideo();
-                        NewVideo(newVideoObj);
-
-                        VideoStatePayload payload = new VideoStatePayload()
-                        {
-                            currentVideoState = GetSuggestedVideoState(),
-                            currentYoutubeVideoId = currentYoutubeVideoId,
-                            videoTimeSeconds = videoTimeSeconds,
-                            currentYoutubeVideoTitle = currentYoutubeVideoTitle
-                        };
-
-                        RoomDataUpdate update = new RoomDataUpdate()
-                        {
-                            updateType = Network.StateUpdates.Enum.UpdateType.VideoUpdate,
-                            payload = payload
-                        };
-
-                        CancellationTokenSource source = new CancellationTokenSource();
-
-                        await ConnectionManager.SendUpdateToAll(this, update, source.Token);
-                        isTransitioningToNewVideo = false;
-                    }
-                }
-                
+                await SyncUsersVideos(token);
+                await PeriodicRemoveDisconnectedUsers(token);
                 new Task(() => PeriodicUpdateVideoStatistics()).Start();
                 await Task.Delay(periodicTaskMilliseconds);
+            }
+        }
+
+        public async Task SyncUsersVideos(CancellationToken token)
+        {
+            TimeSpan elapsed = DateTime.Now - lastTimeSyncedUsersVideos;
+
+            if(elapsed.TotalSeconds > periodicSyncUsersVideosSeconds)
+            {
+                lastTimeSyncedUsersVideos = DateTime.Now;
+
+                if(UserManager.SomeoneHasState(VideoState.Ended))
+                {
+                    return;
+                }
+
+                VideoStatePayload payload = new VideoStatePayload()
+                {
+                    currentVideoState = GetSuggestedVideoState(),
+                    currentYoutubeVideoId = currentYoutubeVideoId,
+                    videoTimeSeconds = videoTimeSeconds,
+                    currentYoutubeVideoTitle = currentYoutubeVideoTitle
+                };
+
+                RoomDataUpdate update = new RoomDataUpdate()
+                {
+                    updateType = Network.StateUpdates.Enum.UpdateType.VideoUpdate,
+                    payload = payload
+                };
+
+                await ConnectionManager.SendUpdateToAll(this, update, token);
+            }
+        }
+
+        public async Task PeriodicRemoveDisconnectedUsers(CancellationToken token)
+        {
+            TimeSpan elapsed = DateTime.Now - lastTimeRemovedDisconnectedUsers;
+
+            if (elapsed.TotalMilliseconds >= periodicRemoveUsersMilliseconds)
+            {
+                int usersRemoved = await ConnectionManager.CheckAndRemoveDisconnectedUsers(this, token);
+                lastTimeRemovedDisconnectedUsers = DateTime.Now;
+
+                if (usersRemoved > 0 && UserManager.SomeoneHasState(VideoState.Ended) && !isTransitioningToNewVideo)
+                {
+                    isTransitioningToNewVideo = true;
+
+                    //TODO: Playlist support, play next video.
+                    PlaylistObject newVideoObj = PlaylistManager.GoToNextVideo();
+                    NewVideo(newVideoObj);
+
+                    VideoStatePayload payload = new VideoStatePayload()
+                    {
+                        currentVideoState = GetSuggestedVideoState(),
+                        currentYoutubeVideoId = currentYoutubeVideoId,
+                        videoTimeSeconds = videoTimeSeconds,
+                        currentYoutubeVideoTitle = currentYoutubeVideoTitle
+                    };
+
+                    RoomDataUpdate update = new RoomDataUpdate()
+                    {
+                        updateType = Network.StateUpdates.Enum.UpdateType.VideoUpdate,
+                        payload = payload
+                    };
+
+                    await ConnectionManager.SendUpdateToAll(this, update, token);
+                    isTransitioningToNewVideo = false;
+                }
             }
         }
 
@@ -377,10 +420,32 @@ namespace Video_Syncer.Models
             
         }
 
-        public User Join(string name, string sessionID)
+        public void StartEmptyRoomCountDown()
         {
-            User user = UserManager.Join(name, sessionID);
+            destroyRoomTokenSource = new CancellationTokenSource();
+
+            var task = Task.Run(async () =>
+            {
+                await Task.Delay(timeUntilEmptyRoomDestroyedMS, destroyRoomTokenSource.Token);
+                RoomShouldBeDestroyed = true;
+                logger.LogInformation("[VSY] Room " + id + " has been empty for " + timeUntilEmptyRoomDestroyedMS / 1000  + " seconds. Room has been tagged to be destroyed");
+            },
+            destroyRoomTokenSource.Token);
+        }
+
+        public User Join(string name, string sessionID, IPAddress ipAddress)
+        {
+            User user = UserManager.Join(name, sessionID, ipAddress);
             HandleJoiningUser(user);
+
+            if (destroyRoomTokenSource != null) 
+            {
+                logger.LogInformation("[VSY] Stopped room destroy count down");
+                destroyRoomTokenSource.Cancel();
+                RoomShouldBeDestroyed = false;
+            }
+            
+
             return user;
         }
 
@@ -388,6 +453,12 @@ namespace Video_Syncer.Models
         {
             logger.LogInformation("[VSY]User with user id " + userId + " has left.");
             UserManager.RemoveFromUserList(userId);
+
+            if (UserManager.GetNumUsers() <= 0)
+            {
+                StartEmptyRoomCountDown();
+                logger.LogInformation("[VSY] Started room destroy count down");
+            }
         }
 
         private void HandleJoiningUser(User user)

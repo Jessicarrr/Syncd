@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Video_Syncer.Models.Users.Interface
@@ -8,12 +9,14 @@ namespace Video_Syncer.Models.Users.Interface
     public interface IUserManager
     {
         public bool IsSessionIdBanned(string sessionID);
+        public bool IsUserIpAddressMatching(int userId, IPAddress ipAddress);
+        public bool IsIpAddressBanned(IPAddress paramIp);
         public bool Kick(User user, User recipient);
         public bool Ban(User user, User recipient);
         public bool IsAdmin(User user);
         public bool CreateNewAdmin(User user);
         public bool RemoveAdmin(User user);
-        public User Join(string name, string sessionID);
+        public User Join(string name, string sessionID, IPAddress ipAddress);
         public bool ChangeName(int userId, string newName);
         public bool AddToUserList(User user);
         public void RemoveFromUserList(User user);
@@ -26,7 +29,7 @@ namespace Video_Syncer.Models.Users.Interface
         public VideoState GetStateForUser(int userId);
         public bool UpdateLastConnectionTime(int userId);
         public User UpdateUser(int userId, double seconds);
-        public User CreateNewUser(string name, string sessionID);
+        public User CreateNewUser(string name, string sessionID, IPAddress ipAddress);
         public bool IsFull();
         public bool UserIdExists(int id);
 
@@ -37,6 +40,7 @@ namespace Video_Syncer.Models.Users.Interface
         public int GetNumUsers();
 
         public List<User> GetUserList();
+        public List<User> GetAllAdmins();
         public List<string> GetSessionIdList();
     }
 }

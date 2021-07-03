@@ -14,6 +14,7 @@ namespace Video_Syncer.api.receiver
 {
     public class NoEmbedHandler
     {
+        
         protected readonly string apiName = "noembed";
         protected readonly string baseAddress = "https://noembed.com/";
         protected readonly string resourceAddressStart = "embed?url=http://www.youtube.com/watch?v=";

@@ -9,6 +9,8 @@ using Video_Syncer.Models.Users.Interface;
 using Video_Syncer.Models.Users.Enum;
 using System.Net.WebSockets;
 using System.Threading;
+using System.Net;
+using System.Web;
 
 namespace Video_Syncer.Models.Users.Impl
 {
@@ -29,6 +31,7 @@ namespace Video_Syncer.Models.Users.Impl
 
         protected List<string> adminSessionIDs { get; set; } = new List<string>();
         protected List<string> bannedSessionIDs { get; set; } = new List<string>();
+        protected List<IPAddress> bannedIpAddresses { get; set; } = new List<IPAddress>();
 
         public UserManager(string roomId)
         {
@@ -49,6 +52,21 @@ namespace Video_Syncer.Models.Users.Impl
         public List<User> GetUserList()
         {
             return userList;
+        }
+
+        public List<User> GetAllAdmins()
+        {
+            List<User> adminList = new List<User>();
+
+            foreach(User user in userList) 
+            {
+                if(user.rights == UserRights.Admin)
+                {
+                    adminList.Add(user);
+                }
+            }
+
+            return adminList;
         }
 
         public List<string> GetSessionIdList()
@@ -98,6 +116,12 @@ namespace Video_Syncer.Models.Users.Impl
             if(!bannedSessionIDs.Contains(userSessionID))
             {
                 bannedSessionIDs.Add(userSessionID);
+                
+            }
+
+            if(!bannedIpAddresses.Contains(user.IpAddress))
+            {
+                bannedIpAddresses.Add(user.IpAddress);
             }
         }
 
@@ -158,14 +182,25 @@ namespace Video_Syncer.Models.Users.Impl
             return false;
         }
 
-        public User Join(string name, string sessionID)
+        public bool IsIpAddressBanned(IPAddress paramIp)
         {
-            if(IsSessionIdBanned(sessionID))
+            IEnumerable<IPAddress> matchingIpAddresses = bannedIpAddresses.Where(ip => ip.Equals(paramIp));
+
+            if(matchingIpAddresses.Count() > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public User Join(string name, string sessionID, IPAddress ipAddress)
+        {
+            if(IsSessionIdBanned(sessionID) || IsIpAddressBanned(ipAddress))
             {
                 return null;
             }
 
-            User user = CreateNewUser(name, sessionID);
+            User user = CreateNewUser(name, sessionID, ipAddress);
             logger.LogInformation("[VSY]Joining user \"" + user.name + "\"");
             AddToUserList(user);
 
@@ -205,7 +240,7 @@ namespace Video_Syncer.Models.Users.Impl
                 return true;
             }
 
-            relevantUser.name = newName;
+            relevantUser.name = HttpUtility.HtmlEncode(newName);
             return true;
         }
 
@@ -365,7 +400,7 @@ namespace Video_Syncer.Models.Users.Impl
             return null;
         }
 
-        public User CreateNewUser(string name, string sessionID)
+        public User CreateNewUser(string name, string sessionID, IPAddress ipAddress)
         {
             int userId = this.CreateUniqueUserId();
 
@@ -373,7 +408,10 @@ namespace Video_Syncer.Models.Users.Impl
             {
                 name = name.Substring(0, usernameCharacterLimit);
             }
-            User user = new User(userId, name, sessionID);
+
+            string encodedName = HttpUtility.HtmlEncode(name);
+
+            User user = new User(userId, encodedName, sessionID, ipAddress);
             return user;
         }
 
@@ -432,6 +470,22 @@ namespace Video_Syncer.Models.Users.Impl
             }
 
             if (String.Equals(user.sessionID, sessionID))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool IsUserIpAddressMatching(int userId, IPAddress ipAddress)
+        {
+            User user = GetUserById(userId);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            if (ipAddress.Equals(user.IpAddress))
             {
                 return true;
             }

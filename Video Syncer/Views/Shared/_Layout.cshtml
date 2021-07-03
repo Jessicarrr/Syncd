@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Prototype Syncing Website</title>
+    <title>@ViewData["Title"] - Syncd</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -14,62 +14,39 @@
 </head>
 <body id="whole-body">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm box-shadow mb-3">
-            <div class="container navbar-container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Prototype Syncing Website</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                    </ul>
+        @{
+            var url = Context.Request.Path; /* Our current url path */
+        }
 
-                </div>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav ml-auto navbar-right">
-                        <li class="nav-item">
-                            <label for="night-mode-toggle" id="night-mode-label">Night mode</label>
-                        </li>
-
-                        <li class="nav-item">
-                            <div id="night-mode-div">
-                                <label class="switch night-mode-switch">
-                                    <input type="checkbox" id="night-mode-toggle" />
-                                    <span class="slider round"></span>
-
-
-                                </label>
-                            </div>
-                        </li>
-
-                        <li class="nav-item">
-                            <input type="text" id="usernameBox">
-                            <div class="alert alert-danger" role="alert" id="alert-username-too-long">
-                                Name must be less than 25 characters
-                            </div>
-                        </li>
-
-                    </ul>
-
-                </div>
-            </div>
-        </nav>
+        @if (url.Equals("/")) /* If we're on the home page, i.e. nothing after the main url */
+        {
+            <partial name="~/Views/Shared/Navbar/_NavbarPlain.cshtml" />
+        }
+        else if (url.StartsWithSegments("/room")) /* If the part after the main url starts with "/room", we're in a room */
+        {
+            <partial name="~/Views/Shared/Navbar/_NavbarWithNightMode.cshtml" />
+        }
+        else /* Any other page on the site */
+        {
+            <partial name="~/Views/Shared/Navbar/_NavbarPlain.cshtml" />
+        }
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2020 - Prototype website for synced YouTube videos - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <div id="area-beneath-header">
+        <div id="middle-area">
+            <main role="main" id="main-area">
+                @RenderBody()
+            </main>
         </div>
-    </footer>
+
+        <!--
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2020 - Prototype website for synced YouTube videos - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>
+        -->
+    </div>
+    
 
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)

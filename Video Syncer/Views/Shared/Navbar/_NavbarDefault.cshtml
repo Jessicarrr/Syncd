@@ -1,0 +1,46 @@
+﻿
+<!-- the old nav bar that is no longer used -->
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm">
+    <div class="container navbar-container">
+        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Syncd</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+            <ul class="navbar-nav flex-grow-1">
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+            </ul>
+
+        </div>
+        <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+            <ul class="navbar-nav ml-auto navbar-right">
+                <li class="nav-item">
+                    <label for="night-mode-toggle" id="night-mode-label">Night mode</label>
+                </li>
+
+                <li class="nav-item">
+                    <div id="night-mode-div">
+                        <label class="switch night-mode-switch">
+                            <input type="checkbox" id="night-mode-toggle" />
+                            <span class="slider round"></span>
+
+
+                        </label>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <input type="text" id="usernameBox">
+                    <div class="alert alert-danger" role="alert" id="alert-username-too-long">
+                        Name must be less than 25 characters
+                    </div>
+                </li>
+
+            </ul>
+
+        </div>
+    </div>
+</nav>

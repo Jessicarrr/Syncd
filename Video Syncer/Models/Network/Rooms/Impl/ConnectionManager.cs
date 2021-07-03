@@ -71,8 +71,8 @@ namespace Video_Syncer.Models.Network.Rooms.Impl
 
         public async Task SendUpdateToUser(User user, Room room, IUpdate update, CancellationToken token)
         {
-            var dataToSend = new Byte[1024];
             var newString = JsonConvert.SerializeObject(update);
+            var dataToSend = new Byte[newString.Length] ;
             dataToSend = System.Text.Encoding.UTF8.GetBytes(newString);
             bool userDisconnected = false;
             
@@ -107,10 +107,54 @@ namespace Video_Syncer.Models.Network.Rooms.Impl
             }
         }
 
+        public async Task SendUpdateToAdmins(Room room, IUpdate update, CancellationToken cancellationToken)
+        {
+            var newString = JsonConvert.SerializeObject(update);
+            var dataToSend = new Byte[newString.Length];
+            dataToSend = System.Text.Encoding.UTF8.GetBytes(newString);
+            List<User> disconnectedUsers = new List<User>();
+
+            foreach (User loopUser in room.UserManager.GetAllAdmins())
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    break;
+                }
+
+                try
+                {
+                    await loopUser.socket.SendAsync(dataToSend,
+                        WebSocketMessageType.Text, true, CancellationToken.None);
+                }
+                catch(WebSocketException e)
+                {
+                    logger.LogError("Caught exception in ConnectionManager.SendUpdateToAdmins. User was " + loopUser.name
+                        + " with id " + loopUser.id + " in room " + room.id
+                        + ". The user will be forced to leave the room. The exception was: " + e.Message);
+                    disconnectedUsers.Add(loopUser);
+                }
+            }
+            if (disconnectedUsers.Count > 0)
+            {
+                foreach (User loopUser in disconnectedUsers)
+                {
+                    room.Leave(loopUser);
+                }
+
+                RoomDataUpdate newUpdate = new RoomDataUpdate()
+                {
+                    updateType = StateUpdates.Enum.UpdateType.UserListUpdate,
+                    payload = room.UserManager.GetUserList()
+                };
+
+                await SendUpdateToAll(room, newUpdate, cancellationToken);
+            }
+        }
+
         public async Task SendUpdateToAll(Room room, IUpdate update, CancellationToken cancellationToken)
         {
-            var dataToSend = new Byte[1024];
             var newString = JsonConvert.SerializeObject(update);
+            var dataToSend = new Byte[newString.Length];
             dataToSend = System.Text.Encoding.UTF8.GetBytes(newString);
             List<User> disconnectedUsers = new List<User>();
 
@@ -154,8 +198,8 @@ namespace Video_Syncer.Models.Network.Rooms.Impl
 
         public async Task SendUpdateToAllExcept(User user, Room room, IUpdate update, CancellationToken cancellationToken)
         {
-            var dataToSend = new Byte[1024];
             var newString = JsonConvert.SerializeObject(update);
+            var dataToSend = new Byte[newString.Length];
             dataToSend = System.Text.Encoding.UTF8.GetBytes(newString);
             List<User> disconnectedUsers = new List<User>();
 

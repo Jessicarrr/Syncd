@@ -1,0 +1,175 @@
+﻿.index-mobile {
+    display: none;
+    height: 0px;
+    line-height: 2.5;
+}
+
+.icon, .link-icon {
+    color: hotpink;
+}
+.link-icon {
+    margin-top: 18px;
+}
+
+/* Hamburger menu icon */
+.fa-bars {
+    transform: scale(1.6, 1.6);
+    color: hotpink;
+    padding-right: 15px;
+    height: 5px;
+}
+
+/* Syncd title on mobile */
+#navbar-mobile-title {
+    text-align: center;
+    font-family: Arial, Verdana, sans-serif;
+    line-height: 1.6;
+}
+
+/*the whole nav bar*/
+.whole-navbar {
+    box-shadow: 0px 2px 8px rgba(255, 105, 180, 0.25);
+    height: 55px;
+    width: 100%;
+    position: relative;
+    padding: 0px 110px 0px 20px;
+    overflow: hidden;
+}
+
+/* a class created for all items of type "ul" in the navbar*/
+.index-navbar-ul {
+    list-style-type: none; /* Remove bullet points from each item in the navbar*/
+    padding-right: 15px;
+    height: 100%;
+}
+
+/* a class created for all items of type "li" in the navbar*/
+.index-navbar-li {
+    float: left;
+    height: 100%;
+}
+/* a class meant for any content inside the li items of the navbar */
+.index-navbar-content {
+    display: block;
+    padding: 8px;
+    text-align: center;
+}
+
+/* any link in the navbar (i.e. <a href=""></a>)*/
+.index-navbar-link {
+    color: black;
+    height: 100%;
+    line-height: 2.3;
+}
+
+/* any link in the navbar when hovered over with the mouse */
+.index-navbar-link:hover {
+    background-color: #f3f3f3;
+    color: black;
+    text-decoration: none;
+}
+
+/* the title of the navbar "Syncd" */
+#navbar-title {
+    text-align: center;
+    font-family: Arial, Verdana, sans-serif;
+    line-height: 1.4;
+}
+
+/* the branding i.e. where it says the name of the site as well as the brand image*/
+.index-navbar-branding {
+    float: left;
+    border-right: 1px solid lightgray;
+}
+
+/* the brand image of the navbar. this is the image that appears in the navbar*/
+.index-navbar-brand-image {
+    height: 55px;
+    width: 55px;
+    margin-right: 50px;
+}
+
+/* the items on the navbar that appear on the left side of it*/
+.index-navbar-left {
+    float: left;
+}
+
+/* the items on the navbar that appear on the right side of it*/
+.index-navbar-right {
+    float: right;
+}
+
+/* The red warning that appears when the username is too long */
+#alert-username-too-long {
+    margin-bottom: 1px;
+    height: 16px;
+    line-height: 12px;
+    font-size: 11px;
+    position: absolute;
+}
+
+/* Styling of the box where you enter your username. this styling is for night mode */
+#username-box.night-mode {
+    background: #373737;
+    color: #d0d0d0;
+}
+
+/* Styling of the box where you enter your username. this applies generally in day and night mode*/
+#username-box {
+    border: 1px solid #e6e6e6;
+    margin-top: 15px;
+    padding: 0px 0px 2px 2px;
+    height: 24px;
+    width: 200px;
+
+}
+
+/* When the screen width is lower than 750px */
+@media screen and (max-width: 767px) {
+    .index-navbar-left, .index-navbar-right, .index-navbar-branding {
+        display: none;
+    }
+
+    .index-mobile {
+        display: block;
+    }
+
+    .whole-navbar {
+        padding: 0px 110px 0px 0px;
+    }
+
+        /*.index-navbar-ul {
+        padding-left: -15px;
+    }*/
+    
+}
+
+@media screen and (max-width: 767px) {
+    .whole-navbar.responsive {
+        position: relative;
+        overflow: visible;
+        background-color: white;
+    }
+
+        .whole-navbar.responsive .index-navbar-left {
+            float: none;
+            display: block;
+            text-align: left;
+            background-color: white;
+        }
+        .whole-navbar.responsive .index-navbar-right {
+            float: none;
+            display: block;
+            text-align: left;
+            background-color: white;
+        }
+        .whole-navbar.responsive .index-navbar-ul {
+            /*padding-right: 0px;*/
+            /*margin: 0px 0px -14px 0px;*/
+            float: left;
+            margin-bottom: 0px;
+            min-width: 350px;
+            width: 55%;
+            margin: 0px 0px -14px 0px;
+        }
+}

@@ -1,0 +1,80 @@
+﻿<!-- the nav bar that includes the night mode switch. this is used in the room. -->
+<link rel="stylesheet" href="~/css/navbar/navbar-with-night-mode.css">
+<script src="https://kit.fontawesome.com/87bec8f453.js" crossorigin="anonymous"></script>
+
+<!-- the div containing the whole navbar for the room -->
+<div id="navbar" class="whole-navbar">
+
+    <ul class="room-mobile room-navbar-ul">
+        <li class="room-navbar-li">
+            <a href="javascript:void(0);" class="room-navbar-content hamburger-menu-icon" onclick="onClickHamburger()">
+                <i class="fa fa-bars fa-lg"></i>
+            </a>
+        </li>
+        <li class="room-navbar-li">
+            <h3 id="navbar-mobile-title" class="room-navbar-content">Syncd</h3>
+        </li>
+    </ul>
+
+    <!-- the branding of the navbar. i.e. the title and logo -->
+    <ul class="room-navbar-branding room-navbar-ul">
+
+
+
+        <!-- the logo/image of the navbar -->
+        <!--
+        <li class="room-navbar-li">
+            <img src="~/images/navbar/brand-image.png" alt="Amazing!" class="room-navbar-brand-image room-navbar-content">
+        </li>
+        -->
+        <!-- the title of the navbar "syncd" -->
+        <li class="room-navbar-li">
+            <h3 id="navbar-title" class="room-navbar-content">Syncd</h3>
+        </li>
+
+    </ul>
+    <!-- the links that appear on the left side of the navbar, but to the right of the branding area -->
+    <ul class="room-navbar-left room-navbar-ul">
+
+        <li class="mobile-menu-item room-navbar-li" id="home-link">
+            <i class="room-navbar-content link-icon fa fa-home fa-lg"></i>
+            <a class="room-navbar-content room-navbar-link link-with-icon" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+        </li>
+    </ul>
+
+    <!-- the links and elements that appear on the right side of the navbar -->
+    <ul class="room-navbar-right room-navbar-ul">
+
+        <!-- night mode label that contains the text "night mode"-->
+        <!--
+        li class="room-navbar-li">
+        <label for="night-mode-toggle" id="night-mode-label">Night mode</label>
+        </li>
+        -->
+
+        <!-- the night mode toggle switch -->
+        <li class="mobile-menu-item room-navbar-li" id="night-mode-toggle-area">
+            <i class="room-navbar-content link-icon fa fa-moon fa-lg"></i>
+            <div class="room-navbar-content" id="night-mode-div">
+                <label class="room-navbar-content switch night-mode-switch">
+                    <input class="room-navbar-content" type="checkbox" id="night-mode-toggle" />
+                    <span class="slider round room-navbar-content" id="night-mode-toggle"></span>
+
+
+                </label>
+            </div>
+        </li>
+
+        <!-- the username changing box -->
+        <li class="mobile-menu-item room-navbar-li" id="username-box-area">
+            <i class="room-navbar-content icon fa fa-user-edit fa-lg"></i>
+
+            <input type="text" id="username-box">
+
+            <div class="alert alert-danger" role="alert" id="alert-username-too-long">
+                Name must be less than 25 characters
+            </div>
+        </li>
+    </ul>
+
+</div>

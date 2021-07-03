@@ -22,28 +22,21 @@ function addUserUI(userDiv) {
 /**
  * Update the user list for a specific user.
  * @param {any} userId The identifier for which user to update.
- * @param {any} userState The user's YouTube player state.
- * @param {any} userTime The time the user is at in the video.
+ * @param {any} userRights The user's rights (admin or regular user)
  */
-function updateUIForUser(userId, userState, userTime, userRights) {
+function updateUIForUser(userId, userRights) {
     var updatedUser = false;
 
     userList.forEach(function (entry) {
         if (userId == entry["id"]) {
-            var state = document.getElementById(userId + "userState");
-            var time = document.getElementById(userId + "userTime")
-            var rights = document.getElementById(userId + "userRights");
-
-            if (state == null || time == null) {
-                console.log("No state or time?");
-                updatedUser = false;
-            }
-
-            state.innerHTML = userState;
-            time.innerHTML = userTime;
+            var icon = document.getElementById(userId + "userIcon");
 
             if (userRights === 1) {
-                rights.style.display = "block";
+
+                icon.classList.remove("fa-user");
+                icon.classList.add("fa-crown");
+                icon.style.color = "darkgoldenrod";
+                icon.style.marginLeft = "-2px"
             }
 
             updatedUser = true;
@@ -61,11 +54,14 @@ function updateUIForUser(userId, userState, userTime, userRights) {
  */
 function createUIForUser(name, id) {
     var userDiv = document.createElement("div");
+
+    var topLineDiv = document.createElement("div");
+    var bottomLineDiv = document.createElement("div");
+    var userIconDiv = document.createElement("div");
+
     var userName = document.createElement("p");
     var userIdElement = document.createElement("p");
-    var userState = document.createElement("p");
-    var userTime = document.createElement("p");
-    var userRights = document.createElement("p");
+    var userIcon = document.createElement("i");
 
     var userKick = document.createElement("p");
     var userBan = document.createElement("p");
@@ -73,20 +69,16 @@ function createUIForUser(name, id) {
 
     userDiv.classList.add("userDiv");
 
+    userIcon.classList.add("fa", "fa-user", "icon");
+    userIcon.id = id + "userIcon";
+
+    userIconDiv.id = id + "userIconDiv";
+
     userName.classList.add("userDivElement");
     userName.id = id + "userName";
 
     userIdElement.classList.add("userDivElement");
     userIdElement.id = id + "userId";
-
-    userState.classList.add("userDivElement");
-    userState.id = id + "userState";
-
-    userTime.classList.add("userDivElement");
-    userTime.id = id + "userTime";
-
-    userRights.classList.add("userDivElement");
-    userRights.id = id + "userRights";
 
     userKick.classList.add("userDivElement");
     userKick.id = id + "userKick";
@@ -97,16 +89,18 @@ function createUIForUser(name, id) {
     userMakeAdmin.classList.add("userDivElement");
     userMakeAdmin.id = id + "userMakeAdmin";
 
+    
     userName.innerHTML = name;
-    userIdElement.innerHTML = id;
-    userState.innerHTML = "[Video State]";
-    userTime.innerHTML = "[Video Time]";
-    userRights.innerHTML = "👑";
+    userIdElement.innerHTML = "#" + id;
     userKick.innerHTML = "Kick";
     userBan.innerHTML = "Ban";
     userMakeAdmin.innerHTML = "Make Admin";
 
-    userRights.style.display = "none";
+    if (typeof isNightMode !== 'undefined') {
+        if (isNightMode === true) {
+            userIcon.classList.add("night-mode");
+        }
+    }
 
     if (myRights == 1 && id != userId) {
         userKick.style.display = "block";
@@ -131,14 +125,17 @@ function createUIForUser(name, id) {
         sendBanRequest(id);
     };
 
-    userDiv.appendChild(userName);
-    userDiv.appendChild(userRights);
-    userDiv.appendChild(userIdElement);
-    userDiv.appendChild(userState);
-    userDiv.appendChild(userTime);
-    userDiv.appendChild(userKick);
-    userDiv.appendChild(userBan);
-    userDiv.appendChild(userMakeAdmin);
+    userDiv.appendChild(topLineDiv);
+    userDiv.appendChild(bottomLineDiv);
+
+    userIconDiv.appendChild(userIcon);
+
+    topLineDiv.appendChild(userIconDiv);
+    topLineDiv.appendChild(userName);
+    topLineDiv.appendChild(userIdElement);
+    bottomLineDiv.appendChild(userKick);
+    bottomLineDiv.appendChild(userBan);
+    bottomLineDiv.appendChild(userMakeAdmin);
 
     return userDiv;
 }

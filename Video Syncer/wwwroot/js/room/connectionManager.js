@@ -1,5 +1,6 @@
 ﻿var socket;
 var userId = -1;
+var myRights = 0;
 
 var requestTypeProperty = "requestType";
 var updateTypeProperty = "updateType";
@@ -32,7 +33,8 @@ const UpdateType = Object.freeze(
         "UserListUpdate": 1,
         "PlaylistUpdate": 2,
         "VideoUpdate": 3,
-        "RedirectToPage": 4
+        "RedirectToPage": 4,
+        "AdminLogMessage": 5
     });
 
 function setupNetworking() {
@@ -52,12 +54,15 @@ function connectToServer() {
 function setupSocketEvents() {
     socket.onopen = function (event) {
         console.log("socket.onopen: " + event.data);
+
         
         hideDisconnectError();
         reconnectionAttempts = 0;
         changeDisplayedDisconnectAttemptsNumber(0);
         sendJoinRequest();
         //sendVideoStateChangeRequest(1);
+
+        setTimeout(hideInitialLoadingScreen, 1000);
     };
 
     socket.onclose = function (event) {
@@ -84,7 +89,7 @@ function setupSocketEvents() {
         try {
             var obj = JSON.parse(event.data);
 
-            console.log("json message: \"" + event.data + "\"");
+            //console.log("json message: \"" + event.data + "\"");
 
             if (obj.hasOwnProperty(requestTypeProperty)) {
                 handleRequestResponse(obj);
@@ -94,7 +99,7 @@ function setupSocketEvents() {
             }
         }
         catch (e) {
-            console.log("non-json message: \"" + event.data + "\"");
+            //console.log("non-json message: \"" + event.data + "\"");
         }
         
         
@@ -201,6 +206,9 @@ function handleServerUpdate(obj) {
             var page = obj["payload"];
             window.location.replace(page);
             break;
+        case UpdateType.AdminLogMessage:
+            handleAdminLogMessage(obj);
+            break;
     }
 }
 
@@ -235,10 +243,12 @@ function handleJoinRequestResponse(response) {
     setVideoTitle(newVideoTitle);
 
     if (playlist != null) {
-        compareAndRemovePlaylistItems(playlist);
-        compareAndAddPlaylistItems(playlist);
-        updateTitlesAndAuthors(playlist);
-        fixPlaylistArrangement(playlist);
+        removeAllPlaylistVideos();
+        addPlaylistItems(playlist);
+    }
+
+    if (myRights == 1) {
+        showUsageLogsButton();
     }
 
     /*
@@ -252,18 +262,19 @@ function handleJoinRequestResponse(response) {
 
         var currentUserId = user["id"];
         var currentUserName = user["name"];
-        var currentUserState = user["videoState"];
-        var currentUserVideoTime = user["videoTimeSeconds"];
         var currentUserRights = user["rights"];
 
         if (currentUserId == userId && currentUserRights != myRights) {
             console.log("changed rights");
             myRights = currentUserRights;
+
+            if (currentUserRights === 1) {
+                showUsageLogsButton();
+            }
         }
 
         addUser(currentUserId, currentUserName);
-        updateUIForUser(currentUserId, stateIntToString(currentUserState),
-            formatVideoTime(currentUserVideoTime), currentUserRights);
+        updateUIForUser(currentUserId, currentUserRights);
     }
 }
 
@@ -281,8 +292,12 @@ function handleUserListRequestResponse(obj) {
             var currentUserRights = user["rights"];
 
             if (currentUserId == userId) {
-                if ((currentUserRights == 1 || currentUserRights == 0) && myRights != currentUserRights) {
+                if (myRights != currentUserRights) {
                     myRights = currentUserRights;
+
+                    if (currentUserRights === 1) {
+                        showUsageLogsButton();
+                    }
                 }
                 break;
             }
@@ -293,18 +308,19 @@ function handleUserListRequestResponse(obj) {
 
             var currentUserId = user["id"];
             var currentUserName = user["name"];
-            var currentUserState = user["videoState"];
-            var currentUserVideoTime = user["videoTimeSeconds"];
             var currentUserRights = user["rights"];
 
             if (currentUserId == userId && currentUserRights != myRights) {
                 console.log("changed rights");
                 myRights = currentUserRights;
+
+                if (currentUserRights === 1) {
+                    showUsageLogsButton();
+                }
             }
 
             addUser(currentUserId, currentUserName);
-            updateUIForUser(currentUserId, stateIntToString(currentUserState),
-                formatVideoTime(currentUserVideoTime), currentUserRights);
+            updateUIForUser(currentUserId, currentUserRights);
 
             //console.log("Updated user" + currentUserName + "(" + currentUserId + ") with " + currentUserState + " and " + currentUserVideoTime);
         }
@@ -329,6 +345,10 @@ function handleUserListUpdate(obj) {
             if (currentUserId == userId) {
                 if ((currentUserRights == 1 || currentUserRights == 0) && myRights != currentUserRights) {
                     myRights = currentUserRights;
+
+                    if (currentUserRights === 1) {
+                        showUsageLogsButton();
+                    }
                 }
                 break;
             }
@@ -339,13 +359,10 @@ function handleUserListUpdate(obj) {
 
             var currentUserId = user["id"];
             var currentUserName = user["name"];
-            var currentUserState = user["videoState"];
-            var currentUserVideoTime = user["videoTimeSeconds"];
             var currentUserRights = user["rights"];
 
             addUser(currentUserId, currentUserName);
-            updateUIForUser(currentUserId, stateIntToString(currentUserState),
-                formatVideoTime(currentUserVideoTime), currentUserRights);
+            updateUIForUser(currentUserId, currentUserRights);
 
             //console.log("Updated user" + currentUserName + "(" + currentUserId + ") with " + currentUserState + " and " + currentUserVideoTime);
         }
@@ -427,13 +444,21 @@ function handlePlaylistUpdate(obj) {
     var playlist = payload["playlist"];
 
     if (playlist != null) {
-        compareAndRemovePlaylistItems(playlist);
-        compareAndAddPlaylistItems(playlist);
-        updateTitlesAndAuthors(playlist);
-        fixPlaylistArrangement(playlist);
+        removeAllPlaylistVideos();
+        addPlaylistItems(playlist);
     }
     else {
         console.log("playlist is null");
+    }
+}
+
+function handleAdminLogMessage(obj) {
+    var payload = obj["payload"];
+    var user = payload["user"];
+    var actionMessage = payload["actionMessage"];
+
+    if (actionMessage != null) {
+        addNewAdminLogMessage(user, actionMessage);
     }
 }
 
@@ -514,7 +539,7 @@ function sendRearrangePlaylistRequest(onTopId, onBottomId) {
 }
 
 function send(str) {
-    console.log("sending: " + str);
+    //console.log("sending: " + str);
     if (socket.readyState === socket.OPEN) {
 
         socket.send(str);

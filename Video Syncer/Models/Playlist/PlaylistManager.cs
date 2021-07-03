@@ -17,7 +17,7 @@ namespace Video_Syncer.Models.Playlist
         public List<PlaylistObject> playlist = new List<PlaylistObject>();
 
         private int uniqueIdLength = 15;
-        private NoEmbedHandler noembed = new NoEmbedHandler();
+        private YoutubeApiHandler youtubeApi = new YoutubeApiHandler();
 
         private PlaylistObject currentItemPlaying = null;
 
@@ -40,7 +40,7 @@ namespace Video_Syncer.Models.Playlist
             }
             return false;
         }
-        public void AddToPlaylist(string youtubeId, Action onGetYoutubeData = null)
+        public void AddToPlaylist(string youtubeId, Func<PlaylistObject, Task<int>> onGetYoutubeData)
         {
             PlaylistObject obj = new PlaylistObject();
             Random random = new Random();
@@ -54,7 +54,7 @@ namespace Video_Syncer.Models.Playlist
             CancellationTokenSource source = new CancellationTokenSource();
             Task.Run(async () =>
             {
-                await noembed.GetYoutubeData(youtubeId, source).ContinueWith(result =>
+                await youtubeApi.GetYoutubeData(youtubeId, source).ContinueWith(result =>
                 {
                     JObject jResult = result.Result;
 
@@ -79,7 +79,7 @@ namespace Video_Syncer.Models.Playlist
                     {
                         logger.LogWarning("[VSY] noembed.GetYoutubeData returned null for video with youtube id " + youtubeId);
                     }
-                    onGetYoutubeData?.Invoke(); // invoke the method if it was passed as a parameter
+                    onGetYoutubeData?.Invoke(obj);
                 });
             });
         }
