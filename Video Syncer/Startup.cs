@@ -19,6 +19,7 @@ using Video_Syncer.Models.Users;
 using Video_Syncer.Models;
 using Video_Syncer.Models.Users.Interface;
 using Video_Syncer.Models.Users.Impl;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace Video_Syncer
 {
@@ -108,8 +109,10 @@ namespace Video_Syncer
                 KeepAliveInterval = TimeSpan.FromSeconds(30)
             };
 
-            //webSocketOptions.AllowedOrigins.Add("https://prototypevideosyncingsite111.azurewebsites.net/");
-            //webSocketOptions.AllowedOrigins.Add("https://syncd.me");
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
             app.UseWebSockets(webSocketOptions);
 
