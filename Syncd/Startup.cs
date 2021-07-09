@@ -20,6 +20,7 @@ using Syncd.Models;
 using Syncd.Models.Users.Interface;
 using Syncd.Models.Users.Impl;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.FileProviders;
 
 namespace Snycd
 {
@@ -117,7 +118,10 @@ namespace Snycd
             app.UseWebSockets(webSocketOptions);
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider($@"{AppDomain.CurrentDomain.BaseDirectory}/wwwroot")
+            });
 
             app.UseRouting();
 
