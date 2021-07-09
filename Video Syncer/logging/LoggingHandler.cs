@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Video_Syncer.logging
+namespace Syncd.logging
 {
     public class LoggingHandler
     {

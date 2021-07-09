@@ -7,10 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Video_Syncer.api.receiver;
-using Video_Syncer.logging;
+using Syncd.api.receiver;
+using Syncd.logging;
 
-namespace Video_Syncer.Models.Playlist
+namespace Syncd.Models.Playlist
 {
     public class PlaylistManager : IPlaylistManager
     {

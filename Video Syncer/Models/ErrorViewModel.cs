@@ -1,6 +1,6 @@
 using System;
 
-namespace Video_Syncer.Models
+namespace Syncd.Models
 {
     public class ErrorViewModel
     {

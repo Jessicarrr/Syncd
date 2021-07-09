@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Video_Syncer.Models.Network.StateUpdates.Enum;
-using Video_Syncer.Models.Network.StateUpdates.Interface;
+using Syncd.Models.Network.StateUpdates.Enum;
+using Syncd.Models.Network.StateUpdates.Interface;
 
-namespace Video_Syncer.Models.Network.StateUpdates.Impl
+namespace Syncd.Models.Network.StateUpdates.Impl
 {
     public class RoomDataUpdate : IUpdate
     {

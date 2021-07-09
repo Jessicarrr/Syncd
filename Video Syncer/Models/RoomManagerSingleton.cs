@@ -7,12 +7,12 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Video_Syncer.logging;
-using Video_Syncer.Models.Network.Rooms.Impl;
-using Video_Syncer.Models.Playlist;
-using Video_Syncer.Models.Users.Impl;
+using Syncd.logging;
+using Syncd.Models.Network.Rooms.Impl;
+using Syncd.Models.Playlist;
+using Syncd.Models.Users.Impl;
 
-namespace Video_Syncer.Models
+namespace Syncd.Models
 {
     public class RoomManagerSingleton : IDisposable, IRoomManagerSingleton
     {

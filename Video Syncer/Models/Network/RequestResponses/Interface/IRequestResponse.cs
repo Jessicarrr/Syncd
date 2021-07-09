@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Video_Syncer.Models.Network.RequestResponses.Enum;
+using Syncd.Models.Network.RequestResponses.Enum;
 
-namespace Video_Syncer.Models.Network.RequestResponses.Interface
+namespace Syncd.Models.Network.RequestResponses.Interface
 {
     interface IRequestResponse
     {

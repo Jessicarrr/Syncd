@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Video_Syncer.Models.Users.Interface
+namespace Syncd.Models.Users.Interface
 {
     public interface IUserManager
     {

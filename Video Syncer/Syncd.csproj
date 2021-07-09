@@ -38,23 +38,6 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="OldNetworkingCode\Network\AddToPlaylistRequest.cs" />
-    <None Include="OldNetworkingCode\Network\AdminRequests.cs" />
-    <None Include="OldNetworkingCode\Network\ChangeUsernameRequest.cs" />
-    <None Include="OldNetworkingCode\Network\IRequest.cs" />
-    <None Include="OldNetworkingCode\Network\JoinRequest.cs" />
-    <None Include="OldNetworkingCode\Network\LeaveRequest.cs" />
-    <None Include="OldNetworkingCode\Network\PlayPlaylistVideoRequest.cs" />
-    <None Include="OldNetworkingCode\Network\RearrangePlaylistRequest.cs" />
-    <None Include="OldNetworkingCode\Network\RemoveFromPlaylistRequest.cs" />
-    <None Include="OldNetworkingCode\Network\RequestType.cs" />
-    <None Include="OldNetworkingCode\Network\TimeChangeRequest.cs" />
-    <None Include="OldNetworkingCode\Network\UpdateRequest.cs" />
-    <None Include="OldNetworkingCode\Network\VideoChangeRequest.cs" />
-    <None Include="OldNetworkingCode\Network\VideoStateChangeRequest.cs" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="AntiXSS" Version="4.3.0" />
@@ -81,6 +64,7 @@
 
 
   <ItemGroup>
+    <Folder Include="OldNetworkingCode\Network\" />
     <Folder Include="wwwroot\images\navbar\index\" />
   </ItemGroup>
 

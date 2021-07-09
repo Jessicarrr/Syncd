@@ -1,7 +1,7 @@
-﻿using Video_Syncer.Models.Network.RequestResponses.Enum;
-using Video_Syncer.Models.Network.RequestResponses.Interface;
+﻿using Syncd.Models.Network.RequestResponses.Enum;
+using Syncd.Models.Network.RequestResponses.Interface;
 
-namespace Video_Syncer.Models.Network.RequestResponses.Impl
+namespace Syncd.Models.Network.RequestResponses.Impl
 {
     public class RequestResponse : IRequestResponse
     {

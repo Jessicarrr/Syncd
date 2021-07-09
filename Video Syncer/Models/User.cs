@@ -5,9 +5,9 @@ using System.Linq;
 using System.Net;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
-using Video_Syncer.Models.Users.Enum;
+using Syncd.Models.Users.Enum;
 
-namespace Video_Syncer.Models
+namespace Syncd.Models
 {
     public class User
     {

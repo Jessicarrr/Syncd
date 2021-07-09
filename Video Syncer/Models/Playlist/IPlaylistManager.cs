@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Video_Syncer.Models.Playlist
+namespace Syncd.Models.Playlist
 {
     public interface IPlaylistManager
     {

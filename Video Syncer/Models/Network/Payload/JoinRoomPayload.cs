@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Video_Syncer.Models.Playlist;
-using Video_Syncer.Models.Users.Enum;
+using Syncd.Models.Playlist;
+using Syncd.Models.Users.Enum;
 
-namespace Video_Syncer.Models.Network.Payload
+namespace Syncd.Models.Network.Payload
 {
     public class JoinRoomPayload
     {

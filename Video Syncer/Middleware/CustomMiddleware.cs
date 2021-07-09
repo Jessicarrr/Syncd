@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Video_Syncer.Helpers;
+using Syncd.Helpers;
 
-namespace Video_Syncer.Middleware
+namespace Syncd.Middleware
 {
     public class CustomMiddleware
     {

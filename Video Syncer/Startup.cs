@@ -10,18 +10,18 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Video_Syncer.Middleware;
+using Syncd.Middleware;
 using System.Diagnostics;
 using Microsoft.ApplicationInsights.TraceListener;
-using Video_Syncer.logging;
+using Syncd.logging;
 using Microsoft.Extensions.Logging.AzureAppServices;
-using Video_Syncer.Models.Users;
-using Video_Syncer.Models;
-using Video_Syncer.Models.Users.Interface;
-using Video_Syncer.Models.Users.Impl;
+using Syncd.Models.Users;
+using Syncd.Models;
+using Syncd.Models.Users.Interface;
+using Syncd.Models.Users.Impl;
 using Microsoft.AspNetCore.HttpOverrides;
 
-namespace Video_Syncer
+namespace Snycd
 {
     public class Startup
     {

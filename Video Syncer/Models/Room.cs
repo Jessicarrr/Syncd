@@ -9,16 +9,16 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Video_Syncer.logging;
-using Video_Syncer.Models.Network.Payload;
-using Video_Syncer.Models.Network.Rooms.Interface;
-using Video_Syncer.Models.Network.StateUpdates.Impl;
-using Video_Syncer.Models.Playlist;
-using Video_Syncer.Models.Users;
-using Video_Syncer.Models.Users.Enum;
-using Video_Syncer.Models.Users.Interface;
+using Syncd.logging;
+using Syncd.Models.Network.Payload;
+using Syncd.Models.Network.Rooms.Interface;
+using Syncd.Models.Network.StateUpdates.Impl;
+using Syncd.Models.Playlist;
+using Syncd.Models.Users;
+using Syncd.Models.Users.Enum;
+using Syncd.Models.Users.Interface;
 
-namespace Video_Syncer.Models
+namespace Syncd.Models
 {
     public class Room : IDisposable
     {

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Video_Syncer.Models.Playlist;
+using Syncd.Models.Playlist;
 
-namespace Video_Syncer.Models.Network.Payload
+namespace Syncd.Models.Network.Payload
 {
     public class PlaylistStatePayload
     {

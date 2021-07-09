@@ -6,11 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Video_Syncer.api.receiver.manager;
-using Video_Syncer.logging;
-using Video_Syncer.Models.Playlist;
+using Syncd.api.receiver.manager;
+using Syncd.logging;
+using Syncd.Models.Playlist;
 
-namespace Video_Syncer.api.receiver
+namespace Syncd.api.receiver
 {
     public class NoEmbedHandler
     {

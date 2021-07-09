@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Video_Syncer.api.receiver.manager;
+using Syncd.api.receiver.manager;
 
-namespace Video_Syncer.api.receiver
+namespace Syncd.api.receiver
 {
     public class YoutubeApiHandler
     {
@@ -42,7 +42,7 @@ namespace Video_Syncer.api.receiver
 
                 return jObj;
             }
-            catch (ApiException e)
+            catch (ApiException)
             {
                 //logger.LogError("[VSY] ApiException in NoEmbedHandler.GetYoutubeData, statusCode =  " + e.statusCode + " with message " + e.Message + ", e = " + e);
                 return null;

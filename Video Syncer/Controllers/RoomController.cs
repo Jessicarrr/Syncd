@@ -11,17 +11,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Video_Syncer.Models;
-using Video_Syncer.Models.Network.Payload;
-using Video_Syncer.Models.Network.Payload.StateUpdates;
-using Video_Syncer.Models.Network.RequestResponses.Enum;
-using Video_Syncer.Models.Network.RequestResponses.Impl;
-using Video_Syncer.Models.Network.StateUpdates.Enum;
-using Video_Syncer.Models.Network.StateUpdates.Impl;
-using Video_Syncer.Models.Playlist;
-using Video_Syncer.Views.Room;
+using Syncd.Models;
+using Syncd.Models.Network.Payload;
+using Syncd.Models.Network.Payload.StateUpdates;
+using Syncd.Models.Network.RequestResponses.Enum;
+using Syncd.Models.Network.RequestResponses.Impl;
+using Syncd.Models.Network.StateUpdates.Enum;
+using Syncd.Models.Network.StateUpdates.Impl;
+using Syncd.Models.Playlist;
+using Syncd.Views.Room;
 
-namespace Video_Syncer.Controllers
+namespace Syncd.Controllers
 {
     public class RoomController : Controller
     {

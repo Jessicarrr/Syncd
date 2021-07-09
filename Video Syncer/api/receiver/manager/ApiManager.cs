@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Video_Syncer.api.receiver.manager
+namespace Syncd.api.receiver.manager
 {
     public class ApiManager
     {

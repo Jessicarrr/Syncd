@@ -7,13 +7,13 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
-using Video_Syncer.logging;
-using Video_Syncer.Models.Network.Payload.StateUpdates;
-using Video_Syncer.Models.Network.Rooms.Interface;
-using Video_Syncer.Models.Network.StateUpdates.Impl;
-using Video_Syncer.Models.Network.StateUpdates.Interface;
+using Syncd.logging;
+using Syncd.Models.Network.Payload.StateUpdates;
+using Syncd.Models.Network.Rooms.Interface;
+using Syncd.Models.Network.StateUpdates.Impl;
+using Syncd.Models.Network.StateUpdates.Interface;
 
-namespace Video_Syncer.Models.Network.Rooms.Impl
+namespace Syncd.Models.Network.Rooms.Impl
 {
     public class ConnectionManager : IConnectionManager
     {

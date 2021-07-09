@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Video_Syncer.Models;
+using Syncd.Models;
 
-namespace Video_Syncer.Views.Room
+namespace Syncd.Views.Room
 {
     public class RoomModel
     {

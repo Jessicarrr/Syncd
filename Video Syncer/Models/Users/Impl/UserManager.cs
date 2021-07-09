@@ -4,15 +4,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Video_Syncer.logging;
-using Video_Syncer.Models.Users.Interface;
-using Video_Syncer.Models.Users.Enum;
+using Syncd.logging;
+using Syncd.Models.Users.Interface;
+using Syncd.Models.Users.Enum;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Net;
 using System.Web;
 
-namespace Video_Syncer.Models.Users.Impl
+namespace Syncd.Models.Users.Impl
 {
     public class UserManager : IUserManager
     {
