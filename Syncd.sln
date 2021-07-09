@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29409.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Syncd", "Video Syncer\Syncd.csproj", "{0038D418-AA96-4A68-94F4-9481B7E21173}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Syncd", "Syncd\Syncd.csproj", "{65659202-F5C7-49B6-B95E-18BAB18B2C8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0038D418-AA96-4A68-94F4-9481B7E21173}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0038D418-AA96-4A68-94F4-9481B7E21173}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0038D418-AA96-4A68-94F4-9481B7E21173}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0038D418-AA96-4A68-94F4-9481B7E21173}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65659202-F5C7-49B6-B95E-18BAB18B2C8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65659202-F5C7-49B6-B95E-18BAB18B2C8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65659202-F5C7-49B6-B95E-18BAB18B2C8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65659202-F5C7-49B6-B95E-18BAB18B2C8E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
