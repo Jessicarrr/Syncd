@@ -44,7 +44,7 @@ function setupNetworking() {
 }
 
 function connectToServer() {
-    var connectionUrl = "wss://" + location.hostname + ":443/Room/ConnectToWebSocket";
+    var connectionUrl = "https://" + location.hostname + ":443/Room/ConnectToWebSocket";
     console.log("Connecting to " + connectionUrl)
     socket = new WebSocket(connectionUrl);
 
@@ -119,7 +119,7 @@ function setupSocketEvents() {
 function tryReconnect() {
     socket = null;
 
-    var connectionUrl = "wss://" + location.hostname + ":" + location.port + "/Room/ConnectToWebSocket";
+    var connectionUrl = "http://" + location.hostname + "/Room/ConnectToWebSocket";
     console.log("Connecting to " + connectionUrl)
     socket = new WebSocket(connectionUrl);
 
