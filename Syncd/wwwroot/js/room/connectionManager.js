@@ -44,7 +44,8 @@ function setupNetworking() {
 }
 
 function connectToServer() {
-    var connectionUrl = "https://" + location.hostname + ":443/Room/ConnectToWebSocket";
+    var connectionUrl = "wss://" + location.hostname + ":443/Room/ConnectToWebSocket";
+
     console.log("Connecting to " + connectionUrl)
     socket = new WebSocket(connectionUrl);
 
@@ -66,7 +67,8 @@ function setupSocketEvents() {
     };
 
     socket.onclose = function (event) {
-        console.log("socket.onclose: " + event.data);
+        console.log("socket.onclose: " + event.code + ", reason:" + event.reason);
+
         
         if (!shouldSocketBeClosed) {
             showDisconnectError();
@@ -82,7 +84,8 @@ function setupSocketEvents() {
     };
 
     socket.onerror = function (event) {
-        console.log("socket.onerror: " + event.data);
+        console.log("socket.onerror: " + event.message);
+
     };
 
     socket.onmessage = function (event) {
@@ -119,7 +122,8 @@ function setupSocketEvents() {
 function tryReconnect() {
     socket = null;
 
-    var connectionUrl = "http://" + location.hostname + "/Room/ConnectToWebSocket";
+    var connectionUrl = "wss://" + location.hostname + ":443/Room/ConnectToWebSocket";
+
     console.log("Connecting to " + connectionUrl)
     socket = new WebSocket(connectionUrl);
 
